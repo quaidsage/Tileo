@@ -6,7 +6,6 @@ let h = canvas.height;
 let sqrW = 5;
 let row = h / sqrW;
 let col = w / sqrW;
-let isDragging = false;
 let currentElement = 1;
 let brushSize = 3;
 let brushSpeed = 10;
@@ -30,12 +29,12 @@ class Grid {
         this.grid[y* this.col + x] = element;
     }
 
-    setBrush(x, y, element, radius) {
-        for (let i = x - radius; i <= x + radius; i++) {
-            for (let j = y - radius; j <= y + radius; j++) {
+    setBrush(x, y, element) {
+        for (let i = x - brushSize; i <= x + brushSize; i++) {
+            for (let j = y - brushSize; j <= y + brushSize; j++) {
                 let dx = i - x;
                 let dy = j - y;
-                if (dx * dx + dy * dy <= radius * radius) {
+                if (dx * dx + dy * dy <= brushSize * brushSize) {
                     if (i >= 0 && i < col && j >= 0 && j < row) {
                         if (Math.random() < element.probability) {      
                             this.setElement(i, j, new element.constructor());
@@ -67,6 +66,22 @@ class Grid {
         this.grid.forEach((element, index) => {
             drawPixel(index, element);
         })
+        
+        let x = Math.floor(mouseX / sqrW);
+        let y = Math.floor(mouseY / sqrW);
+        for (let i = x - brushSize; i <= x + brushSize; i++) {
+            for (let j = y - brushSize; j <= y + brushSize; j++) {
+                let dx = i - x;
+                let dy = j - y;
+                if (dx * dx + dy * dy <= brushSize * brushSize) {
+                    if (i >= 0 && i < col && j >= 0 && j < row) {
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                        ctx.fillRect(i * sqrW, j * sqrW, sqrW, sqrW);
+                    }
+                }
+            }
+        }
+
         this.update();
     }
 
@@ -138,7 +153,7 @@ class Sand extends Element {
 
         if (this.falling) {
             for (let m = 0; m < this.velocity/10; m++) {
-                if ((Math.ceil((bottom+grid.row) / grid.row) < grid.row - 1) && grid.isEmpty(bottom+grid.row)) {
+                if ((Math.ceil((bottom+grid.row) / grid.row) < grid.row - 1) && (grid.isEmpty(bottom+grid.row) || grid.isLiquid(bottom+grid.row))) {
                     bottom += grid.row;
                 } else {
                     break;
@@ -258,7 +273,6 @@ function drawPixel(index, element) {
         ctx.fillStyle = `rgb(${element.color[0]}, ${element.color[1]}, ${element.color[2]})`;
     }
     ctx.fillRect((index % col) * sqrW, Math.floor(index / col) * sqrW, sqrW, sqrW);
-
 }
 
 function render() {
@@ -266,24 +280,27 @@ function render() {
     requestAnimationFrame(() => render());
 }
 
-canvas.addEventListener('mousedown', function () {
+canvas.addEventListener('mousedown', function (e) {
+    let rect = canvas.getBoundingClientRect();
+    mouseX = e.clientX - rect.left;
+    mouseY = e.clientY - rect.top;
+
     brushInterval = setInterval(() => {
         let i = Math.floor(mouseX / sqrW);
         let j = Math.floor(mouseY / sqrW);
-
         if (i >= 0 && i < col && j >= 0 && j < row) {
             switch (currentElement) {
                 case 1:
-                    grid.setBrush(i, j, new Sand(), brushSize);
+                    grid.setBrush(i, j, new Sand());
                     break;
                 case 2:
-                    grid.setBrush(i, j, new Wood(), brushSize);
+                    grid.setBrush(i, j, new Wood());
                     break;
                 case 3:
-                    grid.setBrush(i, j, new Water(), brushSize);
+                    grid.setBrush(i, j, new Water());
                     break;
                 default:
-                    grid.setBrush(i, j, new Empty(), brushSize);
+                    grid.setBrush(i, j, new Empty());
             }
         }
     }, brushSpeed);
@@ -297,11 +314,21 @@ canvas.addEventListener('mousemove', function (e) {
     let rect = canvas.getBoundingClientRect();
     mouseX = e.clientX - rect.left;
     mouseY = e.clientY - rect.top;
+
+    // Calculate the grid position of the mouse
+    let i = Math.floor(mouseX / sqrW);
+    let j = Math.floor(mouseY / sqrW);
+
+    if (i >= 0 && i < col && j >= 0 && j < row) {
+        document.getElementById('mousePosition').textContent = `Mouse position: ${i}, ${j}`;
+    }
 });
 
 canvas.addEventListener('mouseleave', function () {
     clearInterval(brushInterval);
 });
+
+
 
 document.getElementById('reset').addEventListener('click', function () {
     grid.reset();
