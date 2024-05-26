@@ -1,0 +1,78 @@
+html {
+    background-color: rgb(42, 42, 48);
+    font-family: monospace; 
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#container {
+    display: flex;
+    justify-content: center;
+}
+
+#canvas {
+    border: 1px solid white;
+}
+
+#menu {
+    height: 500px;
+    margin-left: 20px;
+    border: 1px solid white;
+    background-color: rgb(50, 50, 56);
+    display: flex;
+    align-items: center;
+}
+
+#btns {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 50%;
+    margin-left: 40px;
+}
+
+#info {
+    width: 250px;
+}
+
+#btns button {
+    font-weight: bold;
+    width: 150px;
+    font-size: 18px;
+    box-shadow: 0 4px 10px 0px black;
+}
+
+#sand {
+    background-color: rgb(207, 207, 97);
+    border: 5px solid rgb(171, 171, 82);
+}
+
+#water {
+    background-color: rgb(51, 100, 184);
+    border: 5px solid rgb(39, 75, 138);
+}
+
+#wood {
+    background-color: rgb(102, 66, 28);
+    border: 5px solid rgb(66, 43, 18);
+
+}
+
+#info {
+    color: white;
+    margin-left: 20px;
+    font-size: 18px;
+}
+
+#cat {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    top: 60vh;
+    left: 80vw;
+}
