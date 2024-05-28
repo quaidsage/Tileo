@@ -15,16 +15,19 @@ body {
 }
 
 #canvas {
-    border: 1px solid white;
+    border: 1px solid darkgray;
+    box-shadow: 0 4px 10px 0px gray;
 }
 
 #menu {
-    height: 500px;
+    padding-right: 30px;
+    height: 300px;
     margin-left: 20px;
-    border: 1px solid white;
+    border: 1px solid darkgray;
     background-color: rgb(50, 50, 56);
     display: flex;
     align-items: center;
+    box-shadow: 0 4px 10px 0px gray;
 }
 
 #btns {
@@ -32,12 +35,16 @@ body {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    height: 50%;
+    height: 70%;
     margin-left: 40px;
 }
 
 #info {
-    width: 250px;
+    width: 220px;
+    padding: 5px 40px 5px 20px;
+    margin-right: 20px;
+    border: 1px solid darkgray;
+    box-shadow: 0 2px 5px 0px gray;
 }
 
 #btns button {
@@ -48,8 +55,8 @@ body {
 }
 
 #sand {
-    background-color: rgb(207, 207, 97);
-    border: 5px solid rgb(171, 171, 82);
+    background-color: rgb(187, 167, 77);
+    border: 5px solid rgb(151, 131, 62);
 }
 
 #water {
