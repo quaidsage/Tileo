@@ -35,9 +35,9 @@ class MoveDown extends Behaviour {
         const x = element.index % grid.row;
         const y = Math.floor(element.index / grid.col);
         let nx = x;
-        let ny = y + 1;
+        let ny = y + Math.ceil(element.velocity);
         let steps = 0;
-        while (steps < element.velocity) {
+        while (steps < Math.ceil(element.velocity)) {
             let moves = this.availableMoves(nx, ny, grid);
             if (moves[0] === 1) {
                 grid.swap(y * grid.col + x, ny * grid.col + nx);
@@ -45,10 +45,8 @@ class MoveDown extends Behaviour {
                 grid.swap(y * grid.col + x, ny * grid.col + nx - 1);
             } else if (moves[2] === 1) {
                 grid.swap(y * grid.col + x, ny * grid.col + nx + 1);
-            } else {
-                break;
             }
-            ny++;
+            ny--;
             steps++;
         }
     }

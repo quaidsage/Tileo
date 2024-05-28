@@ -10,23 +10,43 @@ const ctx = canvas.getContext("2d");
 
 let w = canvas.width;
 let h = canvas.height;
-let gridWidth = 16;
+let gridWidth = 8;
 let row = h / gridWidth;
 let col = w / gridWidth;
-let brushSize = 3;
 let grid = new Grid(row, col);
 
-function drawPixel(index, element) {
-    if (element.empty) {
-        ctx.fillStyle = `rgb(${Empty.baseColor[0]}, ${Empty.baseColor[1]}, ${Empty.baseColor[2]})`;
-    } else {
-        ctx.fillStyle = `rgb(${element.color[0]}, ${element.color[1]}, ${element.color[2]})`;
+let lastFrameTime = performance.now();
+let frameTimes = [];
+
+function calculateFrameRate() {
+    const now = performance.now();
+    const frameTime = now - lastFrameTime;
+    lastFrameTime = now;
+
+    // Keep the last 100 frame times
+    if (frameTimes.length > 100) {
+        frameTimes.shift();
     }
+    frameTimes.push(frameTime);
+
+    // Calculate the average frame time and convert to fps
+    const averageFrameTime = frameTimes.reduce((a, b) => a + b) / frameTimes.length;
+    const frameRate = 1000 / averageFrameTime;
+
+    // Update the frame rate display
+    const frameRateElement = document.getElementById('frameRate');
+    frameRateElement.textContent = `Frame Rate: ${Math.round(frameRate)} fps`;
+}
+
+function drawPixel(index, element) {
+    ctx.fillStyle = `rgb(${element.color[0]}, ${element.color[1]}, ${element.color[2]})`;
     ctx.fillRect((index % col) * gridWidth, Math.floor(index / col) * gridWidth, gridWidth, gridWidth);
 }
 
+
 function render() {
     grid.draw();
+    calculateFrameRate();
     setTimeout(() => {
         requestAnimationFrame(() => render());
     }, 0); // Delay in milliseconds (e.g., 1000ms = 1 second)
@@ -39,4 +59,4 @@ export function start() {
     render();
 }
 
-export { drawPixel, brushSize, gridWidth, col, row, ctx, grid };
+export { drawPixel, gridWidth, col, row, ctx, grid };

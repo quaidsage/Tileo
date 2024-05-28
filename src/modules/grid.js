@@ -1,6 +1,6 @@
 import Empty from './elements/empty.js';
-import { drawPixel, brushSize, gridWidth, col, row, ctx, grid } from './renderer.js';
-import { currentElement, mouseX, mouseY } from './controls.js';
+import { drawPixel, gridWidth, col, row, ctx, grid } from './renderer.js';
+import { currentElement, brushSize, mouseX, mouseY } from './controls.js';
 
 class Grid {
     initialize(row, col) {

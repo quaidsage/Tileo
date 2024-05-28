@@ -2,9 +2,10 @@ import Sand from './elements/sand.js';
 import Wood from './elements/wood.js';
 import Water from './elements/water.js';
 import Empty from './elements/empty.js';
-import { brushSize, gridWidth, col, row, grid } from './renderer.js';
+import { gridWidth, col, row, grid } from './renderer.js';
 
 let brushSpeed = 10;
+let brushSize = 4;
 let brushInterval;
 let currentElement = new Sand();
 let mouseX, mouseY;
@@ -70,14 +71,14 @@ export function setupControls() {
 
     document.getElementById('plusbrush').addEventListener('click', function () {
         brushSize++;
-        document.getElementById('brush').textContent = 'Brush Size: ' + brushSize;
+        document.getElementById('brush').textContent = 'Brush Size: ' + (brushSize + 1);
     });
 
     document.getElementById('minusbrush').addEventListener('click', function () {
-        brushSize--;
-        document.getElementById('brush').textContent = 'Brush Size: ' + brushSize;
+        brushSize = Math.max(0, brushSize - 1);
+        document.getElementById('brush').textContent = 'Brush Size: ' + (brushSize + 1);
     });
 }
 
-export { currentElement, mouseX, mouseY }
+export { currentElement, brushSize, mouseX, mouseY }
 

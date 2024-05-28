@@ -1,9 +1,8 @@
 import Element from './element.js';
 
 class Empty extends Element {
-    static baseColor = [0, 0, 0];
     constructor(index) {
-        super(index, { empty: true });
+        super(index, { empty: true, color: [0, 0, 0] });
     }
 }
 export default Empty;
