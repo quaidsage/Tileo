@@ -1,20 +1,24 @@
 import Empty from './elements/empty.js';
-import {drawPixel, brushSize, sqrW, col, row, ctx} from './renderer.js';
-import {mouseX, mouseY} from './controls.js';
+import { drawPixel, brushSize, gridWidth, col, row, ctx, grid } from './renderer.js';
+import { mouseX, mouseY } from './controls.js';
 
 class Grid {
-    initialize(row,col) {
+    initialize(row, col) {
         this.row = row;
         this.col = col;
-        this.grid = new Array(row*col).fill(new Empty());
+        this.grid = new Array(row * col).fill(new Empty());
     }
 
     reset() {
-        this.grid = new Array(row*col).fill(new Empty());
+        this.grid = new Array(row * col).fill(new Empty());
+    }
+
+    setIndex(i, element) {
+        element.index = i;
     }
 
     setElement(x, y, element) {
-        this.grid[y* this.col + x] = element;
+        this.grid[y * this.col + x] = element;
     }
 
     setBrush(x, y, element) {
@@ -24,8 +28,10 @@ class Grid {
                 let dy = j - y;
                 if (dx * dx + dy * dy <= brushSize * brushSize) {
                     if (i >= 0 && i < col && j >= 0 && j < row) {
-                        if (Math.random() < element.probability) {      
-                            this.setElement(i, j, new element.constructor());
+                        if (Math.random() < element.probability) {
+                            let newElement = new element.constructor(j * this.col + i);
+                            this.setIndex(j * this.col + i, newElement);
+                            this.setElement(i, j, newElement);
                         }
                     }
                 }
@@ -36,10 +42,12 @@ class Grid {
     swap(a, b) {
         if (this.grid[a].empty && this.grid[b].empty) {
             return;
-          }
+        }
         let temp = this.grid[a];
         this.grid[a] = this.grid[b];
         this.grid[b] = temp;
+        this.setIndex(a, this.grid[b]);
+        this.setIndex(b, temp);
     }
 
     isEmpty(i) {
@@ -50,13 +58,17 @@ class Grid {
         return this.grid[i].liquid;
     }
 
+    isValidIndex(x, y) {
+        return x >= 0 && x < this.col && y >= 0 && y < this.row;
+    }
+
     draw() {
         this.grid.forEach((element, index) => {
             drawPixel(index, element);
         })
-        
-        let x = Math.floor(mouseX / sqrW);
-        let y = Math.floor(mouseY / sqrW);
+
+        let x = Math.floor(mouseX / gridWidth);
+        let y = Math.floor(mouseY / gridWidth);
         for (let i = x - brushSize; i <= x + brushSize; i++) {
             for (let j = y - brushSize; j <= y + brushSize; j++) {
                 let dx = i - x;
@@ -64,7 +76,7 @@ class Grid {
                 if (dx * dx + dy * dy <= brushSize * brushSize) {
                     if (i >= 0 && i < col && j >= 0 && j < row) {
                         ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-                        ctx.fillRect(i * sqrW, j * sqrW, sqrW, sqrW);
+                        ctx.fillRect(i * gridWidth, j * gridWidth, gridWidth, gridWidth);
                     }
                 }
             }
@@ -74,20 +86,12 @@ class Grid {
     }
 
     update() {
-        // for (let i = this.grid.length - this.row - 1; i > 0; i--) {
-        //     if (this.grid[i].still || this.grid[i].empty) {
-        //         continue;
-        //     }
-        //     this.grid[i].update(i);
-        // }
-
         for (let i = Math.floor(this.grid.length / this.col) - 1; i >= 0; i--) {
             let rndmOffset = Math.random() > 0.5;
             for (let j = 0; j < this.col; j++) {
-                
                 let colOffset = rndmOffset ? j : -j + this.col - 1;
-                this.grid[i*this.col + colOffset].update(i*this.col + colOffset);
-            }  
+                this.grid[i * this.col + colOffset].update(this);
+            }
         }
     }
 }

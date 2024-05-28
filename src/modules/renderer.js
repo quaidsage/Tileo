@@ -10,12 +10,10 @@ const ctx = canvas.getContext("2d");
 
 let w = canvas.width;
 let h = canvas.height;
-let sqrW = 10;
-let row = h / sqrW;
-let col = w / sqrW;
+let gridWidth = 5;
+let row = h / gridWidth;
+let col = w / gridWidth;
 let brushSize = 3;
-let countl = 0;
-let countr = 0;
 let grid = new Grid(row, col);
 
 function drawPixel(index, element) {
@@ -24,18 +22,21 @@ function drawPixel(index, element) {
     } else {
         ctx.fillStyle = `rgb(${element.color[0]}, ${element.color[1]}, ${element.color[2]})`;
     }
-    ctx.fillRect((index % col) * sqrW, Math.floor(index / col) * sqrW, sqrW, sqrW);
+    ctx.fillRect((index % col) * gridWidth, Math.floor(index / col) * gridWidth, gridWidth, gridWidth);
 }
 
 function render() {
     grid.draw();
-    requestAnimationFrame(() => render());
+    setTimeout(() => {
+        requestAnimationFrame(() => render());
+    }, 0); // Delay in milliseconds (e.g., 1000ms = 1 second)
+
 }
 
 export function start() {
-    grid.initialize(row,col);
+    grid.initialize(row, col);
     controls.setupControls();
     render();
 }
 
-export {drawPixel, brushSize, sqrW, col, row, ctx, grid};
+export { drawPixel, brushSize, gridWidth, col, row, ctx, grid };
