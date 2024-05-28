@@ -6,7 +6,7 @@ import { brushSize, gridWidth, col, row, grid } from './renderer.js';
 
 let brushSpeed = 10;
 let brushInterval;
-let currentElement = 1;
+let currentElement = new Sand();
 let mouseX, mouseY;
 
 
@@ -22,19 +22,7 @@ export function setupControls() {
             let i = Math.floor(mouseX / gridWidth);
             let j = Math.floor(mouseY / gridWidth);
             if (i >= 0 && i < col && j >= 0 && j < row) {
-                switch (currentElement) {
-                    case 1:
-                        grid.setBrush(i, j, new Sand());
-                        break;
-                    case 2:
-                        grid.setBrush(i, j, new Wood());
-                        break;
-                    case 3:
-                        grid.setBrush(i, j, new Water());
-                        break;
-                    default:
-                        grid.setBrush(i, j, new Empty());
-                }
+                grid.setBrush(i, j, currentElement);
             }
         }, brushSpeed);
     });
@@ -66,17 +54,17 @@ export function setupControls() {
     });
 
     document.getElementById('sand').addEventListener('click', function () {
-        currentElement = 1;
+        currentElement = new Sand();
         document.getElementById('selected').textContent = 'Selected: Sand'
     });
 
     document.getElementById('wood').addEventListener('click', function () {
-        currentElement = 2;
+        currentElement = new Wood();
         document.getElementById('selected').textContent = 'Selected: Wood';
     });
 
     document.getElementById('water').addEventListener('click', function () {
-        currentElement = 3;
+        currentElement = new Water();
         document.getElementById('selected').textContent = 'Selected: Water'
     });
 

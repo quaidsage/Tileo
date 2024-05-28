@@ -1,6 +1,6 @@
 import Empty from './elements/empty.js';
 import { drawPixel, brushSize, gridWidth, col, row, ctx, grid } from './renderer.js';
-import { mouseX, mouseY } from './controls.js';
+import { currentElement, mouseX, mouseY } from './controls.js';
 
 class Grid {
     initialize(row, col) {
@@ -75,7 +75,7 @@ class Grid {
                 let dy = j - y;
                 if (dx * dx + dy * dy <= brushSize * brushSize) {
                     if (i >= 0 && i < col && j >= 0 && j < row) {
-                        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                        ctx.fillStyle = `rgba(${currentElement.color[0]}, ${currentElement.color[1]}, ${currentElement.color[2]}, 0.3)`;
                         ctx.fillRect(i * gridWidth, j * gridWidth, gridWidth, gridWidth);
                     }
                 }

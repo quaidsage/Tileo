@@ -11,24 +11,44 @@ class MoveDown extends Behaviour {
         this.velocity = 0;
     }
 
-    update(element, grid) {
+    updateVelocity(element) {
         element.velocity += this.acceleration;
         element.velocity = Math.min(element.velocity, this.maxSpeed);
+    }
+
+    availableMoves(nx, ny, grid) {
+        const moves = [0, 0, 0];
+        if (grid.isValidIndex(nx, ny) && grid.isEmpty(ny * grid.col + nx)) {
+            moves[0] = 1; // Move down
+        }
+        if (grid.isValidIndex(nx - 1, ny) && grid.isEmpty(ny * grid.col + nx - 1)) {
+            moves[1] = 1; // Move down left
+        }
+        if (grid.isValidIndex(nx + 1, ny) && grid.isEmpty(ny * grid.col + nx + 1)) {
+            moves[2] = 1; // Move down right
+        }
+        return moves;
+    }
+
+    update(element, grid) {
+        this.updateVelocity(element);
         const x = element.index % grid.row;
         const y = Math.floor(element.index / grid.col);
         let nx = x;
-        let ny = y + element.velocity;
+        let ny = y + 1;
         let steps = 0;
         while (steps < element.velocity) {
-            if (grid.isValidIndex(nx, ny)) {
-                if (grid.isEmpty(ny * grid.col + nx)) {
-                    grid.swap((y * grid.col + x), (ny * grid.col + nx));
-                    //grid.swap(x, y, nx, ny - 1);
-                    break;
-                }
+            let moves = this.availableMoves(nx, ny, grid);
+            if (moves[0] === 1) {
+                grid.swap(y * grid.col + x, ny * grid.col + nx);
+            } else if (moves[1] === 1) {
+                grid.swap(y * grid.col + x, ny * grid.col + nx - 1);
+            } else if (moves[2] === 1) {
+                grid.swap(y * grid.col + x, ny * grid.col + nx + 1);
+            } else {
+                break;
             }
-            nx = x;
-            ny -= 1;
+            ny++;
             steps++;
         }
     }

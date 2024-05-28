@@ -10,7 +10,7 @@ const ctx = canvas.getContext("2d");
 
 let w = canvas.width;
 let h = canvas.height;
-let gridWidth = 5;
+let gridWidth = 16;
 let row = h / gridWidth;
 let col = w / gridWidth;
 let brushSize = 3;
