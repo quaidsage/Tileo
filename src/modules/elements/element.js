@@ -4,12 +4,7 @@ class Element {
         this.empty = empty ?? false;
         this.still = still ?? false;
         this.liquid = liquid ?? false;
-        this.falling = falling ?? false;
         this.probability = probability ?? 1;
-        this.disperse = disperse ?? 0;
-        this.velocity = velocity ?? 0;
-        this.acceleration = acceleration ?? 0;
-        this.maxVelocity = maxVelocity ?? 0;
         this.behaviours = behaviours ?? [];
         this.behavioursLookup = Object.fromEntries(
             this.behaviours.map(

@@ -1,4 +1,7 @@
 import Behaviour from './Behaviour.js';
+import { DEBUG_VELOCITY } from '../config.js';
+import { DEBUG_MOVEMENT } from '../config.js';
+
 class MoveDown extends Behaviour {
     constructor({ maxSpeed, acceleration, velocity } = {}) {
         super();
@@ -7,13 +10,19 @@ class MoveDown extends Behaviour {
         this.velocity = velocity ?? 0;
     }
 
-    resetVelocity() {
+    resetVelocity(element) {
         this.velocity = 0;
+        if (DEBUG_VELOCITY || DEBUG_MOVEMENT) {
+            element.color = [255, 0, 0];
+        }
     }
 
     updateVelocity(element) {
-        element.velocity += this.acceleration;
-        element.velocity = Math.min(element.velocity, this.maxSpeed);
+        this.velocity += this.acceleration;
+        this.velocity >= 0 ? this.velocity = Math.min(this.velocity, this.maxSpeed) : this.velocity = Math.max(this.velocity, -this.maxSpeed);
+        if (DEBUG_VELOCITY) {
+            element.color = [0, Math.abs(this.velocity) * 100, 100];
+        }
     }
 
     availableMoves(nx, ny, grid) {
@@ -30,25 +39,40 @@ class MoveDown extends Behaviour {
         return moves;
     }
 
+    step(element, grid, x, y, nx, ny) {
+        let steps = 0;
+        while (steps < Math.abs(Math.ceil(this.velocity))) {
+            let moves = this.availableMoves(nx, ny, grid);
+            if (moves[0] === 1) {
+                grid.swap(y * grid.col + x, ny * grid.col + nx);
+                if (DEBUG_MOVEMENT) {
+                    element.color = [0, 255, 0];
+                }
+            } else if (moves[1] === 1) {
+                grid.swap(y * grid.col + x, ny * grid.col + nx - 1);
+                if (DEBUG_MOVEMENT) {
+                    element.color = [0, 0, 255];
+                }
+            } else if (moves[2] === 1) {
+                grid.swap(y * grid.col + x, ny * grid.col + nx + 1);
+                if (DEBUG_MOVEMENT) {
+                    element.color = [0, 0, 255];
+                }
+            } else {
+                this.resetVelocity(element);
+            }
+            ny--;
+            steps++;
+        }
+    }
+
     update(element, grid) {
         this.updateVelocity(element);
         const x = element.index % grid.row;
         const y = Math.floor(element.index / grid.col);
         let nx = x;
-        let ny = y + Math.ceil(element.velocity);
-        let steps = 0;
-        while (steps < Math.ceil(element.velocity)) {
-            let moves = this.availableMoves(nx, ny, grid);
-            if (moves[0] === 1) {
-                grid.swap(y * grid.col + x, ny * grid.col + nx);
-            } else if (moves[1] === 1) {
-                grid.swap(y * grid.col + x, ny * grid.col + nx - 1);
-            } else if (moves[2] === 1) {
-                grid.swap(y * grid.col + x, ny * grid.col + nx + 1);
-            }
-            ny--;
-            steps++;
-        }
+        let ny = y + Math.ceil(this.velocity);
+        this.step(element, grid, x, y, nx, ny);
     }
 
 }

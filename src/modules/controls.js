@@ -1,7 +1,7 @@
 import Sand from './elements/sand.js';
 import Wood from './elements/wood.js';
 import Water from './elements/water.js';
-import Empty from './elements/empty.js';
+import Smoke from './elements/smoke.js';
 import { gridWidth, col, row, grid } from './renderer.js';
 
 let brushSpeed = 10;
@@ -67,6 +67,11 @@ export function setupControls() {
     document.getElementById('water').addEventListener('click', function () {
         currentElement = new Water();
         document.getElementById('selected').textContent = 'Selected: Water'
+    });
+
+    document.getElementById('smoke').addEventListener('click', function () {
+        currentElement = new Smoke();
+        document.getElementById('selected').textContent = 'Selected: Smoke'
     });
 
     document.getElementById('plusbrush').addEventListener('click', function () {

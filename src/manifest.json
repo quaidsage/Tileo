@@ -1,0 +1,37 @@
+{
+    "manifest_version": 2,
+    "name": "Temp",
+    "version": "1.0",
+    "description": "Description of your extension",
+    "permissions": [
+        "tabs"
+    ],
+    "background": {
+        "scripts": [
+            "main.js"
+        ],
+        "persistent": false
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+            ],
+            "js": [
+                "content.js"
+            ]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "styles.css"
+            ],
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+            ]
+        }
+    ]
+}

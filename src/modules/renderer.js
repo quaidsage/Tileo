@@ -1,9 +1,5 @@
 import Grid from './grid.js';
 import * as controls from './controls.js';
-import Empty from './elements/empty.js';
-import Sand from './elements/sand.js';
-import Wood from './elements/wood.js';
-import Water from './elements/water.js';
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");

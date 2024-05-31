@@ -40,14 +40,16 @@ class Grid {
     }
 
     swap(a, b) {
+        let aOffset = 0;
+        let bOffset = 0;
         if (this.grid[a].empty && this.grid[b].empty) {
             return;
         }
         let temp = this.grid[a];
-        this.grid[a] = this.grid[b];
-        this.grid[b] = temp;
         this.setIndex(a, this.grid[b]);
         this.setIndex(b, temp);
+        this.grid[a] = this.grid[b];
+        this.grid[b] = temp;
     }
 
     isEmpty(i) {
