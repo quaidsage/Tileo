@@ -13,6 +13,9 @@ let grid = new Grid(row, col);
 
 let lastFrameTime = performance.now();
 let frameTimes = [];
+let maxFrameRate = 0;
+let RENDER_DELAY = 0;
+
 
 function calculateFrameRate() {
     const now = performance.now();
@@ -31,7 +34,11 @@ function calculateFrameRate() {
 
     // Update the frame rate display
     const frameRateElement = document.getElementById('frameRate');
-    frameRateElement.textContent = `Frame Rate: ${Math.round(frameRate)} fps`;
+    frameRateElement.textContent = `Avg Frame Rate: ${Math.round(frameRate)} fps`;
+    if (maxFrameRate < frameRate) {
+        maxFrameRate = frameRate;
+        document.getElementById('frameRateMax').textContent = `Max Frame Rate: ${Math.round(maxFrameRate)} fps`;
+    }
 }
 
 function drawPixel(index, element) {
@@ -45,7 +52,7 @@ function render() {
     calculateFrameRate();
     setTimeout(() => {
         requestAnimationFrame(() => render());
-    }, 0); // Delay in milliseconds (e.g., 1000ms = 1 second)
+    }, RENDER_DELAY); // Delay in milliseconds (e.g., 1000ms = 1 second)
 
 }
 
