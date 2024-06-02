@@ -19,7 +19,7 @@ class Water extends Element {
     }
 
     toString() {
-        return 'w';
+        return 'W';
     }
 }
 export default Water;

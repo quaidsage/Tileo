@@ -2,6 +2,8 @@ import Sand from './elements/sand.js';
 import Wood from './elements/wood.js';
 import Water from './elements/water.js';
 import Smoke from './elements/smoke.js';
+import Fire from './elements/fire.js';
+import Stone from './elements/stone.js';
 import { gridWidth, col, row, grid } from './renderer.js';
 
 let brushSpeed = 10;
@@ -9,6 +11,7 @@ let brushSize = 4;
 let brushInterval;
 let currentElement = new Sand();
 let mouseX, mouseY;
+let RENDER_DELAY = 0;
 
 
 export function setupControls() {
@@ -74,6 +77,16 @@ export function setupControls() {
         document.getElementById('selected').textContent = 'Selected: Smoke'
     });
 
+    document.getElementById('stone').addEventListener('click', function () {
+        currentElement = new Stone();
+        document.getElementById('selected').textContent = 'Selected: Stone'
+    });
+
+    document.getElementById('fire').addEventListener('click', function () {
+        currentElement = new Fire();
+        document.getElementById('selected').textContent = 'Selected: Fire'
+    });
+
     document.getElementById('plusbrush').addEventListener('click', function () {
         brushSize++;
         document.getElementById('brush').textContent = 'Brush Size: ' + (brushSize + 1);
@@ -83,7 +96,11 @@ export function setupControls() {
         brushSize = Math.max(0, brushSize - 1);
         document.getElementById('brush').textContent = 'Brush Size: ' + (brushSize + 1);
     });
+
+    document.getElementById('renderDelay').addEventListener('input', (event) => {
+        RENDER_DELAY = event.target.value;
+    });
 }
 
-export { currentElement, brushSize, mouseX, mouseY }
+export { currentElement, brushSize, mouseX, mouseY, RENDER_DELAY }
 

@@ -14,8 +14,6 @@ let grid = new Grid(row, col);
 let lastFrameTime = performance.now();
 let frameTimes = [];
 let maxFrameRate = 0;
-let RENDER_DELAY = 0;
-
 
 function calculateFrameRate() {
     const now = performance.now();
@@ -52,7 +50,7 @@ function render() {
     calculateFrameRate();
     setTimeout(() => {
         requestAnimationFrame(() => render());
-    }, RENDER_DELAY); // Delay in milliseconds (e.g., 1000ms = 1 second)
+    }, controls.RENDER_DELAY);
 
 }
 

@@ -1,13 +1,13 @@
 import Element from './element.js';
 import { randomColor } from '../utils.js';
 
-class Wood extends Element {
+class Stone extends Element {
     constructor(index) {
-        super(index, { color: randomColor([139, 69, 19]) });
+        super(index, { color: randomColor([100, 100, 100]) });
     }
 
     toString() {
-        return 'w';
+        return 's';
     }
 }
-export default Wood;
+export default Stone;

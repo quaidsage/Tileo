@@ -1,10 +1,11 @@
 import Element from './element.js';
 import SolidMove from '../behaviours/SolidMove.js';
+import { randomColor } from '../utils.js';
 
 class Smoke extends Element {
     constructor(index) {
         super(index, {
-            color: [48, 48, 48],
+            color: randomColor([48, 48, 48]),
             probability: 0.3,
             behaviours: [
                 new SolidMove({

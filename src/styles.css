@@ -22,7 +22,7 @@ body {
 
 #menu {
     padding-right: 30px;
-    height: 350px;
+    height: 450px;
     margin-left: 20px;
     border: 1px solid darkgray;
     background-color: rgb(50, 50, 56);
@@ -42,8 +42,8 @@ body {
 }
 
 #info {
-    width: 240px;
-    padding: 5px 40px 5px 20px;
+    width: 250px;
+    padding: 10px 40px 10px 20px;
     margin-right: 20px;
     border: 1px solid darkgray;
     box-shadow: 0 2px 5px 0px gray;
@@ -72,9 +72,20 @@ body {
 
 }
 
+#stone {
+    background-color: rgb(100, 100, 100);
+    border: 5px solid rgb(70, 70, 70);
+
+}
+
 #smoke {
     background-color: rgb(50, 50, 56);
     border: 5px solid rgb(30, 30, 36);
+}
+
+#fire {
+    background-color: rgb(200, 80, 50);
+    border: 5px solid rgb(140, 40, 0);
 }
 
 #info {
@@ -87,6 +98,32 @@ body {
     margin: 10px;
 }
 
-#debugOptions input[type="checkbox"] {
-    margin-right: 5px;
+#debugOptionsSelect {
+    background-color: rgb(50, 50, 56);
+    color: white;
+    border: 1px solid darkgray;
+    padding: 5px;
+    font-family: monospace;
+}
+
+#title {
+    position: absolute;
+    top: 40px;
+    right: 70px;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    margin: 20px;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#title button {
+    font-size: 18px;
+    color: white;
+    background-color: rgb(50, 50, 56);
+    font-weight: bold;
+    box-shadow: 0 4px 10px 0px black;
 }
