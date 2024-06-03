@@ -40,7 +40,8 @@ function calculateFrameRate() {
 }
 
 function drawPixel(index, element) {
-    ctx.fillStyle = `rgb(${element.color[0]}, ${element.color[1]}, ${element.color[2]})`;
+    let colorList = element.color;
+    ctx.fillStyle = `rgb(${colorList[0]}, ${colorList[1]}, ${colorList[2]})`;
     ctx.fillRect((index % col) * gridWidth, Math.floor(index / col) * gridWidth, gridWidth, gridWidth);
 }
 

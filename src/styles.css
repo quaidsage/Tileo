@@ -22,7 +22,7 @@ body {
 
 #menu {
     padding-right: 30px;
-    height: 450px;
+    height: 500px;
     margin-left: 20px;
     border: 1px solid darkgray;
     background-color: rgb(50, 50, 56);
@@ -86,6 +86,12 @@ body {
 #fire {
     background-color: rgb(200, 80, 50);
     border: 5px solid rgb(140, 40, 0);
+}
+
+#custom {
+    position: relative;
+    background-color: rgb(180, 150, 255);
+    border: 5px solid rgb(140, 110, 205);
 }
 
 #info {

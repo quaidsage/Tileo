@@ -1,6 +1,7 @@
 import Element from './element.js';
 import { randomColor } from '../utils.js';
 import SolidMove from '../behaviours/SolidMove.js';
+import Life from '../behaviours/Life.js';
 
 class Sand extends Element {
     constructor(index) {

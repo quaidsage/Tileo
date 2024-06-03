@@ -1,16 +1,22 @@
 import Element from './element.js';
-import SolidMove from '../behaviours/SolidMove.js';
+import MoveDown from '../behaviours/MoveDown.js';
+import Life from '../behaviours/Life.js';
 import { randomColor } from '../utils.js';
 
 class Smoke extends Element {
     constructor(index) {
         super(index, {
             color: randomColor([48, 48, 48]),
+            gas: true,
             probability: 0.3,
             behaviours: [
-                new SolidMove({
-                    maxSpeed: 5,
+                new MoveDown({
+                    maxSpeed: 1,
                     acceleration: -1
+                }),
+                new Life({
+                    life: 50,
+                    reduction: 0.3
                 })
             ]
         });

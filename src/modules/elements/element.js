@@ -1,9 +1,11 @@
 class Element {
-    constructor(index, { color, empty, still, liquid, probability, disperse, velocity, acceleration, maxVelocity, falling, behaviours } = {}) {
+    constructor(index, { color, empty, still, liquid, gas, onFire, probability, behaviours } = {}) {
         this.color = color ?? [255, 255, 255];
         this.empty = empty ?? false;
         this.still = still ?? false;
         this.liquid = liquid ?? false;
+        this.gas = gas ?? false;
+        this.onFire = onFire ?? false;
         this.probability = probability ?? 1;
         this.behaviours = behaviours ?? [];
         this.behavioursLookup = Object.fromEntries(

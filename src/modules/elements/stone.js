@@ -3,7 +3,9 @@ import { randomColor } from '../utils.js';
 
 class Stone extends Element {
     constructor(index) {
-        super(index, { color: randomColor([100, 100, 100]) });
+        super(index, {
+            color: randomColor([100, 100, 100])
+        });
     }
 
     toString() {

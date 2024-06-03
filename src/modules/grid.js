@@ -13,6 +13,15 @@ class Grid {
         this.grid = new Array(row * col).fill(new Empty());
     }
 
+    removeIndex(i, element) {
+        element.index = -1;
+        this.grid[i] = new Empty();
+    }
+
+    get(i) {
+        return this.grid[i];
+    }
+
     setIndex(i, element) {
         element.index = i;
     }
@@ -60,6 +69,14 @@ class Grid {
         return this.grid[i].liquid;
     }
 
+    isGas(i) {
+        return this.grid[i].gas;
+    }
+
+    isPassable(i) {
+        return this.grid[i].empty || this.grid[i].liquid || this.grid[i].gas;
+    }
+
     isValidIndex(x, y) {
         return x >= 0 && x < this.col && y >= 0 && y < this.row;
     }
@@ -76,7 +93,7 @@ class Grid {
                 let dx = i - x;
                 let dy = j - y;
                 if (dx * dx + dy * dy <= brushSize * brushSize) {
-                    if (i >= 0 && i < col && j >= 0 && j < row) {
+                    if (this.isValidIndex(i, j)) {
                         ctx.fillStyle = `rgba(${currentElement.color[0]}, ${currentElement.color[1]}, ${currentElement.color[2]}, 0.3)`;
                         ctx.fillRect(i * gridWidth, j * gridWidth, gridWidth, gridWidth);
                     }
