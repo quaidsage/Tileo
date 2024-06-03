@@ -9,10 +9,9 @@ class Water extends Element {
             probability: 0.5,
             behaviours: [
                 new WaterMove({
-                    maxSpeed: 5,
-                    acceleration: 1,
-                    velocity: 1,
-                    dispersion: 5
+                    maxSpeed: 3,
+                    acceleration: 0.1,
+                    dispersion: 3
                 })
             ]
         });

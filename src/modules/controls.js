@@ -59,59 +59,43 @@ export function setupControls() {
         grid.reset();
     });
 
-    document.getElementById('sand').addEventListener('click', function () {
-        currentElement = new Sand();
-        document.getElementById('selected').textContent = 'Selected: Sand'
+    const controls = {
+        'sand': () => new Sand(),
+        'wood': () => new Wood(),
+        'water': () => new Water(),
+        'smoke': () => new Smoke(),
+        'stone': () => new Stone(),
+        'fire': () => new Fire(),
+        'custom': () => new Custom(),
+        'eraser': () => new Empty(),
+    };
+
+    Object.keys(controls).forEach(controlId => {
+        document.getElementById(controlId).addEventListener('click', function () {
+            currentElement = controls[controlId]();
+            localStorage.setItem('currentElement', controlId);
+            document.getElementById('selected').textContent = `Selected: ${controlId.charAt(0).toUpperCase() + controlId.slice(1)}`;
+        });
     });
 
-    document.getElementById('wood').addEventListener('click', function () {
-        currentElement = new Wood();
-        document.getElementById('selected').textContent = 'Selected: Wood';
-    });
+    const brushControls = {
+        'plusbrush': () => brushSize++,
+        'minusbrush': () => brushSize = Math.max(0, brushSize - 1),
+    };
 
-    document.getElementById('water').addEventListener('click', function () {
-        currentElement = new Water();
-        document.getElementById('selected').textContent = 'Selected: Water'
-    });
-
-    document.getElementById('smoke').addEventListener('click', function () {
-        currentElement = new Smoke();
-        document.getElementById('selected').textContent = 'Selected: Smoke'
-    });
-
-    document.getElementById('stone').addEventListener('click', function () {
-        currentElement = new Stone();
-        document.getElementById('selected').textContent = 'Selected: Stone'
-    });
-
-    document.getElementById('fire').addEventListener('click', function () {
-        currentElement = new Fire();
-        document.getElementById('selected').textContent = 'Selected: Fire'
-    });
-
-    document.getElementById('custom').addEventListener('click', function () {
-        currentElement = new Custom();
-        document.getElementById('selected').textContent = 'Selected: Custom'
-    });
-
-    document.getElementById('eraser').addEventListener('click', function () {
-        currentElement = new Empty();
-        document.getElementById('selected').textContent = 'Selected: Eraser'
-    });
-
-    document.getElementById('plusbrush').addEventListener('click', function () {
-        brushSize++;
-        document.getElementById('brush').textContent = 'Brush Size: ' + (brushSize + 1);
-    });
-
-    document.getElementById('minusbrush').addEventListener('click', function () {
-        brushSize = Math.max(0, brushSize - 1);
-        document.getElementById('brush').textContent = 'Brush Size: ' + (brushSize + 1);
+    Object.keys(brushControls).forEach(controlId => {
+        document.getElementById(controlId).addEventListener('click', function () {
+            brushControls[controlId]();
+            document.getElementById('brush').textContent = `Brush Size: ${brushSize + 1}`;
+        });
     });
 
     document.getElementById('renderDelay').addEventListener('input', (event) => {
         RENDER_DELAY = event.target.value;
     });
+
+    let storedElement = localStorage.getItem('currentElement') || 'sand';
+    currentElement = controls[storedElement]();
 }
 
 export { currentElement, brushSize, mouseX, mouseY, RENDER_DELAY }

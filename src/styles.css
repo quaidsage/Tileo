@@ -124,12 +124,16 @@ body {
     right: 70px;
     color: white;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 10px;
     margin: 20px;
     position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+#title h1 {
+    margin: 0px 10px;
 }
 
 #title button {

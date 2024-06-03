@@ -11,7 +11,7 @@ class Sand extends Element {
             probability: 0.2,
             behaviours: [
                 new SolidMove({
-                    maxSpeed: 20,
+                    maxSpeed: 3,
                     acceleration: 0.1
                 })
             ]

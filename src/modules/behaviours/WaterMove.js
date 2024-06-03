@@ -1,23 +1,48 @@
-import MoveDown from "./MoveDown.js";
+import { DEBUG_MOVEMENT } from "../config.js";
+import Movement from "./Movement.js";
 
-class WaterMove extends MoveDown {
+class WaterMove extends Movement {
     constructor({ maxSpeed, acceleration, velocity, dispersion } = {}) {
         super({ maxSpeed, acceleration, velocity });
         this.dispersion = dispersion ?? 0;
+        this.previousPosition = -1;
     }
 
-    availableMoves(nx, ny, grid) {
-        const moves = [0, 0, 0];
-        if (grid.isValidIndex(nx, ny) && (grid.isEmpty(ny * grid.col + nx) || grid.isGas(ny * grid.col + nx))) {
-            moves[0] = 1; // Move down
+    disperse(element, grid) {
+        const x = element.index % grid.row;
+        const y = Math.floor(element.index / grid.col);
+
+        let leftDistance = 0;
+        let rightDistance = 0;
+        while (leftDistance < this.dispersion) {
+            if (grid.isValidIndex(x - leftDistance - 1, y) && grid.isEmpty(y * grid.col + x - leftDistance - 1)) {
+                leftDistance++;
+            } else {
+                break;
+            }
         }
-        if (grid.isValidIndex(nx - 1, ny) && (grid.isEmpty(ny * grid.col + nx - 1) || grid.isGas(ny * grid.col + nx - 1))) {
-            moves[1] = 1; // Move down left
+        while (rightDistance < this.dispersion) {
+            if (grid.isValidIndex(x + rightDistance + 1, y) && grid.isEmpty(y * grid.col + x + rightDistance + 1)) {
+                rightDistance++;
+            } else {
+                break;
+            }
         }
-        if (grid.isValidIndex(nx + 1, ny) && (grid.isEmpty(ny * grid.col + nx + 1) || grid.isGas(ny * grid.col + nx + 1))) {
-            moves[2] = 1; // Move down right
+        if (leftDistance + rightDistance > 2) {
+            if (leftDistance > rightDistance) {
+                grid.swap(y * grid.col + x, y * grid.col + x - leftDistance);
+            } else {
+                grid.swap(y * grid.col + x, y * grid.col + x + rightDistance);
+            }
         }
-        return moves;
     }
+
+    update(element, grid) {
+        super.update(element, grid);
+        if (element.index == this.previousPosition) {
+            this.disperse(element, grid);
+        }
+    }
+
 }
 export default WaterMove;

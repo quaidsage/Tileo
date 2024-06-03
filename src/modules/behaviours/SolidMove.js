@@ -1,6 +1,6 @@
-import MoveDown from "./MoveDown.js";
+import Movement from "./Movement.js";
 
-class SolidMove extends MoveDown {
+class SolidMove extends Movement {
     availableMoves(nx, ny, grid) {
         const moves = super.availableMoves(nx, ny, grid);
         if (grid.isValidIndex(nx, ny) && grid.isPassable(ny * grid.col + nx)) {

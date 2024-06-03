@@ -2,6 +2,7 @@ import Empty from './elements/empty.js';
 import { drawPixel, gridWidth, col, row, ctx, grid } from './renderer.js';
 import { currentElement, brushSize, mouseX, mouseY } from './controls.js';
 import { ALLOW_REPLACEMENT, isPaused } from './config.js';
+import Gas from './elements/gas.js';
 
 class Grid {
     initialize(row, col) {
@@ -123,7 +124,21 @@ class Grid {
             let rndmOffset = Math.random() > 0.5;
             for (let j = 0; j < this.col; j++) {
                 let colOffset = rndmOffset ? j : -j + this.col - 1;
-                this.grid[i * this.col + colOffset].update(this);
+                let element = this.grid[i * this.col + colOffset];
+                if (!(element instanceof Gas)) {
+                    element.update(this);
+                }
+            }
+        }
+
+        for (let i = 0; i < Math.floor(this.grid.length / this.col); i++) {
+            let rndmOffset = Math.random() > 0.5;
+            for (let j = 0; j < this.col; j++) {
+                let colOffset = rndmOffset ? j : -j + this.col - 1;
+                let element = this.grid[i * this.col + colOffset];
+                if (element instanceof Gas) {
+                    element.update(this);
+                }
             }
         }
     }
