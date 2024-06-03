@@ -13,7 +13,7 @@ let brushSize = 4;
 let brushInterval;
 let currentElement = new Sand();
 let mouseX, mouseY;
-let RENDER_DELAY = 0;
+let RENDER_DELAY = 20;
 
 
 export function setupControls() {
@@ -86,16 +86,27 @@ export function setupControls() {
     Object.keys(brushControls).forEach(controlId => {
         document.getElementById(controlId).addEventListener('click', function () {
             brushControls[controlId]();
+            localStorage.setItem('brushSize', brushSize);
             document.getElementById('brush').textContent = `Brush Size: ${brushSize + 1}`;
         });
     });
 
     document.getElementById('renderDelay').addEventListener('input', (event) => {
+        localStorage.setItem('RENDER_DELAY', event.target.value);
         RENDER_DELAY = event.target.value;
     });
 
     let storedElement = localStorage.getItem('currentElement') || 'sand';
     currentElement = controls[storedElement]();
+    document.getElementById('selected').textContent = `Selected: ${storedElement.charAt(0).toUpperCase() + storedElement.slice(1)}`;
+
+    let storedBrushSize = localStorage.getItem('brushSize') || 4;
+    brushSize = parseInt(storedBrushSize);
+    document.getElementById('brush').textContent = `Brush Size: ${brushSize + 1}`;
+
+    let storedRenderDelay = localStorage.getItem('RENDER_DELAY') || 20;
+    RENDER_DELAY = parseInt(storedRenderDelay);
+    document.getElementById('renderDelay').value = RENDER_DELAY;
 }
 
 export { currentElement, brushSize, mouseX, mouseY, RENDER_DELAY }

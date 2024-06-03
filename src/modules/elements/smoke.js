@@ -12,8 +12,8 @@ class Smoke extends Gas {
             behaviours: [
                 new GasMove({
                     maxSpeed: 1,
-                    acceleration: 1,
-                    dispersion: 3
+                    acceleration: 0.1,
+                    dispersion: 1
                 }),
                 new Life({
                     life: 50,

@@ -121,8 +121,8 @@ class Grid {
         }
 
         for (let i = Math.floor(this.grid.length / this.col) - 1; i >= 0; i--) {
-            let rndmOffset = Math.random() > 0.5;
             for (let j = 0; j < this.col; j++) {
+                let rndmOffset = Math.random() > 0.5;
                 let colOffset = rndmOffset ? j : -j + this.col - 1;
                 let element = this.grid[i * this.col + colOffset];
                 if (!(element instanceof Gas)) {
@@ -132,8 +132,8 @@ class Grid {
         }
 
         for (let i = 0; i < Math.floor(this.grid.length / this.col); i++) {
-            let rndmOffset = Math.random() > 0.5;
             for (let j = 0; j < this.col; j++) {
+                let rndmOffset = Math.random() > 0.5;
                 let colOffset = rndmOffset ? j : -j + this.col - 1;
                 let element = this.grid[i * this.col + colOffset];
                 if (element instanceof Gas) {

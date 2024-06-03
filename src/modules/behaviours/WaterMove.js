@@ -28,11 +28,18 @@ class WaterMove extends Movement {
                 break;
             }
         }
-        if (leftDistance + rightDistance > 2) {
+        if (leftDistance + rightDistance > 0) {
+            if (DEBUG_MOVEMENT) element.debugColor = [255, 255, 0];
             if (leftDistance > rightDistance) {
                 grid.swap(y * grid.col + x, y * grid.col + x - leftDistance);
-            } else {
+            } if (leftDistance < rightDistance) {
                 grid.swap(y * grid.col + x, y * grid.col + x + rightDistance);
+            } else {
+                if (Math.random() > 0.5) {
+                    grid.swap(y * grid.col + x, y * grid.col + x - leftDistance);
+                } else {
+                    grid.swap(y * grid.col + x, y * grid.col + x + rightDistance);
+                }
             }
         }
     }

@@ -11,7 +11,7 @@ class Water extends Element {
                 new WaterMove({
                     maxSpeed: 3,
                     acceleration: 0.1,
-                    dispersion: 3
+                    dispersion: 5
                 })
             ]
         });
