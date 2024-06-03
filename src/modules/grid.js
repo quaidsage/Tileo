@@ -1,6 +1,7 @@
 import Empty from './elements/empty.js';
 import { drawPixel, gridWidth, col, row, ctx, grid } from './renderer.js';
 import { currentElement, brushSize, mouseX, mouseY } from './controls.js';
+import { isPaused } from './config.js';
 
 class Grid {
     initialize(row, col) {
@@ -36,8 +37,11 @@ class Grid {
                 let dx = i - x;
                 let dy = j - y;
                 if (dx * dx + dy * dy <= brushSize * brushSize) {
-                    if (i >= 0 && i < col && j >= 0 && j < row) {
-                        if (Math.random() < element.probability) {
+                    if (this.isValidIndex(i, j)) {
+                        if (currentElement.constructor.name === "Empty") {
+                            this.removeIndex(j * this.col + i, this.get(j * this.col + i));
+                        }
+                        if (Math.random() < element.probability && this.get(j * this.col + i).constructor.name !== element.constructor.name && this.isEmpty(j * this.col + i)) {
                             let newElement = new element.constructor(j * this.col + i);
                             this.setIndex(j * this.col + i, newElement);
                             this.setElement(i, j, newElement);
@@ -94,7 +98,11 @@ class Grid {
                 let dy = j - y;
                 if (dx * dx + dy * dy <= brushSize * brushSize) {
                     if (this.isValidIndex(i, j)) {
-                        ctx.fillStyle = `rgba(${currentElement.color[0]}, ${currentElement.color[1]}, ${currentElement.color[2]}, 0.3)`;
+                        if (currentElement.constructor.name === "Empty") {
+                            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                        } else {
+                            ctx.fillStyle = `rgba(${currentElement.color[0]}, ${currentElement.color[1]}, ${currentElement.color[2]}, 0.3)`;
+                        }
                         ctx.fillRect(i * gridWidth, j * gridWidth, gridWidth, gridWidth);
                     }
                 }
@@ -105,6 +113,10 @@ class Grid {
     }
 
     update() {
+        if (isPaused) {
+            return;
+        }
+
         for (let i = Math.floor(this.grid.length / this.col) - 1; i >= 0; i--) {
             let rndmOffset = Math.random() > 0.5;
             for (let j = 0; j < this.col; j++) {

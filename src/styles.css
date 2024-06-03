@@ -37,7 +37,7 @@ body {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    height: 70%;
+    height: 83%;
     margin-left: 40px;
 }
 
@@ -94,6 +94,12 @@ body {
     border: 5px solid rgb(140, 110, 205);
 }
 
+#eraser {
+    background-color: rgb(255, 255, 255);
+    border: 5px solid rgb(215, 215, 215);
+
+}
+
 #info {
     color: white;
     margin-left: 20px;
@@ -132,4 +138,19 @@ body {
     background-color: rgb(50, 50, 56);
     font-weight: bold;
     box-shadow: 0 4px 10px 0px black;
+}
+
+#pause {
+    background-color: rgb(50, 50, 56);
+    border: 1px solid white;
+    color: white;
+    width: 100px;
+    padding: 5px;
+    font-family: monospace;
+    font-size: 16px;
+    box-shadow: 0 4px 10px 0px black;
+}
+
+#pause:hover {
+    background-color: rgb(40, 40, 46);
 }

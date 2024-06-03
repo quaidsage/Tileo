@@ -4,6 +4,8 @@ import Water from './elements/water.js';
 import Smoke from './elements/smoke.js';
 import Fire from './elements/fire.js';
 import Stone from './elements/stone.js';
+import Custom from './elements/custom.js';
+import Empty from './elements/empty.js';
 import { gridWidth, col, row, grid } from './renderer.js';
 
 let brushSpeed = 10;
@@ -85,6 +87,16 @@ export function setupControls() {
     document.getElementById('fire').addEventListener('click', function () {
         currentElement = new Fire();
         document.getElementById('selected').textContent = 'Selected: Fire'
+    });
+
+    document.getElementById('custom').addEventListener('click', function () {
+        currentElement = new Custom();
+        document.getElementById('selected').textContent = 'Selected: Custom'
+    });
+
+    document.getElementById('eraser').addEventListener('click', function () {
+        currentElement = new Empty();
+        document.getElementById('selected').textContent = 'Selected: Eraser'
     });
 
     document.getElementById('plusbrush').addEventListener('click', function () {
