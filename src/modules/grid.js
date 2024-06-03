@@ -1,7 +1,7 @@
 import Empty from './elements/empty.js';
 import { drawPixel, gridWidth, col, row, ctx, grid } from './renderer.js';
 import { currentElement, brushSize, mouseX, mouseY } from './controls.js';
-import { isPaused } from './config.js';
+import { ALLOW_REPLACEMENT, isPaused } from './config.js';
 
 class Grid {
     initialize(row, col) {
@@ -41,10 +41,12 @@ class Grid {
                         if (currentElement.constructor.name === "Empty") {
                             this.removeIndex(j * this.col + i, this.get(j * this.col + i));
                         }
-                        if (Math.random() < element.probability && this.get(j * this.col + i).constructor.name !== element.constructor.name && this.isEmpty(j * this.col + i)) {
-                            let newElement = new element.constructor(j * this.col + i);
-                            this.setIndex(j * this.col + i, newElement);
-                            this.setElement(i, j, newElement);
+                        if (Math.random() < element.probability) {
+                            if (ALLOW_REPLACEMENT || (this.get(j * this.col + i).constructor.name !== element.constructor.name && this.isEmpty(j * this.col + i))) {
+                                let newElement = new element.constructor(j * this.col + i);
+                                this.setIndex(j * this.col + i, newElement);
+                                this.setElement(i, j, newElement);
+                            }
                         }
                     }
                 }

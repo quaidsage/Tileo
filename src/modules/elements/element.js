@@ -1,6 +1,7 @@
 class Element {
-    constructor(index, { color, empty, still, liquid, gas, onFire, probability, behaviours } = {}) {
+    constructor(index, { color, debugColor, empty, still, liquid, gas, onFire, probability, behaviours } = {}) {
         this.color = color ?? [255, 255, 255];
+        this.debugColor = debugColor ?? [0, 255, 0];
         this.empty = empty ?? false;
         this.still = still ?? false;
         this.liquid = liquid ?? false;

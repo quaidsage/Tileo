@@ -13,7 +13,7 @@ class MoveDown extends Behaviour {
     resetVelocity(element) {
         this.velocity = 0;
         if (DEBUG_VELOCITY || DEBUG_MOVEMENT) {
-            element.color = [255, 0, 0];
+            element.debugColor = [0, 255, 0];
         }
     }
 
@@ -21,7 +21,7 @@ class MoveDown extends Behaviour {
         this.velocity += this.acceleration;
         this.velocity >= 0 ? this.velocity = Math.min(this.velocity, this.maxSpeed) : this.velocity = Math.max(this.velocity, -this.maxSpeed);
         if (DEBUG_VELOCITY) {
-            element.color = [0, Math.abs(this.velocity) * 100, 100];
+            element.debugColor = [Math.abs(this.velocity) * 100, 100, 0];
         }
     }
 
@@ -46,17 +46,17 @@ class MoveDown extends Behaviour {
             if (moves[0] === 1) {
                 grid.swap(y * grid.col + x, ny * grid.col + nx);
                 if (DEBUG_MOVEMENT) {
-                    element.color = [0, 255, 0];
+                    element.debugColor = [255, 0, 0];
                 }
             } else if (moves[1] === 1) {
                 grid.swap(y * grid.col + x, ny * grid.col + nx - 1);
                 if (DEBUG_MOVEMENT) {
-                    element.color = [0, 0, 255];
+                    element.debugColor = [0, 0, 255];
                 }
             } else if (moves[2] === 1) {
                 grid.swap(y * grid.col + x, ny * grid.col + nx + 1);
                 if (DEBUG_MOVEMENT) {
-                    element.color = [0, 0, 255];
+                    element.debugColor = [0, 0, 255];
                 }
             } else {
                 this.resetVelocity(element);

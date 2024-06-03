@@ -1,5 +1,6 @@
 import Grid from './grid.js';
 import * as controls from './controls.js';
+import { DEBUG_MOVEMENT, DEBUG_VELOCITY, DEBUG_LIFE } from './config.js';
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -41,6 +42,9 @@ function calculateFrameRate() {
 
 function drawPixel(index, element) {
     let colorList = element.color;
+    if (DEBUG_MOVEMENT || DEBUG_VELOCITY || DEBUG_LIFE) {
+        colorList = element.debugColor;
+    }
     ctx.fillStyle = `rgb(${colorList[0]}, ${colorList[1]}, ${colorList[2]})`;
     ctx.fillRect((index % col) * gridWidth, Math.floor(index / col) * gridWidth, gridWidth, gridWidth);
 }

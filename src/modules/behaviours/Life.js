@@ -19,7 +19,7 @@ class Life extends Behaviour {
 
     update(element, grid) {
         if (DEBUG_LIFE) {
-            element.color = [150, this.life * 5, 0];
+            element.debugColor = [150, this.life * 5, 0];
         }
         if (this.life <= 0) {
             this.onDeath(element, grid);
