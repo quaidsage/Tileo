@@ -1,10 +1,17 @@
-import Element from '../element.js';
+import Solid from './solid.js';
 import { randomColor } from '../../utils.js';
 
-class Stone extends Element {
+class Stone extends Solid {
+    static defaultColor = [100, 100, 100];
+    static defaultProbability = 1;
+
+    static currentColor = Stone.defaultColor;
+    static currentProbability = Stone.defaultProbability;
+
     constructor(index) {
         super(index, {
-            color: randomColor([100, 100, 100])
+            color: randomColor(Stone.currentColor),
+            probability: Stone.currentProbability
         });
     }
 

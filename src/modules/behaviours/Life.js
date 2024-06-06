@@ -25,7 +25,12 @@ class Life extends Behaviour {
             this.onDeath(element, grid);
         }
         this.life = this.life - this.reduction;
-        element.color = [element.color[0] - (this.reduction / fadingVariation), element.color[1] - (this.reduction / fadingVariation), element.color[2] - (this.reduction / fadingVariation)];
+
+        // Calculate the percentage of life remaining
+        const lifePercentage = this.life / (this.life + this.reduction);
+
+        // Fade out the color based on the percentage of life remaining
+        element.color = element.color.map(colorComponent => colorComponent * lifePercentage);
     }
 }
 

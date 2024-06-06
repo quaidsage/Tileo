@@ -1,20 +1,45 @@
-import Element from '../element.js';
+import Solid from './solid.js';
 import { randomColor } from '../../utils.js';
 import SolidMove from '../../behaviours/SolidMove.js';
 
-class Sand extends Element {
+class Sand extends Solid {
+    static defaultColor = [160, 120, 0];
+    static defaultProbability = 0.1;
+    static defaultMaxSpeed = 3;
+    static defaultAcceleration = 0.1;
+
+    static currentColor = Sand.defaultColor;
+    static currentProbability = Sand.defaultProbability;
+    static currentMaxSpeed = Sand.defaultMaxSpeed;
+    static currentAcceleration = Sand.defaultAcceleration;
+
     constructor(index) {
         super(index, {
-            // 180, 150, 255 - Ally's color
-            color: randomColor([160, 120, 0]),
-            probability: 0.2,
+            color: randomColor(Sand.currentColor),
+            probability: Sand.currentProbability,
             behaviours: [
                 new SolidMove({
-                    maxSpeed: 3,
-                    acceleration: 0.1
+                    maxSpeed: Sand.currentMaxSpeed,
+                    acceleration: Sand.currentAcceleration,
                 })
             ]
         });
+    }
+
+    setMaxSpeed(newMaxSpeed) {
+        this.behavioursLookup['SolidMove'].maxSpeed = newMaxSpeed;
+        Sand.currentMaxSpeed = newMaxSpeed;
+    }
+
+    setAcceleration(newAcceleration) {
+        this.behavioursLookup['SolidMove'].acceleration = newAcceleration;
+        Sand.currentAcceleration = newAcceleration;
+    }
+
+    resetDefaults() {
+        super.resetDefaults();
+        this.setMaxSpeed(Sand.defaultMaxSpeed);
+        this.setAcceleration(Sand.defaultAcceleration);
     }
 
     toString() {

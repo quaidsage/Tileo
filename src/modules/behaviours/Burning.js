@@ -1,5 +1,6 @@
 import Life from "./Life.js";
 import Smoke from "../elements/gases/smoke.js";
+import Fire from "../elements/misc/fire.js";
 import { randomColor } from "../utils.js";
 
 class Burning extends Life {
@@ -11,12 +12,13 @@ class Burning extends Life {
     onDeath(element, grid) {
         const index = element.index;
         const x = element.index % grid.row;
-        const y = Math.floor(element.index / grid.col);
+        const y = Math.floor(element.index / grid.col); element.onFire = false;
         super.onDeath(element, grid);
-        element.onFire = false;
-        let replacement = new Smoke();
-        grid.setElement(x, y, replacement);
-        grid.setIndex(index, replacement);
+        if (Math.random() > 0.2) {
+            let replacement = new Smoke();
+            grid.setElement(x, y, replacement);
+            grid.setIndex(index, replacement);
+        }
     }
 
     checkValidNeighbours(element, grid) {
@@ -52,7 +54,7 @@ class Burning extends Life {
                     let randomIndex = neighbours[Math.floor(Math.random() * neighbours.length)];
                     let randomElement = grid.get(randomIndex);
                     randomElement.onFire = true;
-                    randomElement.color = randomColor([255, 130, 50])
+                    randomElement.color = randomColor(Fire.currentColor);
                 }
             }
         }

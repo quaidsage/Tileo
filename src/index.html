@@ -12,84 +12,89 @@
     <div id="external">
         <div id="menu">
             <div id="btns">
-                <button id="sand">Sand</button>
-                <button id="water">Water</button>
-                <button id="wood">Wood</button>
-                <button id="stone">Stone</button>
-                <button id="smoke">Smoke</button>
-                <button id="fire">Fire</button>
-                <button id="custom">Custom</button>
-                <button id="eraser">Eraser</button>
-                <button id="plusbrush">+ Brush Size</button>
-                <button id="minusbrush">- Brush Size</button>
-                <button id="reset">Reset</button>
+                <div id="elementButtons">
+                    <button id="sand">Sand</button>
+                    <button id="water">Water</button>
+                    <button id="wood">Wood</button>
+                    <button id="stone">Stone</button>
+                    <button id="smoke">Smoke</button>
+                    <button id="fire">Fire</button>
+                    <button id="custom">Custom</button>
+                </div>
+                <div id="toolbuttons">
+                    <button id="plusbrush">+ Brush Size</button>
+                    <button id="minusbrush">- Brush Size</button>
+                    <button id="eraser">Eraser</button>
+                    <button id="reset">Reset</button>
+                    <button id="plusgrid">+ Grid</button>
+                    <button id="minusgrid">- Grid</button>
+                </div>
             </div>
-            <div id="info">
-                <p id="selected">Selected: Sand</p>
-                <p id="brush">Brush Size: 5</p>
-                <p id="mousePosition">Mouse position: 0, 0</p>
-                <p id="frameRate">Avg Frame Rate: 0 fps</p>
-                <p id="frameRateMax">Max Frame Rate: 0 fps</p>
-                <div id="debugOptions">
-                    <label for="debugOptionsSelect">Behaviour View: </label>
-                    <select id="debugOptionsSelect">
-                        <option value="">None</option>
-                        <option value="debugVelocity">View Velocity</option>
-                        <option value="debugMovement">View Movement</option>
-                        <option value="debugLife">View Life</option>
-                    </select>
-                    <br><br>
-                    <label for="renderDelay">Render Delay: </label>
-                    <input type="range" id="renderDelay" name="renderDelay" min="0" max="50" value="20">
-                    <br><br>
-                    <button id="pause">Pause</button>
-                    <br><br>
-                    <label for="replacement">Allow Replacement:</label>
-                    <input type="checkbox" id="replacement" name="replacement">
+            <div id="editWindow">
+                <div id="editWindowContent">
+                    <div id="editTitleWindow">
+                        <h2>Settings</h2>
+                        <!--<button id="closeEditWindow">Close</button>-->
+                    </div>
+                    <div id="editValueWindow">
+                        <div>
+                            <label for="elementName">Name:</label>
+                            <input type="text" id="elementName" name="elementName">
+                            <br>
+                            <label for="elementColor">Color:</label>
+                            <input type="color" id="elementColor" name="elementColor">
+                            <br>
+                            <label for="elementLife">Life:</label>
+                            <input type="number" id="elementLife" name="elementLife" min="0" max="10000">
+                            <br>
+                            <label for="elementReduction">Reduction Rate:</label>
+                            <input type="number" id="elementReduction" name="elementReduction" min="0" max="1000">
+                            <br>
+                            <label for="elementFireSpread">Fire Spread:</label>
+                            <input type="number" id="elementFireSpread" name="elementFireSpread" min="0" max="1">
+                        </div>
+                        <div>
+                            <label for="elementAcceleration">Velocity:</label>
+                            <input type="number" id="elementAcceleration" name="elementAcceleration" min="0" max="1000">
+                            <br>
+                            <label for="elementMaxSpeed">Max Speed:</label>
+                            <input type="number" id="elementMaxSpeed" name="elementMaxSpeed" min="0" max="1000">
+                            <br>
+                            <label for="elementDispersion">Dispersion:</label>
+                            <input type="number" id="elementDispersion" name="elementDispersion" min="0" max="1000">
+                            <br>
+                            <label for="elementBrushProbability">Brush Probability:</label>
+                            <input type="number" id="elementBrushProbability" name="elementBrushProbability" min="0"
+                                max="100">
+                            <br>
+                            <button id="resetSettings">Reset Settings</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="editWindow">
-            <div id="editWindowContent">
-                <div id="editTitleWindow">
-                    <h2>Settings</h2>
-                    <button id="closeEditWindow">Close</button>
-                </div>
-                <div id="editValueWindow">
-                    <div>
-                        <label for="elementName">Name:</label>
-                        <input type="text" id="elementName" name="elementName">
-                        <br>
-                        <label for="elementColor">Color:</label>
-                        <input type="color" id="elementColor" name="elementColor">
-                        <br>
-                        <label for="elementLife">Life:</label>
-                        <input type="number" id="elementLife" name="elementLife" min="0" max="1000">
-                        <br>
-                        <label for="elementReduction">Life Reduction Rate:</label>
-                        <input type="number" id="elementReduction" name="elementReduction" min="0" max="1000">
-                        <br>
-                        <label for="elementFireSpread">Fire Spread:</label>
-                        <input type="number" id="elementFireSpread" name="elementFireSpread" min="0" max="1000">
-                    </div>
-                    <div>
-                        <label for="elementFlammable">Flammable:</label>
-                        <input type="checkbox" id="elementFlammable" name="elementFlammable">
-                        <br>
-                        <label for="elementDecay">Decay:</label>
-                        <input type="checkbox" id="elementDecay" name="elementDecay">
-                        <br>
-                        <label for="elementMovement">Movement: </label>
-                        <select id="elementMovementSelect">
-                            <option value="">None</option>
-                            <option value="">Solid Movement</option>
-                            <option value="">Liquid Movement</option>
-                            <option value="">Gaseous Movement</option>
-                        </select>
-                        <br><br>
-                        <button id="saveElement">Save</button>
-                    </div>
-                </div>
+        <div id="info">
+            <p id="selected">Selected: Sand</p>
+            <p id="brush">Brush Size: 5</p>
+            <p id="mousePosition">Mouse position: 0, 0</p>
+            <p id="frameRate">Avg Frame Rate: 0 fps</p>
+            <p id="frameRateMax">Max Frame Rate: 0 fps</p>
+            <div id="debugOptions">
+                <label for="debugOptionsSelect">Behaviour View: </label>
+                <select id="debugOptionsSelect">
+                    <option value="">None</option>
+                    <option value="debugVelocity">View Velocity</option>
+                    <option value="debugMovement">View Movement</option>
+                    <option value="debugLife">View Life</option>
+                </select>
+                <br><br>
+                <label for="renderDelay">Render Delay: </label>
+                <input type="range" id="renderDelay" name="renderDelay" min="0" max="50" value="20">
+                <br><br>
+                <button id="pause">Pause</button>
+                <br><br>
+                <label for="replacement">Brush Replacement:</label>
+                <input type="checkbox" id="replacement" name="replacement">
             </div>
         </div>
     </div>

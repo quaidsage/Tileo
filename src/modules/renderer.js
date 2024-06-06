@@ -1,13 +1,14 @@
 import Grid from './grid.js';
 import * as controls from './controls.js';
 import { DEBUG_MOVEMENT, DEBUG_VELOCITY, DEBUG_LIFE } from './config.js';
+import { setupEditor } from './editor.js';
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 let w = canvas.width;
 let h = canvas.height;
-let gridWidth = 8;
+let gridWidth = 5;
 let row = h / gridWidth;
 let col = w / gridWidth;
 let grid = new Grid(row, col);
@@ -15,6 +16,30 @@ let grid = new Grid(row, col);
 let lastFrameTime = performance.now();
 let frameTimes = [];
 let maxFrameRate = 0;
+
+export function increaseSize() {
+    gridWidth *= 2;
+    row = h / gridWidth;
+    col = w / gridWidth;
+    grid = new Grid(row, col);
+    grid.initialize(row, col);
+}
+
+export function decreaseSize() {
+    gridWidth = Math.max(gridWidth / 2, 4);
+    row = h / gridWidth;
+    col = w / gridWidth;
+    grid = new Grid(row, col);
+    grid.initialize(row, col);
+}
+
+export function setGridSize(gridSize) {
+    gridWidth = gridSize;
+    row = h / gridWidth;
+    col = w / gridWidth;
+    grid = new Grid(row, col);
+    grid.initialize(row, col);
+}
 
 function calculateFrameRate() {
     const now = performance.now();
@@ -62,6 +87,7 @@ function render() {
 export function start() {
     grid.initialize(row, col);
     controls.setupControls();
+    setupEditor();
     render();
 }
 

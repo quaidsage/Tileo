@@ -8,50 +8,46 @@ body {
     justify-content: center;
 }
 
-#external {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    margin-left: 20px;
-}
-
 #container {
     display: flex;
     justify-content: center;
-
 }
 
 #canvas {
     border: 1px solid darkgray;
-    box-shadow: 0 4px 10px 0px gray;
+}
+
+#external {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
 }
 
 #menu {
-    padding-right: 30px;
-    border: 1px solid darkgray;
-    background-color: rgb(50, 50, 56);
     display: flex;
-    align-items: center;
-    box-shadow: 0 4px 10px 0px gray;
 }
 
 #btns {
     display: flex;
+    border: 1px solid darkgray;
+    background-color: rgb(50, 50, 56);
     flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    height: 83%;
-    margin-left: 40px;
+    margin-right: 10px;
+}
+
+#btns>* {
+    margin: 10px;
 }
 
 #info {
-    padding: 10px 40px 30px 20px;
-    margin-right: 20px;
+    margin-top: 10px;
+    padding: 0px 20px 20px 20px;
+    border: 1px solid darkgray;
+    background-color: rgb(50, 50, 56);
 }
 
 #btns button {
     font-weight: bold;
-    width: 150px;
     font-size: 18px;
     box-shadow: 0 4px 10px 0px black;
 }
@@ -84,8 +80,8 @@ body {
 }
 
 #fire {
-    background-color: rgb(200, 80, 50);
-    border: 5px solid rgb(140, 40, 0);
+    background-color: rgb(190, 60, 20);
+    border: 5px solid rgb(120, 20, 0);
 }
 
 #custom {
@@ -94,21 +90,11 @@ body {
     border: 5px solid rgb(140, 110, 205);
 }
 
-#eraser {
-    background-color: rgb(255, 255, 255);
-    border: 5px solid rgb(215, 215, 215);
-
-}
-
 #info {
     color: white;
-    margin-left: 20px;
     font-size: 18px;
 }
 
-#debugOptions {
-    margin: 10px;
-}
 
 #debugOptionsSelect {
     background-color: rgb(50, 50, 56);
@@ -116,32 +102,6 @@ body {
     border: 1px solid darkgray;
     padding: 5px;
     font-family: monospace;
-}
-
-#title {
-    position: absolute;
-    top: 40px;
-    right: 70px;
-    color: white;
-    font-weight: bold;
-    font-size: 10px;
-    margin: 20px;
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#title h1 {
-    margin: 0px 10px;
-}
-
-#title button {
-    font-size: 18px;
-    color: white;
-    background-color: rgb(50, 50, 56);
-    font-weight: bold;
-    box-shadow: 0 4px 10px 0px black;
 }
 
 #pause {
@@ -211,15 +171,16 @@ body {
     font-family: monospace;
     font-size: 14px;
     box-shadow: 0 4px 10px 0px black;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+    width: 100px;
 }
 
 #editValueWindow input:hover {
     background-color: rgb(40, 40, 46);
 }
 
-#saveElement {
-    font-size: 18px;
+#resetSettings {
+    font-size: 16px;
     color: white;
     background-color: rgb(50, 50, 56);
     font-weight: bold;
@@ -228,10 +189,8 @@ body {
     margin-top: 20px;
     cursor: pointer;
     border: none;
-    text-align: center;
-    float: right;
 }
 
-#saveElement:hover {
+#resetSettings:hover {
     background-color: rgb(40, 40, 46);
 }
