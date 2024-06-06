@@ -15,21 +15,23 @@ class WaterMove extends Movement {
         let leftDistance = 0;
         let rightDistance = 0;
         while (leftDistance < this.dispersion) {
-            if (grid.isValidIndex(x - leftDistance - 1, y) && grid.isEmpty(y * grid.col + x - leftDistance - 1)) {
+            if (grid.isValidIndex(x - leftDistance - 1, y) && grid.isPassable(y * grid.col + x - leftDistance - 1)) {
                 leftDistance++;
             } else {
                 break;
             }
         }
         while (rightDistance < this.dispersion) {
-            if (grid.isValidIndex(x + rightDistance + 1, y) && grid.isEmpty(y * grid.col + x + rightDistance + 1)) {
+            if (grid.isValidIndex(x + rightDistance + 1, y) && grid.isPassable(y * grid.col + x + rightDistance + 1)) {
                 rightDistance++;
             } else {
                 break;
             }
         }
         if (leftDistance + rightDistance > 0) {
-            if (DEBUG_MOVEMENT) element.debugColor = [255, 255, 0];
+            if (DEBUG_MOVEMENT && leftDistance > rightDistance) element.debugColor = [255, 0, 255];
+            if (DEBUG_MOVEMENT && leftDistance < rightDistance) element.debugColor = [255, 255, 0];
+            if (DEBUG_MOVEMENT && leftDistance == rightDistance) element.debugColor = [255, 255, 255];
             if (leftDistance > rightDistance) {
                 grid.swap(y * grid.col + x, y * grid.col + x - leftDistance);
             } if (leftDistance < rightDistance) {

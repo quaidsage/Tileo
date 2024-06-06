@@ -1,11 +1,4 @@
-import Sand from './elements/sand.js';
-import Wood from './elements/wood.js';
-import Water from './elements/water.js';
-import Smoke from './elements/smoke.js';
-import Fire from './elements/fire.js';
-import Stone from './elements/stone.js';
-import Custom from './elements/custom.js';
-import Empty from './elements/empty.js';
+import { Sand, Water, Fire, Smoke, Wood, Stone, Custom, Empty } from './elements/ElementIndex.js';
 import { gridWidth, col, row, grid } from './renderer.js';
 
 let brushSpeed = 10;

@@ -6,7 +6,13 @@ html {
 body {
     display: flex;
     justify-content: center;
-    align-items: center;
+}
+
+#external {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin-left: 20px;
 }
 
 #container {
@@ -22,13 +28,10 @@ body {
 
 #menu {
     padding-right: 30px;
-    height: 500px;
-    margin-left: 20px;
     border: 1px solid darkgray;
     background-color: rgb(50, 50, 56);
     display: flex;
     align-items: center;
-    align-self: center;
     box-shadow: 0 4px 10px 0px gray;
 }
 
@@ -42,11 +45,8 @@ body {
 }
 
 #info {
-    width: 250px;
-    padding: 10px 40px 10px 20px;
+    padding: 10px 40px 30px 20px;
     margin-right: 20px;
-    border: 1px solid darkgray;
-    box-shadow: 0 2px 5px 0px gray;
 }
 
 #btns button {
@@ -156,5 +156,82 @@ body {
 }
 
 #pause:hover {
+    background-color: rgb(40, 40, 46);
+}
+
+#editWindow {
+    background-color: rgb(50, 50, 56);
+    border: 1px solid darkgray;
+    padding: 20px;
+    color: white;
+}
+
+#editWindowContent {
+    display: flex;
+    flex-direction: column;
+}
+
+#editTitleWindow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+#editTitleWindow h2 {
+    margin: 0px 10px;
+    color: white;
+}
+
+#editTitleWindow button {
+    font-size: 18px;
+    color: white;
+    background-color: rgb(50, 50, 56);
+    font-weight: bold;
+    box-shadow: 0 4px 10px 0px black;
+}
+
+#editValueWindow {
+    display: flex;
+    margin-top: 10px;
+}
+
+#editValueWindow>* {
+    margin-right: 20px;
+}
+
+#editValueWindow label {
+    color: white;
+}
+
+#editValueWindow input {
+    color: white;
+    background-color: rgb(50, 50, 56);
+    border: 1px solid white;
+    font-family: monospace;
+    font-size: 14px;
+    box-shadow: 0 4px 10px 0px black;
+    margin-bottom: 5px;
+}
+
+#editValueWindow input:hover {
+    background-color: rgb(40, 40, 46);
+}
+
+#saveElement {
+    font-size: 18px;
+    color: white;
+    background-color: rgb(50, 50, 56);
+    font-weight: bold;
+    box-shadow: 0 4px 10px 0px black;
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+    border: none;
+    text-align: center;
+    float: right;
+}
+
+#saveElement:hover {
     background-color: rgb(40, 40, 46);
 }

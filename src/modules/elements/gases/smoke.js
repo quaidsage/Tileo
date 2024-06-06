@@ -1,7 +1,7 @@
 import Gas from './gas.js';
-import GasMove from '../behaviours/GasMove.js';
-import Life from '../behaviours/Life.js';
-import { randomColor } from '../utils.js';
+import GasMove from '../../behaviours/GasMove.js';
+import Life from '../../behaviours/Life.js';
+import { randomColor } from '../../utils.js';
 
 class Smoke extends Gas {
     constructor(index) {
@@ -13,7 +13,7 @@ class Smoke extends Gas {
                 new GasMove({
                     maxSpeed: 1,
                     acceleration: 0.1,
-                    dispersion: 1
+                    dispersion: 2
                 }),
                 new Life({
                     life: 50,

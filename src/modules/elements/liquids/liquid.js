@@ -1,9 +1,9 @@
-import Element from './element.js';
+import Element from '../element.js';
 
-class Gas extends Element {
+class Liquid extends Element {
     constructor(index, { color, debugColor, onFire, probability, behaviours } = {}) {
         super(index, { color, debugColor, onFire, probability, behaviours });
-        this.gas = true;
+        this.liquid = true;
     }
 }
-export default Gas;
+export default Liquid;

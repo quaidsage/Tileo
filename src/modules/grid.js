@@ -1,8 +1,8 @@
-import Empty from './elements/empty.js';
+import Empty from './elements/misc/empty.js';
 import { drawPixel, gridWidth, col, row, ctx, grid } from './renderer.js';
 import { currentElement, brushSize, mouseX, mouseY } from './controls.js';
 import { ALLOW_REPLACEMENT, isPaused } from './config.js';
-import Gas from './elements/gas.js';
+import Gas from './elements/gases/gas.js';
 
 class Grid {
     initialize(row, col) {
@@ -120,6 +120,7 @@ class Grid {
             return;
         }
 
+        // update solids and liquid from top to bottom
         for (let i = Math.floor(this.grid.length / this.col) - 1; i >= 0; i--) {
             for (let j = 0; j < this.col; j++) {
                 let rndmOffset = Math.random() > 0.5;

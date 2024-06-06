@@ -1,5 +1,5 @@
-import Element from './element.js';
-import { randomColor } from '../utils.js';
+import Element from '../element.js';
+import { randomColor } from '../../utils.js';
 
 class Stone extends Element {
     constructor(index) {

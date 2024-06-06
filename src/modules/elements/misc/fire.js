@@ -1,6 +1,6 @@
-import Element from './element.js';
-import { randomColor } from '../utils.js';
-import Burning from '../behaviours/Burning.js';
+import Element from '../element.js';
+import { randomColor } from '../../utils.js';
+import Burning from '../../behaviours/Burning.js';
 
 class Fire extends Element {
     constructor(index) {

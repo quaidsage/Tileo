@@ -1,7 +1,8 @@
-import Element from './element.js';
-import WaterMove from '../behaviours/WaterMove.js';
+import Liquid from './liquid.js';
+import WaterMove from '../../behaviours/WaterMove.js';
+import { randomColor } from '../../utils.js';
 
-class Water extends Element {
+class Water extends Liquid {
     constructor(index) {
         super(index, {
             color: [50, 86, 183],
@@ -11,7 +12,7 @@ class Water extends Element {
                 new WaterMove({
                     maxSpeed: 3,
                     acceleration: 0.1,
-                    dispersion: 5
+                    dispersion: 7
                 })
             ]
         });

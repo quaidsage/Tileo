@@ -32,17 +32,18 @@ class MoveDown extends Behaviour {
     availableMoves(nx, ny, grid) {
         const moves = [0, 0, 0];
         if (grid.isValidIndex(nx, ny) && grid.isEmpty(ny * grid.col + nx)) {
-            moves[0] = 1; // Move down
+            moves[0] = 1;
         }
         if (grid.isValidIndex(nx - 1, ny) && grid.isEmpty(ny * grid.col + nx - 1)) {
-            moves[1] = 1; // Move down left
+            moves[1] = 1;
         }
         if (grid.isValidIndex(nx + 1, ny) && grid.isEmpty(ny * grid.col + nx + 1)) {
-            moves[2] = 1; // Move down right
+            moves[2] = 1;
         }
         return moves;
     }
 
+    // Need to fix where solids with high velocity phase through solid elements
     step(element, grid, x, y, nx, ny) {
         while (ny > y) {
             let moves = this.availableMoves(nx, ny, grid);

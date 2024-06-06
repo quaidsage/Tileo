@@ -1,5 +1,5 @@
 import Life from "./Life.js";
-import Smoke from "../elements/smoke.js";
+import Smoke from "../elements/gases/smoke.js";
 import { randomColor } from "../utils.js";
 
 class Burning extends Life {

@@ -1,7 +1,7 @@
-import Movement from "./Movement.js";
 import { DEBUG_MOVEMENT } from "../config.js";
+import SolidMove from "./SolidMove.js";
 
-class GasMove extends Movement {
+class GasMove extends SolidMove {
     constructor({ maxSpeed, acceleration, velocity, dispersion } = {}) {
         super({ maxSpeed, acceleration, velocity })
         this.dispersion = dispersion ?? 0;
