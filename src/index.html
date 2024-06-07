@@ -20,12 +20,12 @@
                     <button id="smoke">Smoke</button>
                     <button id="fire">Fire</button>
                     <button id="custom">Custom</button>
+                    <button id="eraser">Eraser</button>
                 </div>
                 <div id="toolbuttons">
                     <button id="plusbrush">+ Brush Size</button>
                     <button id="minusbrush">- Brush Size</button>
-                    <button id="eraser">Eraser</button>
-                    <button id="reset">Reset</button>
+                    <button id="reset">Reset Grid</button>
                     <button id="plusgrid">+ Grid</button>
                     <button id="minusgrid">- Grid</button>
                 </div>
@@ -39,7 +39,7 @@
                     <div id="editValueWindow">
                         <div>
                             <label for="elementName">Name:</label>
-                            <input type="text" id="elementName" name="elementName">
+                            <input type="text" id="elementName" name="elementName" maxlength="20">
                             <br>
                             <label for="elementColor">Color:</label>
                             <input type="color" id="elementColor" name="elementColor">
@@ -54,7 +54,7 @@
                             <input type="number" id="elementFireSpread" name="elementFireSpread" min="0" max="1">
                         </div>
                         <div>
-                            <label for="elementAcceleration">Velocity:</label>
+                            <label for="elementAcceleration">Acceleration:</label>
                             <input type="number" id="elementAcceleration" name="elementAcceleration" min="0" max="1000">
                             <br>
                             <label for="elementMaxSpeed">Max Speed:</label>
@@ -67,7 +67,7 @@
                             <input type="number" id="elementBrushProbability" name="elementBrushProbability" min="0"
                                 max="100">
                             <br>
-                            <button id="resetSettings">Reset Settings</button>
+                            <button id="resetSettings">Reset</button>
                         </div>
                     </div>
                 </div>
@@ -89,9 +89,10 @@
                 </select>
                 <br><br>
                 <label for="renderDelay">Render Delay: </label>
-                <input type="range" id="renderDelay" name="renderDelay" min="0" max="50" value="20">
+                <input type="range" id="renderDelay" name="renderDelay" min="0" max="50" value="10">
                 <br><br>
                 <button id="pause">Pause</button>
+                <button id="resetAll">Reset All</button>
                 <br><br>
                 <label for="replacement">Brush Replacement:</label>
                 <input type="checkbox" id="replacement" name="replacement">

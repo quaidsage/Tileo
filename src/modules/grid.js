@@ -7,7 +7,6 @@ class Grid {
     initialize(row, col) {
         this.row = row;
         this.col = col;
-        console.log(row, col);
         this.grid = new Array(row * col).fill(new Empty());
     }
 

@@ -2,13 +2,14 @@ import Grid from './grid.js';
 import * as controls from './controls.js';
 import { DEBUG_MOVEMENT, DEBUG_VELOCITY, DEBUG_LIFE } from './config.js';
 import { setupEditor } from './editor.js';
+import { setupConfig } from './config.js';
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 let w = canvas.width;
 let h = canvas.height;
-let gridWidth = 5;
+let gridWidth = 80;
 let row = h / gridWidth;
 let col = w / gridWidth;
 let grid = new Grid(row, col);
@@ -18,7 +19,7 @@ let frameTimes = [];
 let maxFrameRate = 0;
 
 export function increaseSize() {
-    gridWidth *= 2;
+    gridWidth = Math.min(gridWidth * 2, 160);
     row = h / gridWidth;
     col = w / gridWidth;
     grid = new Grid(row, col);
@@ -26,7 +27,7 @@ export function increaseSize() {
 }
 
 export function decreaseSize() {
-    gridWidth = Math.max(gridWidth / 2, 4);
+    gridWidth = Math.max(gridWidth / 2, 5);
     row = h / gridWidth;
     col = w / gridWidth;
     grid = new Grid(row, col);
@@ -87,6 +88,7 @@ function render() {
 export function start() {
     grid.initialize(row, col);
     controls.setupControls();
+    setupConfig();
     setupEditor();
     render();
 }

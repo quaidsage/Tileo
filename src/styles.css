@@ -18,8 +18,6 @@ body {
 }
 
 #external {
-    display: flex;
-    flex-direction: column;
     margin-left: 10px;
 }
 
@@ -29,6 +27,7 @@ body {
 
 #btns {
     display: flex;
+    flex-grow: 0;
     border: 1px solid darkgray;
     background-color: rgb(50, 50, 56);
     flex-direction: column;
@@ -85,9 +84,14 @@ body {
 }
 
 #custom {
-    position: relative;
     background-color: rgb(180, 150, 255);
     border: 5px solid rgb(140, 110, 205);
+}
+
+#eraser {
+    background-color: rgb(255, 255, 255);
+    border: 5px solid rgb(225, 225, 225);
+
 }
 
 #info {
@@ -104,7 +108,8 @@ body {
     font-family: monospace;
 }
 
-#pause {
+#pause,
+#resetAll {
     background-color: rgb(50, 50, 56);
     border: 1px solid white;
     color: white;
@@ -115,9 +120,11 @@ body {
     box-shadow: 0 4px 10px 0px black;
 }
 
-#pause:hover {
+#pause:hover,
+#resetAll:hover {
     background-color: rgb(40, 40, 46);
 }
+
 
 #editWindow {
     background-color: rgb(50, 50, 56);
