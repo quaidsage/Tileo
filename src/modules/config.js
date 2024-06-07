@@ -8,7 +8,7 @@ export let DEBUG_LIFE = false;
 export let ALLOW_REPLACEMENT = false;
 
 export let isPaused = false;
-export let RENDER_DELAY = 10;
+export let RENDER_DELAY = 0;
 
 export function setupConfig() {
     document.getElementById('pause').addEventListener('click', function () {
@@ -38,6 +38,7 @@ export function setupConfig() {
         DEBUG_VELOCITY = this.value === 'debugVelocity';
         DEBUG_MOVEMENT = this.value === 'debugMovement';
         DEBUG_LIFE = this.value === 'debugLife';
+        grid.drawAll();
     });
 
     const gridControls = {
@@ -57,11 +58,11 @@ export function setupConfig() {
         RENDER_DELAY = event.target.value;
     });
 
-    let storedRenderDelay = localStorage.getItem('RENDER_DELAY') || 10;
+    let storedRenderDelay = localStorage.getItem('RENDER_DELAY') || 0;
     RENDER_DELAY = parseInt(storedRenderDelay);
     document.getElementById('renderDelay').value = RENDER_DELAY;
 
-    let storedGridSize = localStorage.getItem('gridSize') || 10;
+    let storedGridSize = localStorage.getItem('gridSize') || 5;
     setGridSize(parseInt(storedGridSize));
 }
 

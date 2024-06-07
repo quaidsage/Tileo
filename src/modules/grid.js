@@ -1,21 +1,33 @@
 import Empty from './elements/misc/empty.js';
-import { drawPixel, gridWidth, col, row, ctx, grid } from './renderer.js';
+import { drawPixel, gridWidth, col, row, ctx, updateOnNextFrame } from './renderer.js';
 import { currentElement, brushSize, mouseX, mouseY } from './controls.js';
-import { ALLOW_REPLACEMENT, isPaused } from './config.js';
+import { ALLOW_REPLACEMENT, isPaused, DEBUG_LIFE, DEBUG_MOVEMENT, DEBUG_VELOCITY } from './config.js';
 
 class Grid {
     initialize(row, col) {
         this.row = row;
         this.col = col;
         this.grid = new Array(row * col).fill(new Empty());
+        this.drawAll();
+        this.highlightIndex = new Set();
+        this.debugView = false;
     }
 
     reset() {
         this.grid = new Array(row * col).fill(new Empty());
+        this.drawAll();
     }
 
-    removeIndex(i, element) {
-        element.index = -1;
+    fill() {
+        for (let i = 0; i < row * col; i++) {
+            let newElement = new currentElement.constructor(i);
+            this.setIndex(i, newElement);
+            this.grid[i] = newElement;
+        }
+        this.drawAll();
+    }
+
+    removeIndex(i) {
         this.grid[i] = new Empty();
     }
 
@@ -29,6 +41,7 @@ class Grid {
 
     setElement(x, y, element) {
         this.grid[y * this.col + x] = element;
+        updateOnNextFrame.add(y * this.col + x);
     }
 
     setBrush(x, y, element) {
@@ -55,8 +68,6 @@ class Grid {
     }
 
     swap(a, b) {
-        let aOffset = 0;
-        let bOffset = 0;
         if (this.grid[a].empty && this.grid[b].empty) {
             return;
         }
@@ -65,6 +76,10 @@ class Grid {
         this.setIndex(b, temp);
         this.grid[a] = this.grid[b];
         this.grid[b] = temp;
+        updateOnNextFrame.add(a);
+        updateOnNextFrame.add(b);
+        drawPixel(a, this.grid[a]);
+        drawPixel(b, this.grid[b]);
     }
 
     isEmpty(i) {
@@ -88,9 +103,22 @@ class Grid {
     }
 
     draw() {
-        this.grid.forEach((element, index) => {
-            drawPixel(index, element);
-        })
+        if (this.debugView !== (DEBUG_LIFE || DEBUG_MOVEMENT || DEBUG_VELOCITY)) {
+            this.debugView = DEBUG_LIFE || DEBUG_MOVEMENT || DEBUG_VELOCITY;
+            this.drawAll();
+        } else if (this.debugView) {
+            this.drawAll();
+        } else {
+            updateOnNextFrame.forEach((index) => {
+                drawPixel(index, this.grid[index]);
+            });
+        }
+
+        this.highlightIndex.forEach((index) => {
+            drawPixel(index, this.grid[index]);
+        });
+
+        this.highlightIndex.clear();
 
         let x = Math.floor(mouseX / gridWidth);
         let y = Math.floor(mouseY / gridWidth);
@@ -106,12 +134,20 @@ class Grid {
                             ctx.fillStyle = `rgba(${currentElement.color[0]}, ${currentElement.color[1]}, ${currentElement.color[2]}, 0.3)`;
                         }
                         ctx.fillRect(i * gridWidth, j * gridWidth, gridWidth, gridWidth);
+                        this.highlightIndex.add(j * this.col + i);
                     }
                 }
             }
         }
 
         this.update();
+
+    }
+
+    drawAll() {
+        this.grid.forEach((element, index) => {
+            drawPixel(index, element);
+        });
     }
 
     update() {

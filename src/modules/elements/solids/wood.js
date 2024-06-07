@@ -1,6 +1,7 @@
 import Solid from './solid.js';
 import { randomColor } from '../../utils.js';
 import Burning from '../../behaviours/Burning.js';
+import { updateOnNextFrame } from '../../renderer.js';
 
 class Wood extends Solid {
     static defaultColor = [68, 25, 9];

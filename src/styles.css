@@ -47,8 +47,13 @@ body {
 
 #btns button {
     font-weight: bold;
+    margin-bottom: 5px;
     font-size: 18px;
     box-shadow: 0 4px 10px 0px black;
+}
+
+.button-selected {
+    outline: 2px solid darkgray;
 }
 
 #sand {
@@ -108,7 +113,6 @@ body {
     font-family: monospace;
 }
 
-#pause,
 #resetAll {
     background-color: rgb(50, 50, 56);
     border: 1px solid white;
@@ -120,7 +124,6 @@ body {
     box-shadow: 0 4px 10px 0px black;
 }
 
-#pause:hover,
 #resetAll:hover {
     background-color: rgb(40, 40, 46);
 }

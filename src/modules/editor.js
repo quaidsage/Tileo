@@ -109,14 +109,9 @@ export function updateHTMLValues() {
     inputElements.get('elementBrushProbability').value = currentElement.constructor.currentProbability;
     inputElements.delete('elementBrushProbability');
 
-    if (currentElement.behavioursLookup['Life']) {
-        inputElements.get('elementLife').value = currentElement.behavioursLookup['Life'].life;
-        inputElements.get('elementReduction').value = currentElement.behavioursLookup['Life'].reduction;
-        inputElements.delete('elementLife');
-        inputElements.delete('elementReduction');
-    } else if (currentElement.behavioursLookup['Burning']) {
-        inputElements.get('elementLife').value = currentElement.behavioursLookup['Burning'].life;
-        inputElements.get('elementReduction').value = currentElement.behavioursLookup['Burning'].reduction;
+    if (currentElement.behavioursLookup['Life'] || currentElement.behavioursLookup['Burning']) {
+        inputElements.get('elementLife').value = currentElement.constructor.currentLife;
+        inputElements.get('elementReduction').value = currentElement.constructor.currentReduction;
         inputElements.delete('elementLife');
         inputElements.delete('elementReduction');
     }
@@ -125,26 +120,13 @@ export function updateHTMLValues() {
         inputElements.delete('elementFireSpread');
     }
     if (currentElement.behavioursLookup['SolidMove'] || currentElement.behavioursLookup['WaterMove'] || currentElement.behavioursLookup['GasMove']) {
-        if (currentElement.solid) {
-            inputElements.get('elementMaxSpeed').value = currentElement.behavioursLookup['SolidMove'].maxSpeed;
-            inputElements.get('elementAcceleration').value = currentElement.behavioursLookup['SolidMove'].acceleration;
-        } else if (currentElement.liquid) {
-            inputElements.get('elementMaxSpeed').value = currentElement.behavioursLookup['WaterMove'].maxSpeed;
-            inputElements.get('elementAcceleration').value = currentElement.behavioursLookup['WaterMove'].acceleration;
-        } else if (currentElement.gas) {
-            inputElements.get('elementMaxSpeed').value = currentElement.behavioursLookup['GasMove'].maxSpeed;
-            inputElements.get('elementAcceleration').value = currentElement.behavioursLookup['GasMove'].acceleration;
-        }
+        inputElements.get('elementMaxSpeed').value = currentElement.constructor.currentMaxSpeed
+        inputElements.get('elementAcceleration').value = currentElement.constructor.currentAcceleration;
         inputElements.delete('elementMaxSpeed');
         inputElements.delete('elementAcceleration');
     }
-
     if (currentElement.behavioursLookup['GasMove'] || currentElement.behavioursLookup['WaterMove']) {
-        if (currentElement.liquid) {
-            inputElements.get('elementDispersion').value = currentElement.behavioursLookup['WaterMove'].dispersion;
-        } else if (currentElement.gas) {
-            inputElements.get('elementDispersion').value = currentElement.behavioursLookup['GasMove'].dispersion;
-        }
+        inputElements.get('elementDispersion').value = currentElement.constructor.currentDispersion;
         inputElements.delete('elementDispersion');
     }
 

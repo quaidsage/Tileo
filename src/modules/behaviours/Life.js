@@ -1,7 +1,6 @@
 import Behaviour from "./Behaviour.js";
 import { DEBUG_LIFE } from "../config.js";
-
-let fadingVariation = 1.5;
+import { updateOnNextFrame } from "../renderer.js";
 
 class Life extends Behaviour {
     constructor({ life, reduction } = {}) {
@@ -14,7 +13,7 @@ class Life extends Behaviour {
     }
 
     onDeath(element, grid) {
-        grid.removeIndex(element.index, element);
+        grid.removeIndex(element.index);
     }
 
     update(element, grid) {
@@ -23,6 +22,7 @@ class Life extends Behaviour {
         }
         if (this.life <= 0) {
             this.onDeath(element, grid);
+            return;
         }
         this.life = this.life - this.reduction;
 
@@ -31,6 +31,10 @@ class Life extends Behaviour {
 
         // Fade out the color based on the percentage of life remaining
         element.color = element.color.map(colorComponent => colorComponent * lifePercentage);
+
+        if (element.onFire) {
+            grid.highlightIndex.add(element.index);
+        }
     }
 }
 

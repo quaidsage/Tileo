@@ -5,7 +5,7 @@ import Burning from '../../behaviours/Burning.js';
 class Fire extends Element {
     static defaultColor = [255, 130, 50];
     static defaultProbability = 0.1;
-    static defaultLife = 100;
+    static defaultLife = 50;
     static defaultReduction = 2;
     static defaultChanceToSpread = 1;
 

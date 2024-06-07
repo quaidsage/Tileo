@@ -14,7 +14,7 @@ class Burning extends Life {
         const x = element.index % grid.row;
         const y = Math.floor(element.index / grid.col); element.onFire = false;
         super.onDeath(element, grid);
-        if (Math.random() > 0.2) {
+        if (Math.random() > 0.8) {
             let replacement = new Smoke();
             grid.setElement(x, y, replacement);
             grid.setIndex(index, replacement);

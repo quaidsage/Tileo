@@ -15,6 +15,10 @@ export function setupControls() {
         grid.reset();
     });
 
+    document.getElementById('fillgrid').addEventListener('click', function () {
+        grid.fill();
+    });
+
     canvas.addEventListener('mousedown', function (e) {
         let rect = canvas.getBoundingClientRect();
         mouseX = e.clientX - rect.left;
@@ -63,7 +67,13 @@ export function setupControls() {
     };
 
     Object.keys(controls).forEach(controlId => {
-        document.getElementById(controlId).addEventListener('click', function () {
+        let button = document.getElementById(controlId);
+        button.addEventListener('click', function () {
+            Object.keys(controls).forEach(id => {
+                document.getElementById(id).classList.remove('button-selected');
+            });
+            button.classList.add('button-selected');
+
             currentElement = controls[controlId]();
             localStorage.setItem('currentElement', controlId);
             document.getElementById('selected').textContent = `Selected: ${controlId.charAt(0).toUpperCase() + controlId.slice(1)}`;

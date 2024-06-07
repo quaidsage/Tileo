@@ -1,8 +1,8 @@
 import Grid from './grid.js';
-import * as controls from './controls.js';
+import { setupControls } from './controls.js';
 import { DEBUG_MOVEMENT, DEBUG_VELOCITY, DEBUG_LIFE } from './config.js';
 import { setupEditor } from './editor.js';
-import { setupConfig } from './config.js';
+import { RENDER_DELAY, setupConfig } from './config.js';
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -10,16 +10,18 @@ const ctx = canvas.getContext("2d");
 let w = canvas.width;
 let h = canvas.height;
 let gridWidth = 80;
+let gridSizing = [2, 5, 10, 20, 40, 80, 160];
 let row = h / gridWidth;
 let col = w / gridWidth;
 let grid = new Grid(row, col);
+let updateOnNextFrame = new Set();
 
 let lastFrameTime = performance.now();
 let frameTimes = [];
 let maxFrameRate = 0;
 
 export function increaseSize() {
-    gridWidth = Math.min(gridWidth * 2, 160);
+    gridWidth = gridSizing[gridSizing.indexOf(gridWidth) + 1] || gridWidth;
     row = h / gridWidth;
     col = w / gridWidth;
     grid = new Grid(row, col);
@@ -27,7 +29,7 @@ export function increaseSize() {
 }
 
 export function decreaseSize() {
-    gridWidth = Math.max(gridWidth / 2, 5);
+    gridWidth = gridSizing[gridSizing.indexOf(gridWidth) - 1] || gridWidth;
     row = h / gridWidth;
     col = w / gridWidth;
     grid = new Grid(row, col);
@@ -40,6 +42,23 @@ export function setGridSize(gridSize) {
     col = w / gridWidth;
     grid = new Grid(row, col);
     grid.initialize(row, col);
+}
+
+export function start() {
+    grid.initialize(row, col);
+    setupControls();
+    setupConfig();
+    setupEditor();
+    render();
+}
+
+export function drawPixel(index, element) {
+    let colorList = element.color;
+    if (DEBUG_MOVEMENT || DEBUG_VELOCITY || DEBUG_LIFE) {
+        colorList = element.debugColor;
+    }
+    ctx.fillStyle = `rgb(${colorList[0]}, ${colorList[1]}, ${colorList[2]})`;
+    ctx.fillRect((index % col) * gridWidth, Math.floor(index / col) * gridWidth, gridWidth, gridWidth);
 }
 
 function calculateFrameRate() {
@@ -66,31 +85,14 @@ function calculateFrameRate() {
     }
 }
 
-function drawPixel(index, element) {
-    let colorList = element.color;
-    if (DEBUG_MOVEMENT || DEBUG_VELOCITY || DEBUG_LIFE) {
-        colorList = element.debugColor;
-    }
-    ctx.fillStyle = `rgb(${colorList[0]}, ${colorList[1]}, ${colorList[2]})`;
-    ctx.fillRect((index % col) * gridWidth, Math.floor(index / col) * gridWidth, gridWidth, gridWidth);
-}
-
-
 function render() {
     grid.draw();
     calculateFrameRate();
     setTimeout(() => {
         requestAnimationFrame(() => render());
-    }, controls.RENDER_DELAY);
+        updateOnNextFrame.clear();
+    }, RENDER_DELAY);
 
 }
 
-export function start() {
-    grid.initialize(row, col);
-    controls.setupControls();
-    setupConfig();
-    setupEditor();
-    render();
-}
-
-export { drawPixel, gridWidth, col, row, ctx, grid };
+export { gridWidth, col, row, ctx, grid, updateOnNextFrame };

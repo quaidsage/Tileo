@@ -7,7 +7,7 @@ class Smoke extends Gas {
     static defaultColor = [48, 48, 48];
     static defaultProbability = 0.3;
     static defaultLife = 50;
-    static defaultReduction = 0.3;
+    static defaultReduction = 1;
     static defaultMaxSpeed = 1;
     static defaultAcceleration = 0.1;
     static defaultDispersion = 2;
@@ -40,12 +40,12 @@ class Smoke extends Gas {
     }
 
     setLife(newLife) {
-        this.behavioursLookup['Burning'].life = newLife;
+        this.behavioursLookup['Life'].life = newLife;
         Smoke.currentLife = newLife;
     }
 
     setReduction(newReduction) {
-        this.behavioursLookup['Burning'].reduction = newReduction;
+        this.behavioursLookup['Life'].reduction = newReduction;
         Smoke.currentReduction = newReduction;
     }
 
@@ -66,11 +66,11 @@ class Smoke extends Gas {
 
     resetDefaults() {
         super.resetDefaults();
-        this.setLife(defaultLife);
-        this.setReduction(defaultReduction);
-        this.setMaxSpeed(defaultMaxSpeed);
-        this.setAcceleration(defaultAcceleration);
-        this.setDispersion(defaultDispersion);
+        this.setLife(Smoke.defaultLife);
+        this.setReduction(Smoke.defaultReduction);
+        this.setMaxSpeed(Smoke.defaultMaxSpeed);
+        this.setAcceleration(Smoke.defaultAcceleration);
+        this.setDispersion(Smoke.defaultDispersion);
     }
 
     toString() {
