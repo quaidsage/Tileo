@@ -97,6 +97,7 @@ export function setupControls() {
     let storedElement = localStorage.getItem('currentElement') || 'sand';
     currentElement = controls[storedElement]();
     document.getElementById('selected').textContent = `Selected: ${storedElement.charAt(0).toUpperCase() + storedElement.slice(1)}`;
+    document.getElementById(storedElement).classList.add('button-selected');
     updateHTMLValues();
 
     let storedBrushSize = localStorage.getItem('brushSize') || 4;
