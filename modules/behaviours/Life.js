@@ -1,6 +1,5 @@
 import Behaviour from "./Behaviour.js";
 import { DEBUG_LIFE } from "../config.js";
-import { updateOnNextFrame } from "../renderer.js";
 
 class Life extends Behaviour {
     constructor({ life, reduction } = {}) {
@@ -14,6 +13,7 @@ class Life extends Behaviour {
 
     onDeath(element, grid) {
         grid.removeIndex(element.index);
+        grid.highlightIndex.add(element.index);
     }
 
     update(element, grid) {

@@ -27,6 +27,15 @@ class Grid {
         this.drawAll();
     }
 
+    updateColor() {
+        this.grid.forEach((element, index) => {
+            if (element.constructor.name === "Empty") {
+                element.setColor(Empty.currentColor);
+                updateOnNextFrame.add(index);
+            }
+        });
+    }
+
     removeIndex(i) {
         this.grid[i] = new Empty();
     }

@@ -1,5 +1,7 @@
 import { gridWidth } from './renderer.js';
-import { increaseSize, decreaseSize, setGridSize } from './renderer.js';
+import { increaseSize, decreaseSize, setGridSize, grid } from './renderer.js';
+import Empty from './elements/misc/empty.js';
+import { parseColor, rgbToHex } from './utils.js';
 
 export let DEBUG_VELOCITY = false;
 export let DEBUG_MOVEMENT = false;
@@ -23,6 +25,12 @@ export function setupConfig() {
 
     document.getElementById('replacement').addEventListener('change', function () {
         ALLOW_REPLACEMENT = this.value;
+    });
+
+    document.getElementById('backgroundColor').addEventListener('input', function (event) {
+        new Empty().setColor(parseColor(event.target.value));
+        grid.updateColor();
+        localStorage.setItem('backgroundColor', event.target.value);
     });
 
     let dropdownMenu = document.getElementById('debugOptionsSelect');
@@ -64,6 +72,11 @@ export function setupConfig() {
 
     let storedGridSize = localStorage.getItem('gridSize') || 5;
     setGridSize(parseInt(storedGridSize));
+
+    let storedBackgroundColor = localStorage.getItem('backgroundColor') || rgbToHex(Empty.defaultColor);
+    document.getElementById('backgroundColor').value = storedBackgroundColor;
+    new Empty().setColor(parseColor(storedBackgroundColor));
+    grid.updateColor();
 }
 
 

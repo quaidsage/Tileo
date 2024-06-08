@@ -1,12 +1,5 @@
 import { currentElement } from './controls.js';
-
-function parseColor(color) {
-    let r = parseInt(color.substring(1, 3), 16);
-    let g = parseInt(color.substring(3, 5), 16);
-    let b = parseInt(color.substring(5, 7), 16);
-    return [r, g, b];
-
-}
+import { parseColor } from './utils.js';
 
 function enableInputs(inputs) {
     inputs.forEach((input) => {

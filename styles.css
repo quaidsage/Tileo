@@ -24,6 +24,7 @@ body {
 
 #external {
     margin-left: 10px;
+    height: 800px;
 }
 
 #menu {
@@ -228,4 +229,16 @@ input::-webkit-inner-spin-button {
 
 input[type=number] {
     -moz-appearance: textfield;
+}
+
+#backgroundcolor {
+    color: white;
+    background-color: rgb(50, 50, 56);
+    border: 1px solid white;
+    font-family: monospace;
+    font-size: 14px;
+    box-shadow: 0 4px 10px 0px black;
+    margin-bottom: 10px;
+    width: 100px;
+
 }
