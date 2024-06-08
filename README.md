@@ -61,12 +61,12 @@
   * Select different Views or alter Render Delay to observe element behaviour in the bottom-right menu.
 
 ## Roadmap
-- [ ] Support water and fire interactions.
+- [ ] Support further fire interactions.
+- [ ] Mobile support.
 - [ ] Ability to adjust movement and types of elements.
 - [ ] Option to add more elements and save.
 - [ ] Option to adjust grid row and column ratio.
-- [ ] Further optimisations to drawing of elements.
-- [ ] Image importing.
+- [ ] Optimisation to liquid and gas dispersion.
 
 ## Acknowledgements 
 
