@@ -1,12 +1,12 @@
 <div align="center">
   <h1 align="center">Falling Sand Sandbox</h3>
-  <a href="https://quaidsage.com/falling-sand-sandbox/falling-sand-sandbox.html" target="_blank">
+  <a href="https://quaidsage.com/falling-sand" target="_blank">
     <img src="https://github.com/quaidsage/Falling-Sand-Sandbox/assets/126384060/1f2f55a2-09a7-4899-9b9f-9581db951b57" width="100" height="100">
   </a>
   <p align="center">
     A grid-based physics sandbox built in Javascript
     <br />
-    <a href="https://quaidsage.com/falling-sand-sandbox/falling-sand-sandbox.html" target="_blank"><strong>View demo »</strong></a>
+    <a href="https://quaidsage.com/falling-sand" target="_blank"><strong>View demo »</strong></a>
     <br />
   </p>
 </div>
@@ -51,7 +51,7 @@
 ## Instructions
 
 <p>
-  You can access the demo from my <a href="https://quaidsage.com/falling-sand-sandbox/falling-sand-sandbox.html" target="_blank"><strong>website »</strong></a>. 
+  You can access the demo from my <a href="https://quaidsage.com/falling-sand" target="_blank"><strong>website »</strong></a>. 
 </p>
 
   * Left Click and drag across the left-hand game window to add elements to the grid.
