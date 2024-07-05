@@ -4,7 +4,7 @@
     <img src="https://github.com/quaidsage/Falling-Sand-Sandbox/assets/126384060/1f2f55a2-09a7-4899-9b9f-9581db951b57" width="100" height="100">
   </a>
   <p align="center">
-    A grid-based physics sandbox built in Javascript
+    A grid-based physics sandbox built in TypeScript
     <br />
     <a href="https://quaidsage.com/falling-sand" target="_blank"><strong>View demo »</strong></a>
     <br />
@@ -17,7 +17,7 @@
 
 <img src="https://github.com/quaidsage/Falling-Sand-Sandbox/assets/126384060/07fd90b3-1ba6-4cbc-a3d1-3742e7803863.gif" width="300" height="300" align="right">
 <p align="left">
-  This is my personal attempt at recreating a common simulation method of physics using a grid-based system within Javascript.
+  This is my personal attempt at recreating a common simulation method of physics using a grid-based system within TypeScript.
   This project was built using the skills I've built in design practices in order to create a flexible sandbox experience with greater customization than external options.
 </p>
 
@@ -26,7 +26,7 @@
 <p>
   I was personally inspired to make this project from the game Noita, from its overall aesthetic to the plentiful interactions between game objects. 
   From this, I decided to create my own attempt at recreating that same feeling with the programming skills I have developed. 
-  For this project, I decided to work in Javascript due to ease of rendering and accessibility to this project through the web. 
+  For this project, I decided to work in TypeScript / JavaScript due to ease of rendering and accessibility to this project through the web. 
 </p>
 
 <br>
