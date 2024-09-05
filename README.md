@@ -1,5 +1,5 @@
 <div align="center">
-  <h1 align="center">Tileo</h3>
+  <h1 align="center">~ Tileo ~</h3>
   <a href="https://quaidsage.com/falling-sand" target="_blank">
     <img src="https://github.com/quaidsage/Falling-Sand-Sandbox/assets/126384060/1f2f55a2-09a7-4899-9b9f-9581db951b57" width="100" height="100">
   </a>
