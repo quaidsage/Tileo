@@ -2,12 +2,11 @@ import Behaviour from "./Behaviour.js";
 import { DEBUG_LIFE } from "../config.js";
 class Life extends Behaviour {
     constructor({ life = 50, reduction = 1 } = {}) {
-        var _a;
         super();
         const variation = 1000 / life;
         const min = life - variation;
         const max = life + variation;
-        this.life = (_a = Math.random() * (max - min) + min) !== null && _a !== void 0 ? _a : 100;
+        this.life = Math.random() * (max - min) + min;
         this.reduction = reduction !== null && reduction !== void 0 ? reduction : 1;
     }
     onDeath(element, grid) {

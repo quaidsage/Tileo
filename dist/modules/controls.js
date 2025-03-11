@@ -7,8 +7,23 @@ let brushInterval;
 let currentElement = new Sand(0);
 let mouseX;
 let mouseY;
+let currentInverseTransform;
+const canvas = document.getElementById('canvas');
+function getMousePosition(e) {
+    let rect = canvas.getBoundingClientRect();
+    let tempMouseX = (e.clientX - rect.left) * (800 / canvas.clientWidth);
+    let tempMouseY = (e.clientY - rect.top) * (800 / canvas.clientWidth);
+    let transformedPoint = currentInverseTransform.transformPoint(new DOMPoint(tempMouseX, tempMouseY));
+    mouseX = transformedPoint.x;
+    mouseY = transformedPoint.y;
+}
+export function updateCurrentTransform(baseTranform) {
+    currentInverseTransform = baseTranform.invertSelf();
+}
 export function setupControls() {
-    let canvas = document.getElementById('canvas');
+    // Prevent default right-click menu
+    canvas.addEventListener("contextmenu", (event) => event.preventDefault());
+    // Grid reset and fill buttons
     let resetButton = document.getElementById('reset');
     resetButton.addEventListener('click', function () {
         grid.reset();
@@ -17,25 +32,22 @@ export function setupControls() {
     fillButton.addEventListener('click', function () {
         grid.fill();
     });
+    // Reset camera postiion and scale on space
+    window.addEventListener('keydown', (event) => {
+        if (event.code === 'Space') {
+            camera.x = 0;
+            camera.y = 0;
+            camera.scale = 1;
+        }
+    });
+    // Zoom
     canvas.addEventListener("wheel", (event) => {
         event.preventDefault();
-        // Determine the zoom factor (zoom in or zoom out)
         let zoomFactor = 1.1;
         let newScale = event.deltaY < 0 ? camera.scale * zoomFactor : camera.scale / zoomFactor;
-        // Constrain the new scale to the min and max scale values
-        newScale = Math.min(camera.maxScale, Math.max(camera.minScale, newScale));
-        // Calculate the relative mouse position on the canvas
-        let mouseX = event.clientX - canvas.offsetLeft;
-        let mouseY = event.clientY - canvas.offsetTop;
-        // Calculate the relative position in the world coordinates (before zoom)
-        let worldX = mouseX / camera.scale + camera.x;
-        let worldY = mouseY / camera.scale + camera.y;
-        // Set the new scale for the camera
-        camera.scale = newScale;
-        // Adjust the camera position to keep the point under the mouse in the same place
-        camera.x = worldX - mouseX / camera.scale;
-        camera.y = worldY - mouseY / camera.scale;
+        camera.scale = Math.min(camera.maxScale, Math.max(camera.minScale, newScale));
     });
+    // Panning Start
     let isPanning = false;
     let startX = 0, startY = 0;
     canvas.addEventListener("mousedown", (event) => {
@@ -45,22 +57,20 @@ export function setupControls() {
             startY = event.clientY + camera.y;
         }
     });
+    // Panning Move
     canvas.addEventListener("mousemove", (event) => {
         if (isPanning) {
             camera.x = startX - event.clientX;
             camera.y = startY - event.clientY;
         }
     });
+    // Panning end
     canvas.addEventListener("mouseup", () => isPanning = false);
     canvas.addEventListener("mouseleave", () => isPanning = false);
-    // Prevent default right-click menu
-    canvas.addEventListener("contextmenu", (event) => event.preventDefault());
-    canvas.addEventListener("contextmenu", (event) => event.preventDefault());
+    // Brush start
     canvas.addEventListener('mousedown', function (e) {
         if (e.button === 0) {
-            let rect = canvas.getBoundingClientRect();
-            mouseX = (e.clientX - rect.left) * (800 / canvas.clientWidth);
-            mouseY = (e.clientY - rect.top) * (800 / canvas.clientWidth);
+            getMousePosition(e);
             brushInterval = setInterval(() => {
                 let i = Math.floor(mouseX / gridWidth);
                 let j = Math.floor(mouseY / gridWidth);
@@ -70,13 +80,9 @@ export function setupControls() {
             }, brushSpeed);
         }
     });
-    canvas.addEventListener('mouseup', function () {
-        clearInterval(brushInterval);
-    });
+    // Brush move
     canvas.addEventListener('mousemove', function (e) {
-        let rect = canvas.getBoundingClientRect();
-        mouseX = (e.clientX - rect.left) * (800 / canvas.clientWidth);
-        mouseY = (e.clientY - rect.top) * (800 / canvas.clientWidth);
+        getMousePosition(e);
         // Calculate the grid position of the mouse
         let i = Math.floor(mouseX / gridWidth);
         let j = Math.floor(mouseY / gridWidth);
@@ -84,6 +90,10 @@ export function setupControls() {
             let mousePosition = document.getElementById('mousePosition');
             mousePosition.textContent = `Mouse position: ${i}, ${j}`;
         }
+    });
+    // Brush end
+    canvas.addEventListener('mouseup', function () {
+        clearInterval(brushInterval);
     });
     canvas.addEventListener('mouseleave', function () {
         clearInterval(brushInterval);

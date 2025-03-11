@@ -1,5 +1,5 @@
 import Grid from './grid.js';
-import { setupControls } from './controls.js';
+import { setupControls, updateCurrentTransform } from './controls.js';
 import { setupEditor } from './editor.js';
 import { DEBUG_MOVEMENT, DEBUG_VELOCITY, DEBUG_LIFE, RENDER_DELAY, setupConfig } from './config.js';
 const canvas = document.getElementById("canvas");
@@ -12,6 +12,7 @@ let row = h / gridWidth;
 let col = w / gridWidth;
 let grid = new Grid();
 let updateOnNextFrame = new Set();
+let currentTransform;
 let lastFrameTime = performance.now();
 let frameTimes = [];
 let maxFrameRate = 0;
@@ -85,15 +86,14 @@ function render() {
     ctx.save();
     ctx.translate(-camera.x, -camera.y);
     ctx.scale(camera.scale, camera.scale);
+    updateCurrentTransform(ctx.getTransform());
     grid.draw();
     grid.drawAll();
     ctx.restore();
-    if (frameTimes.length > 0)
-        console.log("frame rate: " + frameTimes.reduce((a, b) => a + b) / frameTimes.length);
     calculateFrameRate();
     setTimeout(() => {
         requestAnimationFrame(() => render());
         updateOnNextFrame.clear();
     }, RENDER_DELAY);
 }
-export { gridWidth, col, row, ctx, grid, updateOnNextFrame, camera };
+export { gridWidth, col, row, ctx, grid, updateOnNextFrame, camera, currentTransform };

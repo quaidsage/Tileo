@@ -12,7 +12,7 @@ class Life extends Behaviour {
         const variation = 1000 / life;
         const min = life - variation;
         const max = life + variation;
-        this.life = Math.random() * (max - min) + min ?? 100;
+        this.life = Math.random() * (max - min) + min;
         this.reduction = reduction ?? 1;
     }
 
