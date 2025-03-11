@@ -1,4 +1,4 @@
 import { start } from './modules/renderer.js';
-window.onload = function () {
+window.onload = () => {
     start();
 };

@@ -1,5 +1,5 @@
 import { Sand, Water, Fire, Smoke, Wood, Stone, Custom, Empty } from './elements/ElementIndex.js';
-import { gridWidth, col, row, grid } from './renderer.js';
+import { gridWidth, col, row, grid, camera } from './renderer.js';
 import { updateHTMLValues } from './editor.js';
 import Solid from './elements/solids/solid.js';
 import Liquid from './elements/liquids/liquid.js';
@@ -25,18 +25,54 @@ export function setupControls() {
         grid.fill();
     });
 
-    canvas.addEventListener('mousedown', function (e) {
-        let rect = canvas.getBoundingClientRect();
-        mouseX = (e.clientX - rect.left) * (800 / canvas.clientWidth);
-        mouseY = (e.clientY - rect.top) * (800 / canvas.clientWidth);
+    canvas.addEventListener("wheel", (event) => {
+        event.preventDefault();
+        let zoomFactor = 1.1;
+        let newScale = event.deltaY < 0 ? camera.scale * zoomFactor : camera.scale / zoomFactor;
 
-        brushInterval = setInterval(() => {
-            let i = Math.floor(mouseX / gridWidth);
-            let j = Math.floor(mouseY / gridWidth);
-            if (i >= 0 && i < col && j >= 0 && j < row) {
-                grid.setBrush(i, j);
-            }
-        }, brushSpeed);
+        camera.scale = Math.min(camera.maxScale, Math.max(camera.minScale, newScale));
+    });
+
+    let isPanning = false;
+    let startX = 0, startY = 0;
+
+    canvas.addEventListener("mousedown", (event) => {
+        if (event.button === 2) {
+            isPanning = true;
+            startX = event.clientX + camera.x;
+            startY = event.clientY + camera.y;
+        }
+    });
+
+    canvas.addEventListener("mousemove", (event) => {
+        if (isPanning) {
+            camera.x = startX - event.clientX;
+            camera.y = startY - event.clientY;
+        }
+    });
+
+    canvas.addEventListener("mouseup", () => isPanning = false);
+    canvas.addEventListener("mouseleave", () => isPanning = false);
+
+    // Prevent default right-click menu
+    canvas.addEventListener("contextmenu", (event) => event.preventDefault());
+
+    canvas.addEventListener("contextmenu", (event) => event.preventDefault());
+
+    canvas.addEventListener('mousedown', function (e) {
+        if (e.button === 0) {
+            let rect = canvas.getBoundingClientRect();
+            mouseX = (e.clientX - rect.left) * (800 / canvas.clientWidth);
+            mouseY = (e.clientY - rect.top) * (800 / canvas.clientWidth);
+
+            brushInterval = setInterval(() => {
+                let i = Math.floor(mouseX / gridWidth);
+                let j = Math.floor(mouseY / gridWidth);
+                if (i >= 0 && i < col && j >= 0 && j < row) {
+                    grid.setBrush(i, j);
+                }
+            }, brushSpeed);
+        }
     });
 
     canvas.addEventListener('mouseup', function () {

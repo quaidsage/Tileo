@@ -1,7 +1,4 @@
-var Behaviour = /** @class */ (function () {
-    function Behaviour() {
-    }
-    Behaviour.prototype.update = function (grid, element) { };
-    return Behaviour;
-}());
+class Behaviour {
+    update(grid, element) { }
+}
 export default Behaviour;

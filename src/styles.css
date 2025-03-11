@@ -25,6 +25,7 @@ body {
 #external {
     margin-left: 10px;
     height: 800px;
+    display: none;
 }
 
 #menu {

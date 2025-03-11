@@ -80,6 +80,7 @@ export function setupConfig() {
 
     let storedRenderDelay = localStorage.getItem('RENDER_DELAY') || '0';
     RENDER_DELAY = parseInt(storedRenderDelay);
+
     renderDelayInput.value = RENDER_DELAY.toString();
 
     let storedGridSize = localStorage.getItem('gridSize') || '5';

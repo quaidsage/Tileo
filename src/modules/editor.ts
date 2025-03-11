@@ -2,10 +2,6 @@ import { currentElement } from './controls.js';
 import { parseColor } from './utils.js';
 import Empty from './elements/misc/empty.js';
 import Sand from './elements/solids/sand.js';
-import Solid from './elements/solids/solid.js';
-import Liquid from './elements/liquids/liquid.js';
-import Gas from './elements/gases/gas.js';
-import Water from './elements/liquids/water.js';
 
 function enableInputs(inputs: IterableIterator<HTMLInputElement>) {
     Array.from(inputs).forEach((input) => {
@@ -115,8 +111,9 @@ export function updateHTMLValues() {
         return;
     }
 
-    const elementConstructor = currentElement.constructor(0).constructor;
-    const elementInstance = currentElement.constructor(0);
+    const elementConstructor = Object.getPrototypeOf(currentElement).constructor
+    const elementInstance = new elementConstructor(0);
+
 
     inputElements.delete('elementName')
     inputElements.get('elementColor')!.value = '#' + elementConstructor.currentColor.map((val: number) => Math.floor(val).toString(16).padStart(2, '0')).join('');

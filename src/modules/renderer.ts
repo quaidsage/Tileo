@@ -3,7 +3,6 @@ import Element from './elements/element.js';
 import { setupControls } from './controls.js';
 import { setupEditor } from './editor.js';
 import { DEBUG_MOVEMENT, DEBUG_VELOCITY, DEBUG_LIFE, RENDER_DELAY, setupConfig } from './config.js';
-import Empty from './elements/misc/empty.js';
 
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const ctx = (canvas as HTMLCanvasElement | null)?.getContext("2d") as CanvasRenderingContext2D;
@@ -20,6 +19,15 @@ let updateOnNextFrame: Set<number> = new Set();
 let lastFrameTime = performance.now();
 let frameTimes: number[] = [];
 let maxFrameRate = 0;
+
+let camera = {
+    x: 0,
+    y: 0,
+    scale: 1,
+    minScale: 0.5,
+    maxScale: 5
+};
+
 
 export function increaseSize() {
     gridWidth = gridSizing[gridSizing.indexOf(gridWidth) + 1] || gridWidth;
@@ -88,7 +96,20 @@ function calculateFrameRate() {
 }
 
 function render() {
+    ctx.resetTransform();
+    ctx.clearRect(0, 0, w, h);
+
+    ctx.save();
+    ctx.translate(-camera.x, -camera.y);
+    ctx.scale(camera.scale, camera.scale);
+
     grid.draw();
+    grid.drawAll();
+
+    ctx.restore();
+    if (frameTimes.length > 0)
+        console.log("frame rate: " + frameTimes.reduce((a, b) => a + b) / frameTimes.length);
+
     calculateFrameRate();
     setTimeout(() => {
         requestAnimationFrame(() => render());
@@ -97,4 +118,4 @@ function render() {
 
 }
 
-export { gridWidth, col, row, ctx, grid, updateOnNextFrame };
+export { gridWidth, col, row, ctx, grid, updateOnNextFrame, camera };

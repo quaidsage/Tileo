@@ -100,7 +100,7 @@ class Grid {
     }
 
     setBrush(x: number, y: number) {
-        const elementConstructor = currentElement.constructor(0).constructor;
+        const elementConstructor = Object.getPrototypeOf(currentElement).constructor;
 
         for (let i = x - brushSize; i <= x + brushSize; i++) {
             for (let j = y - brushSize; j <= y + brushSize; j++) {
@@ -113,7 +113,7 @@ class Grid {
                         }
                         if (Math.random() < elementConstructor.currentProbability) {
                             if (ALLOW_REPLACEMENT || (this.get(j * this.col + i).constructor.name !== currentElement.constructor.name && this.isEmpty(j * this.col + i))) {
-                                let newElement = currentElement instanceof Empty ? new Empty(j * this.col + i) : currentElement.constructor(j * this.col + i);
+                                let newElement = currentElement instanceof Empty ? new Empty(j * this.col + i) : new elementConstructor(j * this.col + i);
                                 this.setIndex(j * this.col + i, newElement);
                                 this.setElement(i, j, newElement);
                             }
@@ -180,7 +180,7 @@ class Grid {
         let x = Math.floor(mouseX / gridWidth);
         let y = Math.floor(mouseY / gridWidth);
 
-        const elementConstructor = currentElement.constructor(0).constructor;
+        const elementConstructor = Object.getPrototypeOf(currentElement).constructor
 
         for (let i = x - brushSize; i <= x + brushSize; i++) {
             for (let j = y - brushSize; j <= y + brushSize; j++) {
