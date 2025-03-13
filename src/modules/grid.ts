@@ -26,15 +26,15 @@ class Grid {
     }
 
     reset() {
-        this.grid = new Array(row * col);
-        for (let i = 0; i < row * col; i++) {
+        this.grid = new Array(this.row * this.col);
+        for (let i = 0; i < this.row * this.col; i++) {
             this.grid[i] = new Empty(i);
         }
         this.drawAll();
     }
 
     fill() {
-        for (let i = 0; i < row * col; i++) {
+        for (let i = 0; i < this.row * this.col; i++) {
             let newElement = currentElement.constructor(i);
             this.setIndex(i, newElement);
             this.grid[i] = newElement;
@@ -65,38 +65,37 @@ class Grid {
 
     setElement(x: number, y: number, element: Element) {
         let newElement;
-        // This switch statement is very annoying but cannot seem to get around typescript not
-        // liking to construct using element constructor for all types.
+        const index = y * this.col + x;
         switch (element.constructor.name) {
             case "Empty":
-                newElement = new Empty(y * this.col + x);
+                newElement = new Empty(index);
                 break;
             case "Sand":
-                newElement = new Sand(y * this.col + x);
+                newElement = new Sand(index);
                 break;
             case "Water":
-                newElement = new Water(y * this.col + x);
+                newElement = new Water(index);
                 break;
             case "Wood":
-                newElement = new Wood(y * this.col + x);
+                newElement = new Wood(index);
                 break;
             case "Fire":
-                newElement = new Fire(y * this.col + x);
+                newElement = new Fire(index);
                 break;
             case "Smoke":
-                newElement = new Smoke(y * this.col + x);
+                newElement = new Smoke(index);
                 break;
             case "Stone":
-                newElement = new Stone(y * this.col + x);
+                newElement = new Stone(index);
                 break;
             case "Custom":
-                newElement = new Custom(y * this.col + x);
+                newElement = new Custom(index);
                 break;
             default:
-                newElement = new Empty(y * this.col + x);
+                newElement = new Empty(index);
         }
-        this.grid[y * this.col + x] = newElement;
-        updateOnNextFrame.add(y * this.col + x);
+        this.grid[index] = newElement;
+        updateOnNextFrame.add(index);
     }
 
     setBrush(x: number, y: number) {
@@ -108,13 +107,14 @@ class Grid {
                 let dy = j - y;
                 if (dx * dx + dy * dy <= brushSize * brushSize) {
                     if (this.isValidIndex(i, j)) {
+                        const index = j * this.col + i;
                         if (currentElement.constructor.name === "Empty") {
-                            this.removeIndex(j * this.col + i);
+                            this.removeIndex(index);
                         }
                         if (Math.random() < elementConstructor.currentProbability) {
-                            if (ALLOW_REPLACEMENT || (this.get(j * this.col + i).constructor.name !== currentElement.constructor.name && this.isEmpty(j * this.col + i))) {
-                                let newElement = currentElement instanceof Empty ? new Empty(j * this.col + i) : new elementConstructor(j * this.col + i);
-                                this.setIndex(j * this.col + i, newElement);
+                            if (ALLOW_REPLACEMENT || (this.get(index).constructor.name !== currentElement.constructor.name && this.isEmpty(index))) {
+                                let newElement = currentElement instanceof Empty ? new Empty(index) : new elementConstructor(index);
+                                this.setIndex(index, newElement);
                                 this.setElement(i, j, newElement);
                             }
                         }
@@ -188,20 +188,20 @@ class Grid {
                 let dy = j - y;
                 if (dx * dx + dy * dy <= brushSize * brushSize) {
                     if (this.isValidIndex(i, j)) {
+                        const index = j * this.col + i;
                         if (currentElement.constructor.name === "Empty") {
                             ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
                         } else {
                             ctx.fillStyle = `rgba(${elementConstructor.currentColor[0]}, ${elementConstructor.currentColor[1]}, ${elementConstructor.currentColor[2]}, 0.3)`;
                         }
                         ctx.fillRect(i * gridWidth, j * gridWidth, gridWidth, gridWidth);
-                        this.highlightIndex.add(j * this.col + i);
+                        this.highlightIndex.add(index);
                     }
                 }
             }
         }
 
         this.update();
-
     }
 
     drawAll() {
@@ -216,7 +216,7 @@ class Grid {
         }
 
         // update solids and liquid from top to bottom
-        for (let i = Math.floor(this.grid.length / this.col) - 1; i >= 0; i--) {
+        for (let i = this.row - 1; i >= 0; i--) {
             for (let j = 0; j < this.col; j++) {
                 let rndmOffset = Math.random() > 0.5;
                 let colOffset = rndmOffset ? j : -j + this.col - 1;
@@ -227,7 +227,7 @@ class Grid {
             }
         }
 
-        for (let i = 0; i < Math.floor(this.grid.length / this.col); i++) {
+        for (let i = 0; i < this.row; i++) {
             for (let j = 0; j < this.col; j++) {
                 let rndmOffset = Math.random() > 0.5;
                 let colOffset = rndmOffset ? j : -j + this.col - 1;
@@ -237,6 +237,7 @@ class Grid {
                 }
             }
         }
+
     }
 }
 

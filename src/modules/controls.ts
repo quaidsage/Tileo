@@ -16,8 +16,8 @@ const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 
 function getMousePosition(e: MouseEvent): void {
     let rect = canvas.getBoundingClientRect();
-    let tempMouseX = (e.clientX - rect.left) * (800 / canvas.clientWidth);
-    let tempMouseY = (e.clientY - rect.top) * (800 / canvas.clientWidth);
+    let tempMouseX = (e.clientX - rect.left) * (canvas.width / canvas.clientWidth);
+    let tempMouseY = (e.clientY - rect.top) * (canvas.height / canvas.clientHeight);
 
     let transformedPoint = currentInverseTransform.transformPoint(new DOMPoint(tempMouseX, tempMouseY));
 
@@ -55,10 +55,24 @@ export function setupControls() {
     // Zoom
     canvas.addEventListener("wheel", (event) => {
         event.preventDefault();
-        let zoomFactor = 1.1;
+        let zoomFactor = 1.05;
         let newScale = event.deltaY < 0 ? camera.scale * zoomFactor : camera.scale / zoomFactor;
 
+        // Calculate the mouse position before zoom
+        let rect = canvas.getBoundingClientRect();
+        let mouseX = (event.clientX - rect.left) * (canvas.width / canvas.clientWidth);
+        let mouseY = (event.clientY - rect.top) * (canvas.height / canvas.clientHeight);
+        let transformedPoint = currentInverseTransform.transformPoint(new DOMPoint(mouseX, mouseY));
+
+        // Apply the new scale
         camera.scale = Math.min(camera.maxScale, Math.max(camera.minScale, newScale));
+
+        // Calculate the mouse position after zoom
+        let newTransformedPoint = currentInverseTransform.transformPoint(new DOMPoint(mouseX, mouseY));
+
+        // Adjust the camera position to keep the mouse position stable
+        camera.x += (newTransformedPoint.x - transformedPoint.x);
+        camera.y += (newTransformedPoint.y - transformedPoint.y);
     });
 
     // Panning Start
