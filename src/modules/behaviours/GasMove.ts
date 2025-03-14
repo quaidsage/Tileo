@@ -12,7 +12,7 @@ class GasMove extends SolidMove {
     }
 
     disperse(element: Element, grid: Grid) {
-        const x = element.index % grid.row;
+        const x = element.index % grid.col;
         const y = Math.floor(element.index / grid.col);
 
         let leftDistance = 0;
@@ -80,7 +80,7 @@ class GasMove extends SolidMove {
             this.updateVelocity(element);
         }
         this.previousPosition = element.index;
-        const x = element.index % grid.row;
+        const x = element.index % grid.col;
         const y = Math.floor(element.index / grid.col);
         let nx = x;
         let ny = y - Math.ceil(this.velocity) - 1;

@@ -82,7 +82,11 @@ export function drawPixel(index: number, element: Element) {
         colorList = element.debugColor;
     }
     ctx.fillStyle = `rgb(${colorList[0]}, ${colorList[1]}, ${colorList[2]})`;
-    ctx.fillRect((index % col) * gridWidth, Math.floor(index / col) * gridWidth, gridWidth, gridWidth);
+
+    const x = Math.floor((index % col) * gridWidth);
+    const y = Math.floor(index / col) * gridWidth;
+
+    ctx.fillRect(x, y, gridWidth, gridWidth);
 }
 
 function calculateFrameRate() {

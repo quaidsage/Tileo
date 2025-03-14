@@ -4,6 +4,7 @@ import { updateHTMLValues } from './editor.js';
 import Solid from './elements/solids/solid.js';
 import Liquid from './elements/liquids/liquid.js';
 import Gas from './elements/gases/gas.js';
+import { closeCurrentMenu } from './toolbar.js';
 
 let brushSpeed = 10;
 let brushSize = 4;
@@ -11,6 +12,7 @@ let brushInterval: number;
 let currentElement: Solid | Liquid | Gas | Element = new Sand(0);
 let mouseX: number
 let mouseY: number;
+let isInspecting: boolean = false;
 let currentInverseTransform: DOMMatrix;
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 
@@ -25,24 +27,7 @@ function getMousePosition(e: MouseEvent): void {
     mouseY = transformedPoint.y;
 }
 
-export function updateCurrentTransform(baseTranform: DOMMatrix): void {
-    currentInverseTransform = baseTranform.invertSelf();
-}
-
-export function setupControls() {
-    // Prevent default right-click menu
-    canvas.addEventListener("contextmenu", (event) => event.preventDefault());
-
-    // Grid reset and fill buttons
-    let resetButton = document.getElementById('reset') as HTMLButtonElement;
-    resetButton.addEventListener('click', function () {
-        grid.reset();
-    });
-    let fillButton = document.getElementById('fillgrid') as HTMLButtonElement;
-    fillButton.addEventListener('click', function () {
-        grid.fill();
-    });
-
+function setupCameraControls() {
     // Reset camera postiion and scale on space
     window.addEventListener('keydown', (event) => {
         if (event.code === 'Space') {
@@ -95,10 +80,17 @@ export function setupControls() {
     // Panning end
     canvas.addEventListener("mouseup", () => isPanning = false);
     canvas.addEventListener("mouseleave", () => isPanning = false);
+}
 
+function setupBrushControls() {
     // Brush start
     canvas.addEventListener('mousedown', function (e) {
         if (e.button === 0) {
+            closeCurrentMenu();
+
+            if (isInspecting) {
+                return;
+            }
             getMousePosition(e);
 
             brushInterval = setInterval(() => {
@@ -110,8 +102,13 @@ export function setupControls() {
             }, brushSpeed);
         }
     });
+
     // Brush move
     canvas.addEventListener('mousemove', function (e) {
+        if (isInspecting) {
+            return;
+        }
+
         getMousePosition(e);
 
         // Calculate the grid position of the mouse
@@ -125,12 +122,30 @@ export function setupControls() {
     });
     // Brush end
     canvas.addEventListener('mouseup', function () {
+        if (isInspecting) {
+            return;
+        }
         clearInterval(brushInterval);
     });
     canvas.addEventListener('mouseleave', function () {
+        if (isInspecting) {
+            return;
+        }
         clearInterval(brushInterval);
     });
+}
 
+function setupLegacyEditorControls() {
+    // Grid reset and fill buttons
+    let resetButton = document.getElementById('reset') as HTMLButtonElement;
+    resetButton.addEventListener('click', function () {
+        grid.reset();
+    });
+    let fillButton = document.getElementById('fillgrid') as HTMLButtonElement;
+    fillButton.addEventListener('click', function () {
+        grid.fill();
+    });
+    
     const controls: { [key: string]: () => any } = {
         'sand': () => new Sand(0),
         'wood': () => new Wood(0),
@@ -186,6 +201,34 @@ export function setupControls() {
     brushSize = parseInt(storedBrushSize);
     let brush = document.getElementById('brush') as HTMLDivElement;
     brush.textContent = `Brush Size: ${brushSize + 1}`;
+}
+
+export function updateCurrentTransform(baseTranform: DOMMatrix): void {
+    currentInverseTransform = baseTranform.invertSelf();
+}
+
+export function setCurrentElement(element: Solid | Liquid | Gas | Element) {
+    currentElement = element;
+}
+
+// add optional parameter to toggle inspect mode
+export function toggleInspect(inspect?: boolean ) {
+    if (inspect !== undefined) {
+        isInspecting = inspect
+    } else {
+        isInspecting = !isInspecting;
+    }
+}
+
+export function setupControls() {
+    // Prevent default right-click menu
+    canvas.addEventListener("contextmenu", (event) => event.preventDefault());
+
+    setupCameraControls();
+
+    setupBrushControls();
+
+    setupLegacyEditorControls();
 }
 
 export { currentElement, brushSize, mouseX, mouseY }

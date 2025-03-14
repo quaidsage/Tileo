@@ -6,7 +6,7 @@ class WaterMove extends Movement {
         this.dispersion = dispersion;
     }
     disperse(element, grid) {
-        const x = element.index % grid.row;
+        const x = element.index % grid.col;
         const y = Math.floor(element.index / grid.col);
         let leftDistance = 0;
         let rightDistance = 0;

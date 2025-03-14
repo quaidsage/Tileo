@@ -10,7 +10,7 @@ class Burning extends Life {
     onDeath(element, grid) {
         element.onFire = false;
         const index = element.index;
-        const x = element.index % grid.row;
+        const x = element.index % grid.col;
         const y = Math.floor(element.index / grid.col);
         element.onFire = false;
         super.onDeath(element, grid);
@@ -22,7 +22,7 @@ class Burning extends Life {
     }
     checkValidNeighbours(element, grid) {
         const neighbours = [];
-        const nx = element.index % grid.row;
+        const nx = element.index % grid.col;
         const ny = Math.floor(element.index / grid.col);
         for (let dx = -1; dx <= 1; dx++) {
             for (let dy = -1; dy <= 1; dy++) {

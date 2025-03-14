@@ -58,6 +58,19 @@ body {
 
 }
 
+.menu-item {
+    background-color: rgb(50, 50, 56);
+    color: white;
+    border: 1px solid white;
+    font-family: monospace;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin-top: 5px;
+    width: 100%;
+
+}
+
 
 #external {
     margin-left: 10px;
