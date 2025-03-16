@@ -1,5 +1,6 @@
 import { Sand, Water, Fire, Smoke, Wood, Stone, Custom, Empty } from './elements/ElementIndex.js';
 import { setCurrentElement, toggleInspect } from './controls.js';
+import { togglePause } from './config.js';
 var MenuType;
 (function (MenuType) {
     MenuType[MenuType["PLACE"] = 0] = "PLACE";
@@ -17,20 +18,25 @@ const controls = {
     'custom': () => new Custom(0),
     'eraser': () => new Empty(0),
 };
-let placeItems = ['Sand', 'Wood', 'Water', 'Smoke', 'Stone', 'Fire', 'Custom', 'Eraser'];
+let placeItems = ['Sand', 'Wood', 'Water', 'Smoke', 'Stone', 'Fire', 'Custom', 'Eraser', 'Temp'];
 let alterItems = ['Plus Brush', 'Minus Brush'];
-let utilityItems = ['Save', 'Load'];
+let utilityItems = ['Save', 'Load', 'Pause', 'Clear'];
 let existingMenu = null;
 let existingMenuType = null;
+// Adds buttons to the menu based on the type of menu
 function addItems(itemMenu, menuType) {
     let item;
     switch (menuType) {
         case MenuType.PLACE:
             placeItems.forEach(element => {
-                item = document.createElement('button');
+                const item = document.createElement('button');
                 item.textContent = element;
                 item.addEventListener('click', function () {
                     toggleInspect(false);
+                    // 'Toggle' selected button to apply appropriate styling
+                    const menuItems = itemMenu.querySelectorAll('.menu-item');
+                    menuItems.forEach(menuItem => menuItem.classList.remove('active'));
+                    item.classList.add('active');
                     setCurrentElement(controls[element.toLowerCase()]());
                 });
                 item.className = 'menu-item';
@@ -54,7 +60,9 @@ function addItems(itemMenu, menuType) {
                 item = document.createElement('button');
                 item.textContent = element;
                 item.addEventListener('click', function () {
-                    console.log(`Using utility ${element}`);
+                    if (element === 'Pause') {
+                        togglePause();
+                    }
                 });
                 item.className = 'menu-item';
                 itemMenu.appendChild(item);
@@ -62,6 +70,7 @@ function addItems(itemMenu, menuType) {
             break;
     }
 }
+// Positions the menu based on the button's position in toolbar 
 function positionMenu(itemMenu, menuType) {
     // Update y position of menu based on toolbar position
     itemMenu.style.top = `${document.getElementById('toolbar').getBoundingClientRect().top + 5}px`;
@@ -83,6 +92,7 @@ function positionMenu(itemMenu, menuType) {
     const buttonRect = button.getBoundingClientRect();
     itemMenu.style.left = `${buttonRect.left}px`;
 }
+// Creates a menu that will display various buttons based on the type of menu
 function createMenu(menuType) {
     let itemMenu = document.createElement('div');
     itemMenu.id = 'item-menu';
@@ -91,6 +101,7 @@ function createMenu(menuType) {
     document.body.appendChild(itemMenu);
     return itemMenu;
 }
+// Opens a menu based on the type of menu
 function openMenu(menuType) {
     if (existingMenuType === menuType) {
         existingMenu === null || existingMenu === void 0 ? void 0 : existingMenu.remove();
@@ -113,6 +124,7 @@ function openMenu(menuType) {
     }
     existingMenuType = menuType;
 }
+// Assign functionality to toolbar buttons
 export function setupToolbar() {
     // Bind functions to pressing of toolbar buttons
     let placeButton = document.getElementById('place-button');
@@ -130,8 +142,10 @@ export function setupToolbar() {
     let inspectButton = document.getElementById('inspect-button');
     inspectButton.addEventListener('click', function () {
         toggleInspect();
+        closeCurrentMenu();
     });
 }
+// Close the current menu, putting focus onto the canvas
 export function closeCurrentMenu() {
     existingMenu === null || existingMenu === void 0 ? void 0 : existingMenu.remove();
     existingMenuType = null;

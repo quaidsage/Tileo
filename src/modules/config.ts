@@ -90,6 +90,13 @@ export function setupConfig() {
     backgroundColorInput.value = storedBackgroundColor;
     Empty.currentColor = (parseColor(storedBackgroundColor));
     grid.updateColor();
+
 }
 
+export function togglePause(val?: boolean) {
+    if (val !== undefined)
+        isPaused = val;
+    else
+        isPaused = !isPaused;
+}
 

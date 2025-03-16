@@ -1,5 +1,6 @@
 import { Sand, Water, Fire, Smoke, Wood, Stone, Custom, Empty } from './elements/ElementIndex.js';
 import { setCurrentElement, toggleInspect } from './controls.js';
+import { isPaused, togglePause } from './config.js';
 
 enum MenuType {
     PLACE,
@@ -19,23 +20,30 @@ const controls: { [key: string]: () => any } = {
     'eraser': () => new Empty(0),
 };
 
-let placeItems = ['Sand', 'Wood', 'Water', 'Smoke', 'Stone', 'Fire', 'Custom', 'Eraser'];
+let placeItems = ['Sand', 'Wood', 'Water', 'Smoke', 'Stone', 'Fire', 'Custom', 'Eraser', 'Temp'];
 let alterItems = ['Plus Brush', 'Minus Brush'];
-let utilityItems = ['Save', 'Load'];
+let utilityItems = ['Save', 'Load', 'Pause', 'Clear'];
 
 let existingMenu: HTMLDivElement | null | undefined = null;
 let existingMenuType: MenuType | null = null;
 
+// Adds buttons to the menu based on the type of menu
 function addItems(itemMenu: HTMLDivElement, menuType: MenuType) {
     let item: HTMLButtonElement;
 
     switch (menuType) {
         case MenuType.PLACE:
             placeItems.forEach(element => {
-                item = document.createElement('button');
+                const item = document.createElement('button');
                 item.textContent = element;
                 item.addEventListener('click', function () {
                     toggleInspect(false);
+                    
+                    // 'Toggle' selected button to apply appropriate styling
+                    const menuItems = itemMenu.querySelectorAll('.menu-item');
+                    menuItems.forEach(menuItem => menuItem.classList.remove('active'));
+                    item.classList.add('active');
+
                     setCurrentElement(controls[element.toLowerCase()]());
                 });
                 item.className = 'menu-item';
@@ -59,7 +67,9 @@ function addItems(itemMenu: HTMLDivElement, menuType: MenuType) {
                 item = document.createElement('button');
                 item.textContent = element;
                 item.addEventListener('click', function () {
-                    console.log(`Using utility ${element}`);
+                    if (element === 'Pause') {
+                        togglePause();
+                    }
                 });
                 item.className = 'menu-item';
                 itemMenu.appendChild(item);
@@ -68,6 +78,7 @@ function addItems(itemMenu: HTMLDivElement, menuType: MenuType) {
     }
 }
 
+// Positions the menu based on the button's position in toolbar 
 function positionMenu(itemMenu: HTMLDivElement, menuType: MenuType) {
     // Update y position of menu based on toolbar position
     itemMenu.style.top = `${(document.getElementById('toolbar') as HTMLDivElement).getBoundingClientRect().top + 5}px`;
@@ -92,6 +103,7 @@ function positionMenu(itemMenu: HTMLDivElement, menuType: MenuType) {
     itemMenu.style.left = `${buttonRect.left}px`;
 }
 
+// Creates a menu that will display various buttons based on the type of menu
 function createMenu(menuType: MenuType) {
     let itemMenu = document.createElement('div');
     itemMenu.id = 'item-menu';
@@ -104,6 +116,7 @@ function createMenu(menuType: MenuType) {
     return itemMenu;
 }
 
+// Opens a menu based on the type of menu
 function openMenu(menuType: MenuType) {
     if (existingMenuType === menuType) {
         existingMenu?.remove();
@@ -130,6 +143,7 @@ function openMenu(menuType: MenuType) {
     existingMenuType = menuType;
 }
 
+// Assign functionality to toolbar buttons
 export function setupToolbar() {
     // Bind functions to pressing of toolbar buttons
     let placeButton = document.getElementById('place-button') as HTMLButtonElement;
@@ -150,9 +164,11 @@ export function setupToolbar() {
     let inspectButton = document.getElementById('inspect-button') as HTMLButtonElement;
     inspectButton.addEventListener('click', function () {
         toggleInspect();
+        closeCurrentMenu();
     });
 }
 
+// Close the current menu, putting focus onto the canvas
 export function closeCurrentMenu() {
     existingMenu?.remove();
     existingMenuType = null;

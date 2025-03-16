@@ -1,7 +1,8 @@
 import { Sand, Water, Fire, Smoke, Wood, Stone, Custom, Empty } from './elements/ElementIndex.js';
-import { gridWidth, col, row, grid, camera } from './renderer.js';
+import { gridWidth, col, row, grid, camera, ctx } from './renderer.js';
 import { updateHTMLValues } from './editor.js';
 import { closeCurrentMenu } from './toolbar.js';
+import { drawElementInfo } from './inspect-menu.js';
 let brushSpeed = 10;
 let brushSize = 4;
 let brushInterval;
@@ -10,6 +11,7 @@ let mouseX;
 let mouseY;
 let isInspecting = false;
 let currentInverseTransform;
+let currentElementInfo = document.getElementById('element-details-menu');
 const canvas = document.getElementById('canvas');
 function getMousePosition(e) {
     let rect = canvas.getBoundingClientRect();
@@ -18,6 +20,17 @@ function getMousePosition(e) {
     let transformedPoint = currentInverseTransform.transformPoint(new DOMPoint(tempMouseX, tempMouseY));
     mouseX = transformedPoint.x;
     mouseY = transformedPoint.y;
+}
+function debugTool(transformedPoint) {
+    //draw a point via html
+    let point = document.createElement('div');
+    point.style.position = 'absolute';
+    point.style.width = '5px';
+    point.style.height = '5px';
+    point.style.backgroundColor = 'red';
+    point.style.left = `${transformedPoint.x}px`;
+    point.style.top = `${transformedPoint.y}px`;
+    document.body.appendChild(point);
 }
 function setupCameraControls() {
     // Reset camera postiion and scale on space
@@ -31,20 +44,36 @@ function setupCameraControls() {
     // Zoom
     canvas.addEventListener("wheel", (event) => {
         event.preventDefault();
-        let zoomFactor = 1.05;
-        let newScale = event.deltaY < 0 ? camera.scale * zoomFactor : camera.scale / zoomFactor;
-        // Calculate the mouse position before zoom
-        let rect = canvas.getBoundingClientRect();
-        let mouseX = (event.clientX - rect.left) * (canvas.width / canvas.clientWidth);
-        let mouseY = (event.clientY - rect.top) * (canvas.height / canvas.clientHeight);
-        let transformedPoint = currentInverseTransform.transformPoint(new DOMPoint(mouseX, mouseY));
-        // Apply the new scale
-        camera.scale = Math.min(camera.maxScale, Math.max(camera.minScale, newScale));
-        // Calculate the mouse position after zoom
-        let newTransformedPoint = currentInverseTransform.transformPoint(new DOMPoint(mouseX, mouseY));
-        // Adjust the camera position to keep the mouse position stable
-        camera.x += (newTransformedPoint.x - transformedPoint.x);
-        camera.y += (newTransformedPoint.y - transformedPoint.y);
+        const zoomFactor = 1.1;
+        const newScale = event.deltaY < 0
+            ? camera.scale * zoomFactor
+            : camera.scale / zoomFactor;
+        // Ensure the new scale is within the allowed range
+        const clampedScale = Math.min(camera.maxScale, Math.max(camera.minScale, newScale));
+        if (clampedScale === camera.scale) {
+            return; // No change in scale
+        }
+        // Calculate the mouse position relative to canvas
+        const rect = canvas.getBoundingClientRect();
+        const canvasX = (event.clientX - rect.left) * (canvas.width / canvas.clientWidth);
+        const canvasY = (event.clientY - rect.top) * (canvas.height / canvas.clientHeight);
+        // Get the world coordinates before zoom
+        const worldPointBeforeZoom = currentInverseTransform.transformPoint(new DOMPoint(canvasX, canvasY));
+        // debugTool(worldPointBeforeZoom);
+        // Store the old scale and update to new scale
+        const oldScale = camera.scale;
+        camera.scale = clampedScale;
+        // Apply the transform based on the updated camera scale
+        const transform = ctx.getTransform();
+        // Update the inverse transform matrix
+        updateCurrentTransform(transform);
+        // Calculate how the same screen point would map to world coordinates after the zoom
+        const worldPointAfterZoom = currentInverseTransform.transformPoint(new DOMPoint(canvasX, canvasY));
+        // Adjust camera position to keep the point under cursor fixed in world space
+        camera.x += (worldPointAfterZoom.x - worldPointBeforeZoom.x) * camera.scale;
+        camera.y += (worldPointAfterZoom.y - worldPointBeforeZoom.y) * camera.scale;
+        // Update the inverse transform again with the new camera position
+        updateCurrentTransform(ctx.getTransform());
     });
     // Panning Start
     let isPanning = false;
@@ -85,11 +114,8 @@ function setupBrushControls() {
             }, brushSpeed);
         }
     });
-    // Brush move
+    // Brush move / inspect
     canvas.addEventListener('mousemove', function (e) {
-        if (isInspecting) {
-            return;
-        }
         getMousePosition(e);
         // Calculate the grid position of the mouse
         let i = Math.floor(mouseX / gridWidth);
@@ -97,19 +123,26 @@ function setupBrushControls() {
         if (i >= 0 && i < col && j >= 0 && j < row) {
             let mousePosition = document.getElementById('mousePosition');
             mousePosition.textContent = `Mouse position: ${i}, ${j}`;
+            if (isInspecting) {
+                drawElementInfo(i, j, e, currentElementInfo);
+            }
+            else {
+                if (currentElementInfo) {
+                    currentElementInfo.style.display = 'none';
+                }
+            }
+        }
+    });
+    canvas.addEventListener('mousedown', function (e) {
+        if (!isInspecting && e.button === 2) {
+            toggleInspect(true);
         }
     });
     // Brush end
     canvas.addEventListener('mouseup', function () {
-        if (isInspecting) {
-            return;
-        }
         clearInterval(brushInterval);
     });
     canvas.addEventListener('mouseleave', function () {
-        if (isInspecting) {
-            return;
-        }
         clearInterval(brushInterval);
     });
 }
@@ -195,4 +228,4 @@ export function setupControls() {
     setupBrushControls();
     setupLegacyEditorControls();
 }
-export { currentElement, brushSize, mouseX, mouseY };
+export { currentElement, brushSize, mouseX, mouseY, isInspecting };

@@ -1,6 +1,6 @@
 import Element from './elements/element.js';
 import { drawPixel, gridWidth, col, row, ctx, updateOnNextFrame } from './renderer.js';
-import { currentElement, brushSize, mouseX, mouseY } from './controls.js';
+import { currentElement, brushSize, mouseX, mouseY, isInspecting } from './controls.js';
 import { ALLOW_REPLACEMENT, isPaused, DEBUG_LIFE, DEBUG_MOVEMENT, DEBUG_VELOCITY } from './config.js';
 import { Sand, Water, Fire, Smoke, Wood, Stone, Custom, Empty } from './elements/ElementIndex.js';
 
@@ -57,6 +57,10 @@ class Grid {
 
     get(i: number) {
         return this.grid[i];
+    }
+
+    getElement(i: number, j: number) {
+        return this.grid[j * this.col + i];
     }
 
     setIndex(i: number, element: Element) {
@@ -182,25 +186,37 @@ class Grid {
 
         const elementConstructor = Object.getPrototypeOf(currentElement).constructor
 
-        for (let i = x - brushSize; i <= x + brushSize; i++) {
-            for (let j = y - brushSize; j <= y + brushSize; j++) {
-                let dx = i - x;
-                let dy = j - y;
-                if (dx * dx + dy * dy <= brushSize * brushSize) {
-                    if (this.isValidIndex(i, j)) {
-                        const index = j * this.col + i;
-                        if (currentElement.constructor.name === "Empty") {
-                            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-                        } else {
-                            ctx.fillStyle = `rgba(${elementConstructor.currentColor[0]}, ${elementConstructor.currentColor[1]}, ${elementConstructor.currentColor[2]}, 0.3)`;
+        if (!isInspecting) { // Highlight brush area
+            for (let i = x - brushSize; i <= x + brushSize; i++) {
+                for (let j = y - brushSize; j <= y + brushSize; j++) {
+                    let dx = i - x;
+                    let dy = j - y;
+                    if (dx * dx + dy * dy <= brushSize * brushSize) {
+                        if (this.isValidIndex(i, j)) {
+                            const index = j * this.col + i;
+                            if (currentElement.constructor.name === "Empty") {
+                                ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                            } else {
+                                ctx.fillStyle = `rgba(${elementConstructor.currentColor[0]}, ${elementConstructor.currentColor[1]}, ${elementConstructor.currentColor[2]}, 0.3)`;
+                            }
+                            ctx.fillRect(i * gridWidth, j * gridWidth, gridWidth, gridWidth);
+                            this.highlightIndex.add(index);
                         }
-                        ctx.fillRect(i * gridWidth, j * gridWidth, gridWidth, gridWidth);
-                        this.highlightIndex.add(index);
                     }
                 }
             }
+        } else { // Highlight inspected element
+            if (this.isValidIndex(x, y)) {
+                const index = y * this.col + x;
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                
+                ctx.fillRect(x * gridWidth, y * gridWidth, gridWidth, gridWidth);
+                this.highlightIndex.add(index);
+
+            }
         }
 
+        // Update the elements on the grid
         this.update();
     }
 

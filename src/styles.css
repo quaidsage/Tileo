@@ -30,7 +30,7 @@ body {
     transform: translate(-50%, -50%);
     display: flex;
     justify-content: space-evenly;
-    background-color: rgb(50, 50, 56);
+    background-color: rgba(50, 50, 56, 0.75);
     padding: 10px;
     width: 50%;
     z-index: 1;
@@ -55,7 +55,10 @@ body {
     width: 200px;
     height: 300px;
     position: absolute;
-
+    overflow-y: auto;
+    max-height: 300px;
+    scrollbar-width: thin;
+    scrollbar-color: white rgb(40, 40, 46);
 }
 
 .menu-item {
@@ -63,14 +66,48 @@ body {
     color: white;
     border: 1px solid white;
     font-family: monospace;
-    font-size: 16px;
+    font-size: 18px;
     cursor: pointer;
-    padding: 5px 10px;
+    padding: 5px 0px;
     margin-top: 5px;
     width: 100%;
-
+    box-sizing: border-box;
 }
 
+.menu-item.active {
+    background-color: rgb(70, 70, 76);
+    outline: 1px solid white;
+}
+
+#item-menu::-webkit-scrollbar {
+    width: 8px;
+}
+
+#item-menu::-webkit-scrollbar-track {
+    background: rgb(40, 40, 46);
+}
+
+#item-menu::-webkit-scrollbar-thumb {
+    background-color: white;
+    border-radius: 4px;
+}
+
+#element-details-menu {
+    position: absolute; 
+    display: none; 
+    background: rgba(50, 50, 56, 0.75); 
+    border: 1px solid white; 
+    padding: 0px 10px;
+    color: white;
+    pointer-events: none;
+}
+
+#element-details-content {
+    margin: 0;
+    padding: 0;
+    line-height: 0.5;
+
+}
 
 #external {
     margin-left: 10px;
