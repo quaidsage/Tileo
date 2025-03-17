@@ -1,4 +1,4 @@
-import { grid } from './renderer.js';
+import { grid } from '../renderer.js';
 export function drawElementInfo(i, j, e, currentElementInfo) {
     // Get element from grid based on mouse position
     let element = grid.getElement(i, j);

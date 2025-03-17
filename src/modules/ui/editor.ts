@@ -1,7 +1,6 @@
-import { currentElement } from './controls.js';
-import { parseColor } from './utils.js';
-import Empty from './elements/misc/empty.js';
-import Sand from './elements/solids/sand.js';
+import { currentElement } from '../controls.js';
+import { parseColor } from '../utils.js';
+import Empty from '../elements/misc/empty.js';
 
 function enableInputs(inputs: IterableIterator<HTMLInputElement>) {
     Array.from(inputs).forEach((input) => {

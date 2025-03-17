@@ -1,8 +1,9 @@
 import Element from './elements/element.js';
 import { drawPixel, gridWidth, col, row, ctx, updateOnNextFrame } from './renderer.js';
-import { currentElement, brushSize, mouseX, mouseY, isInspecting } from './controls.js';
+import { currentElement, mouseX, mouseY, isInspecting } from './controls.js';
 import { ALLOW_REPLACEMENT, isPaused, DEBUG_LIFE, DEBUG_MOVEMENT, DEBUG_VELOCITY } from './config.js';
 import { Sand, Water, Fire, Smoke, Wood, Stone, Custom, Empty } from './elements/ElementIndex.js';
+import { getBrushSize } from './ui/brush-menu.js';
 
 
 class Grid {
@@ -105,6 +106,8 @@ class Grid {
     setBrush(x: number, y: number) {
         const elementConstructor = Object.getPrototypeOf(currentElement).constructor;
 
+        let brushSize = getBrushSize();
+
         for (let i = x - brushSize; i <= x + brushSize; i++) {
             for (let j = y - brushSize; j <= y + brushSize; j++) {
                 let dx = i - x;
@@ -183,6 +186,7 @@ class Grid {
 
         let x = Math.floor(mouseX / gridWidth);
         let y = Math.floor(mouseY / gridWidth);
+        let brushSize = getBrushSize();
 
         const elementConstructor = Object.getPrototypeOf(currentElement).constructor
 

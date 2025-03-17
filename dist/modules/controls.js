@@ -1,10 +1,11 @@
 import { Sand, Water, Fire, Smoke, Wood, Stone, Custom, Empty } from './elements/ElementIndex.js';
-import { gridWidth, col, row, grid, camera, ctx } from './renderer.js';
-import { updateHTMLValues } from './editor.js';
-import { closeCurrentMenu } from './toolbar.js';
-import { drawElementInfo } from './inspect-menu.js';
-let brushSpeed = 10;
-let brushSize = 4;
+import { gridWidth, col, row, grid, camera, ctx, focusCanvas } from './renderer.js';
+import { updateHTMLValues } from './ui/editor.js';
+import { drawElementInfo } from './ui/inspect-menu.js';
+import { closeCurrentBrushMenu, getBrushSpeed, getCurrentBrushMenu, openBrushMenu } from './ui/brush-menu.js';
+import { togglePause } from './config.js';
+import { toggleDrawMenu } from './ui/toolbar.js';
+let PAUSE_KEY = 'KeyP';
 let brushInterval;
 let currentElement = new Sand(0);
 let mouseX;
@@ -79,7 +80,7 @@ function setupCameraControls() {
     let isPanning = false;
     let startX = 0, startY = 0;
     canvas.addEventListener("mousedown", (event) => {
-        if (event.button === 2) {
+        if (event.button === 1) {
             isPanning = true;
             startX = event.clientX + camera.x;
             startY = event.clientY + camera.y;
@@ -100,7 +101,7 @@ function setupBrushControls() {
     // Brush start
     canvas.addEventListener('mousedown', function (e) {
         if (e.button === 0) {
-            closeCurrentMenu();
+            focusCanvas();
             if (isInspecting) {
                 return;
             }
@@ -111,7 +112,7 @@ function setupBrushControls() {
                 if (i >= 0 && i < col && j >= 0 && j < row) {
                     grid.setBrush(i, j);
                 }
-            }, brushSpeed);
+            }, getBrushSpeed());
         }
     });
     // Brush move / inspect
@@ -134,8 +135,11 @@ function setupBrushControls() {
         }
     });
     canvas.addEventListener('mousedown', function (e) {
-        if (!isInspecting && e.button === 2) {
-            toggleInspect(true);
+        if (e.button === 2) {
+            if (!isInspecting) {
+                toggleInspect(true);
+            }
+            focusCanvas();
         }
     });
     // Brush end
@@ -144,6 +148,29 @@ function setupBrushControls() {
     });
     canvas.addEventListener('mouseleave', function () {
         clearInterval(brushInterval);
+    });
+}
+function setupHotkeys() {
+    // Toggle pause key
+    window.addEventListener('keydown', (event) => {
+        if (event.code === PAUSE_KEY) {
+            togglePause();
+        }
+    });
+    window.addEventListener('keydown', (event) => {
+        if (event.code === 'KeyD') {
+            toggleDrawMenu();
+        }
+    });
+    window.addEventListener('keydown', (event) => {
+        if (event.code === 'KeyC') {
+            if (getCurrentBrushMenu()) {
+                closeCurrentBrushMenu();
+                return;
+            }
+            focusCanvas();
+            openBrushMenu();
+        }
     });
 }
 function setupLegacyEditorControls() {
@@ -181,30 +208,6 @@ function setupLegacyEditorControls() {
             updateHTMLValues();
         });
     });
-    const brushControls = {
-        'plusbrush': () => brushSize++,
-        'minusbrush': () => brushSize = Math.max(0, brushSize - 1),
-    };
-    Object.keys(brushControls).forEach(controlId => {
-        let button = document.getElementById(controlId);
-        button.addEventListener('click', function () {
-            brushControls[controlId]();
-            localStorage.setItem('brushSize', brushSize.toString());
-            let brush = document.getElementById('brush');
-            brush.textContent = `Brush Size: ${brushSize + 1}`;
-        });
-    });
-    let storedElement = localStorage.getItem('currentElement') || 'sand';
-    currentElement = controls[storedElement]();
-    let selected = document.getElementById('selected');
-    selected.textContent = `Selected: ${storedElement.charAt(0).toUpperCase() + storedElement.slice(1)}`;
-    let storedElementButton = document.getElementById(storedElement);
-    storedElementButton.classList.add('button-selected');
-    updateHTMLValues();
-    let storedBrushSize = localStorage.getItem('brushSize') || '4';
-    brushSize = parseInt(storedBrushSize);
-    let brush = document.getElementById('brush');
-    brush.textContent = `Brush Size: ${brushSize + 1}`;
 }
 export function updateCurrentTransform(baseTranform) {
     currentInverseTransform = baseTranform.invertSelf();
@@ -226,6 +229,7 @@ export function setupControls() {
     canvas.addEventListener("contextmenu", (event) => event.preventDefault());
     setupCameraControls();
     setupBrushControls();
+    setupHotkeys();
     setupLegacyEditorControls();
 }
-export { currentElement, brushSize, mouseX, mouseY, isInspecting };
+export { currentElement, mouseX, mouseY, isInspecting };

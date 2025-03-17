@@ -1,8 +1,9 @@
 import Grid from './grid.js';
 import { setupControls, updateCurrentTransform } from './controls.js';
-import { setupEditor } from './editor.js';
+import { setupEditor } from './ui/editor.js';
 import { DEBUG_MOVEMENT, DEBUG_VELOCITY, DEBUG_LIFE, RENDER_DELAY, setupConfig } from './config.js';
-import { setupToolbar } from './toolbar.js';
+import { closeCurrentMenu, setupToolbar } from './ui/toolbar.js';
+import { closeCurrentBrushMenu } from './ui/brush-menu.js';
 const canvas = document.getElementById("canvas");
 const ctx = canvas === null || canvas === void 0 ? void 0 : canvas.getContext("2d");
 let w = canvas.width;
@@ -116,5 +117,10 @@ function render() {
         requestAnimationFrame(() => render());
         updateOnNextFrame.clear();
     }, RENDER_DELAY);
+}
+export function focusCanvas() {
+    closeCurrentMenu();
+    closeCurrentBrushMenu();
+    canvas.focus();
 }
 export { gridWidth, col, row, ctx, grid, updateOnNextFrame, camera, currentTransform };

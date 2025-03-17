@@ -1,8 +1,8 @@
-import Burning from './behaviours/Burning.js';
-import Life from './behaviours/Life.js';
-import Movement from './behaviours/Movement.js';
-import SolidMove from './behaviours/SolidMove.js';
-import { grid } from './renderer.js';
+import Burning from '../behaviours/Burning.js';
+import Life from '../behaviours/Life.js';
+import Movement from '../behaviours/Movement.js';
+import SolidMove from '../behaviours/SolidMove.js';
+import { grid } from '../renderer.js';
 
 export function drawElementInfo(i: number, j: number, e: MouseEvent, currentElementInfo: HTMLDivElement): void {
     // Get element from grid based on mouse position
@@ -78,6 +78,7 @@ export function drawElementInfo(i: number, j: number, e: MouseEvent, currentElem
             <p>x: ${i || 'N/A'}, y: ${j || 'N/A'}</p>
             <p>Type: ${elementType || 'N/A'}</p>
             <p>Color: ${'#' + elementConstructor.currentColor.map((val: number) => Math.floor(val).toString(16).padStart(2, '0')).join('') || 'N/A'}</p>
+            <p>On Fire: ${elementInstance.behavioursLookup['Burning'] ? (`${element.onFire ? 'Yes' : 'No'}`) : 'Immune'}</p>
             <p>Velocity: ${elementInstance.behavioursLookup['SolidMove'] ? `${velocity}` : 'N/A'}</p>
             <p>Acceleration: ${elementConstructor.currentAcceleration || 'N/A'}</p>
             <p>Max Speed: ${elementConstructor.currentMaxSpeed || 'N/A'}</p>

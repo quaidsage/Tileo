@@ -18,7 +18,6 @@ body {
     display: flex;
     justify-content: center;
     margin: 10px 20px;
-    border: 1px solid white;
     background-color: rgb(34, 34, 40);
 }
 
@@ -107,6 +106,117 @@ body {
     padding: 0;
     line-height: 0.5;
 
+}
+
+#brush-menu {
+    background-color: rgb(50, 50, 56);
+    border: 1px solid white;
+    padding: 30px 0px;
+    width: 800px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    z-index: 1;
+}
+
+#brush-preview {
+    border: 1px solid white;
+    aspect-ratio: 1/1;
+}
+
+#brush-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    font-size: 18px;
+}
+
+#close-brush-menu {
+    background-color: rgb(50, 50, 56);
+    color: white;
+    border: 1px solid white;
+    font-family: monospace;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin: 10px;
+    width: 100%;
+}
+
+#close-brush-menu:hover {
+    background-color: rgb(40, 40, 46);
+}
+
+#brush-controls label {
+    margin-bottom: 10px;
+}
+
+#brush-controls input[type="range"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    background: rgb(50, 50, 56);
+    outline: none;
+    margin-bottom: 30px;
+    border: 1px solid white;
+}
+
+#brush-controls input[type="range"]:hover {
+    opacity: 1;
+}
+
+#brush-controls input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: white;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid rgb(50, 50, 56);
+}
+
+#brush-controls input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: white;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid rgb(50, 50, 56);
+}
+
+#help-menu {
+    background-color: rgb(50, 50, 56);
+    border: 1px solid white;
+    padding: 10px 20px;
+    width: 500px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    color: white;
+}
+
+#close-help-menu {
+    background-color: rgb(50, 50, 56);
+    color: white;
+    border: 1px solid white;
+    font-family: monospace;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin: 10px;
+}
+
+#close-help-menu:hover {
+    background-color: rgb(40, 40, 46);
 }
 
 #external {
