@@ -1,7 +1,7 @@
 import { Sand, Water, Fire, Smoke, Wood, Stone, Custom, Empty } from '../elements/ElementIndex.js';
 import { setCurrentElement, toggleInspect } from '../controls.js';
-import { togglePause } from '../config.js';
-import { closeCurrentBrushMenu, getCurrentBrushMenu, openBrushMenu } from './brush-menu.js';
+import { DebugOptions, toggleDebug, togglePause } from '../config.js';
+import { toggleBrushMenu } from './brush-menu.js';
 import { focusCanvas } from '../renderer.js';
 import { toggleHelpMenu } from './help-menu.js';
 
@@ -22,7 +22,7 @@ const controls: { [key: string]: () => any } = {
 };
 
 let placeItems = ['Sand', 'Wood', 'Water', 'Smoke', 'Stone', 'Fire', 'Custom', 'Eraser', 'Temp'];
-let utilityItems = ['Pause (P)', 'Clear Save'];
+let utilityItems = ['Pause (P)', 'Clear Save', 'Debug Velo', 'Debug Move', 'Debug Life'];
 
 let existingMenu: HTMLDivElement | null | undefined = null;
 let existingMenuType: MenuType | null = null;
@@ -38,13 +38,14 @@ function addItems(itemMenu: HTMLDivElement, menuType: MenuType) {
                 item.textContent = element;
                 item.addEventListener('click', function () {
                     toggleInspect(false);
-                    
+
                     // 'Toggle' selected button to apply appropriate styling
                     const menuItems = itemMenu.querySelectorAll('.menu-item');
                     menuItems.forEach(menuItem => menuItem.classList.remove('active'));
                     item.classList.add('active');
 
                     setCurrentElement(controls[element.toLowerCase()]());
+                    this.blur();
                 });
                 item.className = 'menu-item';
                 itemMenu.appendChild(item);
@@ -63,9 +64,19 @@ function addItems(itemMenu: HTMLDivElement, menuType: MenuType) {
                             localStorage.clear();
                             location.reload();
                             break;
+                        case 'Debug Velo':
+                            toggleDebug(DebugOptions.VELOCITY);
+                            break;
+                        case 'Debug Move':
+                            toggleDebug(DebugOptions.MOVEMENT);
+                            break;
+                        case 'Debug Life':
+                            toggleDebug(DebugOptions.LIFE);
+                            break;
                         default:
                             break;
                     }
+                    this.blur();
                 });
                 item.className = 'menu-item';
                 itemMenu.appendChild(item);
@@ -139,27 +150,25 @@ export function setupToolbar() {
     let placeButton = document.getElementById('place-button') as HTMLButtonElement;
     placeButton.addEventListener('click', function () {
         toggleDrawMenu();
+        this.blur();
     });
 
-    let alterButton = document.getElementById('change-brush-button') as HTMLButtonElement;
-    alterButton.addEventListener('click', function () {
-        if (getCurrentBrushMenu()) {
-            closeCurrentBrushMenu();
-            return;
-        }
-        focusCanvas();
-        openBrushMenu();
+    let brushButton = document.getElementById('change-brush-button') as HTMLButtonElement;
+    brushButton.addEventListener('click', function () {
+        toggleBrushMenu();
+        this.blur();
     });
 
     let utilityButton = document.getElementById('utility-button') as HTMLButtonElement;
     utilityButton.addEventListener('click', function () {
-        focusCanvas();
-        openMenu(MenuType.UTILITY);
+        toggleUtilityMenu();
+        this.blur();
     });
 
     let helpButton = document.getElementById('help-button') as HTMLButtonElement;
     helpButton.addEventListener('click', function () {
         toggleHelpMenu();
+        this.blur();
     });
 }
 

@@ -2,10 +2,12 @@ import { Sand, Water, Fire, Smoke, Wood, Stone, Custom, Empty } from './elements
 import { gridWidth, col, row, grid, camera, ctx, focusCanvas } from './renderer.js';
 import { updateHTMLValues } from './ui/editor.js';
 import { drawElementInfo } from './ui/inspect-menu.js';
-import { closeCurrentBrushMenu, getBrushSpeed, getCurrentBrushMenu, openBrushMenu } from './ui/brush-menu.js';
+import { getBrushSpeed, toggleBrushMenu } from './ui/brush-menu.js';
 import { togglePause } from './config.js';
 import { toggleDrawMenu } from './ui/toolbar.js';
-let PAUSE_KEY = 'KeyP';
+let PAUSE_KEY = 'Space';
+let DRAW_MENU_KEY = 'KeyD';
+let BRUSH_MENU_KEY = 'KeyC';
 let brushInterval;
 let currentElement = new Sand(0);
 let mouseX;
@@ -36,7 +38,7 @@ function debugTool(transformedPoint) {
 function setupCameraControls() {
     // Reset camera postiion and scale on space
     window.addEventListener('keydown', (event) => {
-        if (event.code === 'Space') {
+        if (event.code === 'Escape') {
             camera.x = 0;
             camera.y = 0;
             camera.scale = 1;
@@ -158,18 +160,13 @@ function setupHotkeys() {
         }
     });
     window.addEventListener('keydown', (event) => {
-        if (event.code === 'KeyD') {
+        if (event.code === DRAW_MENU_KEY) {
             toggleDrawMenu();
         }
     });
     window.addEventListener('keydown', (event) => {
-        if (event.code === 'KeyC') {
-            if (getCurrentBrushMenu()) {
-                closeCurrentBrushMenu();
-                return;
-            }
-            focusCanvas();
-            openBrushMenu();
+        if (event.code === BRUSH_MENU_KEY) {
+            toggleBrushMenu();
         }
     });
 }

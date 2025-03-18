@@ -1,5 +1,5 @@
 import Behaviour from "./Behaviour.js";
-import { DEBUG_LIFE } from "../config.js";
+import { DebugOptions, DEBUG_MODE } from "../config.js";
 import Grid from "../grid.js";
 import Element from "../elements/element.js";
 
@@ -22,7 +22,7 @@ class Life extends Behaviour {
     }
 
     update(grid: Grid, element: Element) {
-        if (DEBUG_LIFE) {
+        if (DEBUG_MODE === DebugOptions.LIFE) {
             element.debugColor = [150, this.life * 5, 0];
         }
         if (this.life <= 0) {

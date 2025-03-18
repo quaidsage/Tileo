@@ -92,10 +92,10 @@ body {
 }
 
 #element-details-menu {
-    position: absolute; 
-    display: none; 
-    background: rgba(50, 50, 56, 0.75); 
-    border: 1px solid white; 
+    position: absolute;
+    display: none;
+    background: rgba(50, 50, 56, 0.75);
+    border: 1px solid white;
     padding: 0px 10px;
     color: white;
     pointer-events: none;

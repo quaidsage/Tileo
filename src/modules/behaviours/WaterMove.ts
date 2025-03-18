@@ -1,4 +1,4 @@
-import { DEBUG_LIFE, DEBUG_MOVEMENT } from "../config.js";
+import { DEBUG_MODE, DebugOptions } from "../config.js";
 import Movement from "./Movement.js";
 import Element from "../elements/element.js";
 import Grid from "../grid.js";
@@ -31,9 +31,10 @@ class WaterMove extends Movement {
             }
         }
         if (leftDistance + rightDistance > 0) {
-            if (DEBUG_MOVEMENT && leftDistance > rightDistance) element.debugColor = [255, 0, 255];
-            if (DEBUG_MOVEMENT && leftDistance < rightDistance) element.debugColor = [255, 255, 0];
-            if (DEBUG_MOVEMENT && leftDistance == rightDistance) element.debugColor = [255, 255, 255];
+            let isInMovementDebugMode = DEBUG_MODE === DebugOptions.MOVEMENT;
+            if (isInMovementDebugMode && leftDistance > rightDistance) element.debugColor = [255, 0, 255];
+            if (isInMovementDebugMode && leftDistance < rightDistance) element.debugColor = [255, 255, 0];
+            if (isInMovementDebugMode && leftDistance == rightDistance) element.debugColor = [255, 255, 255];
             if (leftDistance > rightDistance) {
                 grid.swap(y * grid.col + x, y * grid.col + x - leftDistance);
             } if (leftDistance < rightDistance) {

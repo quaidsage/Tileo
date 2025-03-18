@@ -2,7 +2,7 @@ class Element {
     constructor(index, { solid = false, liquid = false, gas = false, onFire = false, behaviours = [] } = {}) {
         this.index = index;
         this.color = Element.currentColor;
-        this.debugColor = [0, 0, 0];
+        this.debugColor = [255, 255, 255];
         this.probability = Element.currentProbability;
         this.solid = solid;
         this.liquid = liquid;

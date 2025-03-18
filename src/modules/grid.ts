@@ -1,7 +1,7 @@
 import Element from './elements/element.js';
-import { drawPixel, gridWidth, col, row, ctx, updateOnNextFrame } from './renderer.js';
+import { drawPixel, gridWidth, ctx, updateOnNextFrame } from './renderer.js';
 import { currentElement, mouseX, mouseY, isInspecting } from './controls.js';
-import { ALLOW_REPLACEMENT, isPaused, DEBUG_LIFE, DEBUG_MOVEMENT, DEBUG_VELOCITY } from './config.js';
+import { ALLOW_REPLACEMENT, DEBUG_MODE, DebugOptions, isPaused } from './config.js';
 import { Sand, Water, Fire, Smoke, Wood, Stone, Custom, Empty } from './elements/ElementIndex.js';
 import { getBrushSize } from './ui/brush-menu.js';
 
@@ -13,6 +13,7 @@ class Grid {
     highlightIndex!: Set<number>;
     debugView!: boolean;
     currentElement!: Element;
+    currentDebugView!: DebugOptions;
 
     initialize(row: number, col: number) {
         this.row = row;
@@ -167,10 +168,8 @@ class Grid {
     }
 
     draw() {
-        if (this.debugView !== (DEBUG_LIFE || DEBUG_MOVEMENT || DEBUG_VELOCITY)) {
-            this.debugView = DEBUG_LIFE || DEBUG_MOVEMENT || DEBUG_VELOCITY;
-            this.drawAll();
-        } else if (this.debugView) {
+        if (this.currentDebugView !== DEBUG_MODE) {
+            this.currentDebugView = DEBUG_MODE;
             this.drawAll();
         } else {
             updateOnNextFrame.forEach((index) => {
@@ -213,7 +212,7 @@ class Grid {
             if (this.isValidIndex(x, y)) {
                 const index = y * this.col + x;
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-                
+
                 ctx.fillRect(x * gridWidth, y * gridWidth, gridWidth, gridWidth);
                 this.highlightIndex.add(index);
 

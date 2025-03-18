@@ -3,6 +3,7 @@ class Empty extends Element {
     constructor(index) {
         super(index);
         this.color = Empty.currentColor;
+        this.debugColor = [0, 0, 0];
     }
     setColor(newColor) {
         this.color = newColor;

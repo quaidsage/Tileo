@@ -1,7 +1,7 @@
 import { Sand, Water, Fire, Smoke, Wood, Stone, Custom, Empty } from '../elements/ElementIndex.js';
 import { setCurrentElement, toggleInspect } from '../controls.js';
-import { togglePause } from '../config.js';
-import { closeCurrentBrushMenu, getCurrentBrushMenu, openBrushMenu } from './brush-menu.js';
+import { DebugOptions, toggleDebug, togglePause } from '../config.js';
+import { toggleBrushMenu } from './brush-menu.js';
 import { focusCanvas } from '../renderer.js';
 import { toggleHelpMenu } from './help-menu.js';
 var MenuType;
@@ -20,7 +20,7 @@ const controls = {
     'eraser': () => new Empty(0),
 };
 let placeItems = ['Sand', 'Wood', 'Water', 'Smoke', 'Stone', 'Fire', 'Custom', 'Eraser', 'Temp'];
-let utilityItems = ['Pause (P)', 'Clear Save'];
+let utilityItems = ['Pause (P)', 'Clear Save', 'Debug Velo', 'Debug Move', 'Debug Life'];
 let existingMenu = null;
 let existingMenuType = null;
 // Adds buttons to the menu based on the type of menu
@@ -38,6 +38,7 @@ function addItems(itemMenu, menuType) {
                     menuItems.forEach(menuItem => menuItem.classList.remove('active'));
                     item.classList.add('active');
                     setCurrentElement(controls[element.toLowerCase()]());
+                    this.blur();
                 });
                 item.className = 'menu-item';
                 itemMenu.appendChild(item);
@@ -56,9 +57,19 @@ function addItems(itemMenu, menuType) {
                             localStorage.clear();
                             location.reload();
                             break;
+                        case 'Debug Velo':
+                            toggleDebug(DebugOptions.VELOCITY);
+                            break;
+                        case 'Debug Move':
+                            toggleDebug(DebugOptions.MOVEMENT);
+                            break;
+                        case 'Debug Life':
+                            toggleDebug(DebugOptions.LIFE);
+                            break;
                         default:
                             break;
                     }
+                    this.blur();
                 });
                 item.className = 'menu-item';
                 itemMenu.appendChild(item);
@@ -120,24 +131,22 @@ export function setupToolbar() {
     let placeButton = document.getElementById('place-button');
     placeButton.addEventListener('click', function () {
         toggleDrawMenu();
+        this.blur();
     });
-    let alterButton = document.getElementById('change-brush-button');
-    alterButton.addEventListener('click', function () {
-        if (getCurrentBrushMenu()) {
-            closeCurrentBrushMenu();
-            return;
-        }
-        focusCanvas();
-        openBrushMenu();
+    let brushButton = document.getElementById('change-brush-button');
+    brushButton.addEventListener('click', function () {
+        toggleBrushMenu();
+        this.blur();
     });
     let utilityButton = document.getElementById('utility-button');
     utilityButton.addEventListener('click', function () {
-        focusCanvas();
-        openMenu(MenuType.UTILITY);
+        toggleUtilityMenu();
+        this.blur();
     });
     let helpButton = document.getElementById('help-button');
     helpButton.addEventListener('click', function () {
         toggleHelpMenu();
+        this.blur();
     });
 }
 export function toggleDrawMenu(toggle) {

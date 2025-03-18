@@ -1,4 +1,4 @@
-import { DEBUG_MOVEMENT } from "../config.js";
+import { DebugOptions, DEBUG_MODE } from "../config.js";
 import SolidMove from "./SolidMove.js";
 import Element from "../elements/element.js";
 import Grid from "../grid.js";
@@ -32,7 +32,7 @@ class GasMove extends SolidMove {
             }
         }
         if (leftDistance + rightDistance > 0) {
-            if (DEBUG_MOVEMENT) element.debugColor = [255, 255, 0];
+            if (DEBUG_MODE === DebugOptions.MOVEMENT) element.debugColor = [255, 255, 0];
             if (leftDistance > rightDistance) {
                 grid.swap(y * grid.col + x, y * grid.col + x - leftDistance);
             } if (leftDistance < rightDistance) {
@@ -48,23 +48,25 @@ class GasMove extends SolidMove {
     }
 
     step(element: Element, grid: Grid, x: number, y: number, nx: number, ny: number) {
+        let isInMovementDebugMode = DEBUG_MODE === DebugOptions.MOVEMENT;
+
         while (ny < y) {
             let moves = this.availableMoves(nx, ny, grid);
             if (moves[0] === 1) {
                 grid.swap(y * grid.col + x, ny * grid.col + nx);
-                if (DEBUG_MOVEMENT) {
+                if (isInMovementDebugMode) {
                     element.debugColor = [255, 0, 0];
                 }
                 break;
             } else if (moves[1] === 1) {
                 grid.swap(y * grid.col + x, ny * grid.col + nx - 1);
-                if (DEBUG_MOVEMENT) {
+                if (isInMovementDebugMode) {
                     element.debugColor = [0, 0, 255];
                 }
                 break;
             } else if (moves[2] === 1) {
                 grid.swap(y * grid.col + x, ny * grid.col + nx + 1);
-                if (DEBUG_MOVEMENT) {
+                if (isInMovementDebugMode) {
                     element.debugColor = [0, 0, 255];
                 }
                 break;

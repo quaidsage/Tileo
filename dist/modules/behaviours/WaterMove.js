@@ -1,4 +1,4 @@
-import { DEBUG_MOVEMENT } from "../config.js";
+import { DEBUG_MODE, DebugOptions } from "../config.js";
 import Movement from "./Movement.js";
 class WaterMove extends Movement {
     constructor({ maxSpeed = 0, acceleration = 0, velocity = 0, dispersion = 0 } = {}) {
@@ -27,11 +27,12 @@ class WaterMove extends Movement {
             }
         }
         if (leftDistance + rightDistance > 0) {
-            if (DEBUG_MOVEMENT && leftDistance > rightDistance)
+            let isInMovementDebugMode = DEBUG_MODE === DebugOptions.MOVEMENT;
+            if (isInMovementDebugMode && leftDistance > rightDistance)
                 element.debugColor = [255, 0, 255];
-            if (DEBUG_MOVEMENT && leftDistance < rightDistance)
+            if (isInMovementDebugMode && leftDistance < rightDistance)
                 element.debugColor = [255, 255, 0];
-            if (DEBUG_MOVEMENT && leftDistance == rightDistance)
+            if (isInMovementDebugMode && leftDistance == rightDistance)
                 element.debugColor = [255, 255, 255];
             if (leftDistance > rightDistance) {
                 grid.swap(y * grid.col + x, y * grid.col + x - leftDistance);

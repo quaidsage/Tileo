@@ -10,6 +10,7 @@ class Empty extends Element {
     constructor(index: number) {
         super(index);
         this.color = Empty.currentColor;
+        this.debugColor = [0, 0, 0];
     }
 
     setColor(newColor: number[]) {

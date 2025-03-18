@@ -1,6 +1,6 @@
 import { drawPixel, gridWidth, ctx, updateOnNextFrame } from './renderer.js';
 import { currentElement, mouseX, mouseY, isInspecting } from './controls.js';
-import { ALLOW_REPLACEMENT, isPaused, DEBUG_LIFE, DEBUG_MOVEMENT, DEBUG_VELOCITY } from './config.js';
+import { ALLOW_REPLACEMENT, DEBUG_MODE, isPaused } from './config.js';
 import { Sand, Water, Fire, Smoke, Wood, Stone, Custom, Empty } from './elements/ElementIndex.js';
 import { getBrushSize } from './ui/brush-menu.js';
 class Grid {
@@ -139,11 +139,8 @@ class Grid {
         return x >= 0 && x < this.col && y >= 0 && y < this.row;
     }
     draw() {
-        if (this.debugView !== (DEBUG_LIFE || DEBUG_MOVEMENT || DEBUG_VELOCITY)) {
-            this.debugView = DEBUG_LIFE || DEBUG_MOVEMENT || DEBUG_VELOCITY;
-            this.drawAll();
-        }
-        else if (this.debugView) {
+        if (this.currentDebugView !== DEBUG_MODE) {
+            this.currentDebugView = DEBUG_MODE;
             this.drawAll();
         }
         else {

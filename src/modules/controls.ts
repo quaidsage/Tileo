@@ -5,11 +5,13 @@ import Solid from './elements/solids/solid.js';
 import Liquid from './elements/liquids/liquid.js';
 import Gas from './elements/gases/gas.js';
 import { drawElementInfo } from './ui/inspect-menu.js';
-import { closeCurrentBrushMenu, getBrushSpeed, getCurrentBrushMenu, openBrushMenu } from './ui/brush-menu.js';
+import { getBrushSpeed, toggleBrushMenu } from './ui/brush-menu.js';
 import { togglePause } from './config.js';
 import { toggleDrawMenu } from './ui/toolbar.js';
 
-let PAUSE_KEY = 'KeyP';
+let PAUSE_KEY = 'Space';
+let DRAW_MENU_KEY = 'KeyD';
+let BRUSH_MENU_KEY = 'KeyC';
 
 let brushInterval: number;
 let currentElement: Solid | Liquid | Gas | Element = new Sand(0);
@@ -46,7 +48,7 @@ function debugTool(transformedPoint: DOMPoint): void {
 function setupCameraControls() {
     // Reset camera postiion and scale on space
     window.addEventListener('keydown', (event) => {
-        if (event.code === 'Space') {
+        if (event.code === 'Escape') {
             camera.x = 0;
             camera.y = 0;
             camera.scale = 1;
@@ -57,47 +59,47 @@ function setupCameraControls() {
     canvas.addEventListener("wheel", (event) => {
         event.preventDefault();
         const zoomFactor = 1.1;
-        const newScale = event.deltaY < 0 
-            ? camera.scale * zoomFactor 
+        const newScale = event.deltaY < 0
+            ? camera.scale * zoomFactor
             : camera.scale / zoomFactor;
-    
+
         // Ensure the new scale is within the allowed range
         const clampedScale = Math.min(camera.maxScale, Math.max(camera.minScale, newScale));
 
         if (clampedScale === camera.scale) {
             return; // No change in scale
         }
-    
+
         // Calculate the mouse position relative to canvas
         const rect = canvas.getBoundingClientRect();
         const canvasX = (event.clientX - rect.left) * (canvas.width / canvas.clientWidth);
         const canvasY = (event.clientY - rect.top) * (canvas.height / canvas.clientHeight);
-        
+
         // Get the world coordinates before zoom
         const worldPointBeforeZoom = currentInverseTransform.transformPoint(
             new DOMPoint(canvasX, canvasY)
         );
 
         // debugTool(worldPointBeforeZoom);
-        
+
         // Store the old scale and update to new scale
         const oldScale = camera.scale;
         camera.scale = clampedScale;
-        
+
         // Apply the transform based on the updated camera scale
         const transform = ctx.getTransform();
         // Update the inverse transform matrix
         updateCurrentTransform(transform);
-        
+
         // Calculate how the same screen point would map to world coordinates after the zoom
         const worldPointAfterZoom = currentInverseTransform.transformPoint(
             new DOMPoint(canvasX, canvasY)
         );
-        
+
         // Adjust camera position to keep the point under cursor fixed in world space
         camera.x += (worldPointAfterZoom.x - worldPointBeforeZoom.x) * camera.scale;
         camera.y += (worldPointAfterZoom.y - worldPointBeforeZoom.y) * camera.scale;
-        
+
         // Update the inverse transform again with the new camera position
         updateCurrentTransform(ctx.getTransform());
     });
@@ -195,19 +197,14 @@ function setupHotkeys() {
     });
 
     window.addEventListener('keydown', (event) => {
-        if (event.code === 'KeyD') {
+        if (event.code === DRAW_MENU_KEY) {
             toggleDrawMenu();
         }
     });
 
     window.addEventListener('keydown', (event) => {
-        if (event.code === 'KeyC') {
-            if (getCurrentBrushMenu()) {
-                closeCurrentBrushMenu();
-                return;
-            }
-            focusCanvas();
-            openBrushMenu();
+        if (event.code === BRUSH_MENU_KEY) {
+            toggleBrushMenu();
         }
     });
 }
@@ -222,7 +219,7 @@ function setupLegacyEditorControls() {
     fillButton.addEventListener('click', function () {
         grid.fill();
     });
-    
+
     const controls: { [key: string]: () => any } = {
         'sand': () => new Sand(0),
         'wood': () => new Wood(0),
@@ -261,7 +258,7 @@ export function setCurrentElement(element: Solid | Liquid | Gas | Element) {
 }
 
 // add optional parameter to toggle inspect mode
-export function toggleInspect(inspect?: boolean ) {
+export function toggleInspect(inspect?: boolean) {
     if (inspect !== undefined) {
         isInspecting = inspect
     } else {

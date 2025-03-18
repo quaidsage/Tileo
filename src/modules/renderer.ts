@@ -2,16 +2,16 @@ import Grid from './grid.js';
 import Element from './elements/element.js';
 import { setupControls, updateCurrentTransform } from './controls.js';
 import { setupEditor } from './ui/editor.js';
-import { DEBUG_MOVEMENT, DEBUG_VELOCITY, DEBUG_LIFE, RENDER_DELAY, setupConfig } from './config.js';
+import { DEBUG_MODE, DebugOptions, RENDER_DELAY, setupConfig } from './config.js';
 import { closeCurrentMenu, setupToolbar } from './ui/toolbar.js';
-import { closeCurrentBrushMenu } from './ui/brush-menu.js';
+import { toggleBrushMenu } from './ui/brush-menu.js';
 
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const ctx = (canvas as HTMLCanvasElement | null)?.getContext("2d") as CanvasRenderingContext2D;
 
 let w = canvas.width;
 let h = canvas.height;
-let gridWidth = 80;
+let gridWidth = 5;
 let gridSizing = [2, 5, 10, 20, 40, 80, 160];
 let row = h / gridWidth;
 let col = w / gridWidth;
@@ -79,7 +79,7 @@ export function start() {
 
 export function drawPixel(index: number, element: Element) {
     let colorList = element.color;
-    if (DEBUG_MOVEMENT || DEBUG_VELOCITY || DEBUG_LIFE) {
+    if (DEBUG_MODE !== DebugOptions.NONE) {
         colorList = element.debugColor;
     }
     ctx.fillStyle = `rgb(${colorList[0]}, ${colorList[1]}, ${colorList[2]})`;
@@ -149,9 +149,9 @@ function render() {
 
 }
 
-export function focusCanvas(){
+export function focusCanvas() {
     closeCurrentMenu();
-    closeCurrentBrushMenu();
+    toggleBrushMenu(false);
     canvas.focus();
 }
 

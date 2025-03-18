@@ -3,16 +3,21 @@ import { increaseSize, decreaseSize, setGridSize, grid } from './renderer.js';
 import Empty from './elements/misc/empty.js';
 import { parseColor, rgbToHex } from './utils.js';
 
-export let DEBUG_VELOCITY = false;
-export let DEBUG_MOVEMENT = false;
-export let DEBUG_LIFE = false;
-
 export let ALLOW_REPLACEMENT = false;
-
 export let isPaused = false;
 export let RENDER_DELAY = 0;
 
-export function setupConfig() {
+export enum DebugOptions {
+    NONE,
+    VELOCITY,
+    MOVEMENT,
+    LIFE
+}
+
+export let DEBUG_MODE: DebugOptions = DebugOptions.NONE;
+
+
+function legacyConfig() {
     const pauseButton: HTMLButtonElement = document.getElementById('pause') as HTMLButtonElement;
     pauseButton.addEventListener('click', function () {
         isPaused = !isPaused;
@@ -42,19 +47,6 @@ export function setupConfig() {
 
     let dropdownMenu: HTMLSelectElement = document.getElementById('debugOptionsSelect') as HTMLSelectElement;
     let storedSelection = localStorage.getItem('dropdownValue') || '';
-
-    dropdownMenu.value = storedSelection;
-    DEBUG_VELOCITY = storedSelection === 'debugVelocity';
-    DEBUG_MOVEMENT = storedSelection === 'debugMovement';
-    DEBUG_LIFE = storedSelection === 'debugLife';
-
-    dropdownMenu.addEventListener('change', function () {
-        localStorage.setItem('dropdownValue', this.value);
-        DEBUG_VELOCITY = this.value === 'debugVelocity';
-        DEBUG_MOVEMENT = this.value === 'debugMovement';
-        DEBUG_LIFE = this.value === 'debugLife';
-        grid.drawAll();
-    });
 
     const gridControls: { [key: string]: () => void } = {
         'plusgrid': () => increaseSize(),
@@ -90,6 +82,23 @@ export function setupConfig() {
     backgroundColorInput.value = storedBackgroundColor;
     Empty.currentColor = (parseColor(storedBackgroundColor));
     grid.updateColor();
+}
+
+export function setupConfig() {
+    console.log("config")
+}
+
+export function toggleDebug(debugMode: DebugOptions) {
+    if (DEBUG_MODE === debugMode) {
+        DEBUG_MODE = DebugOptions.NONE;
+    } else {
+        DEBUG_MODE = debugMode;
+    }
+    if (isPaused) {
+        isPaused = false;
+        grid.draw();
+        isPaused = true;
+    }
 
 }
 

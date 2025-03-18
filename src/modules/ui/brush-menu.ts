@@ -1,6 +1,6 @@
 import { currentElement } from "../controls.js";
 import Empty from "../elements/misc/empty.js";
-import { gridWidth } from "../renderer.js";
+import { focusCanvas, gridWidth } from "../renderer.js";
 
 let brushSpeed = 90;
 let brushSize = 8;
@@ -24,7 +24,7 @@ function updatePreview() {
     // draw pixel circle
     let x = (previewCanvas.width / gridWidth) / 2;
     let y = (previewCanvas.height / gridWidth) / 2;
-    
+
     let elementConstructor = Object.getPrototypeOf(currentElement).constructor;
 
     for (let i = x - brushSize; i <= x + brushSize; i++) {
@@ -61,7 +61,7 @@ function addControls() {
         brushSizeLabel.textContent = `Brush Size: ${brushSize + 1}`;
         updatePreview();
     };
-    
+
     let brushSpeedSlider = document.createElement('input');
     brushSpeedSlider.type = 'range';
     brushSpeedSlider.min = `${minBrushSpeed}`;
@@ -77,7 +77,7 @@ function addControls() {
     let brushSizeLabel = document.createElement('label');
     brushSizeLabel.htmlFor = 'brush-size-slider';
     brushSizeLabel.textContent = `Brush Size: ${brushSize + 1}`;
-    
+
     let brushSpeedLabel = document.createElement('label');
     brushSpeedLabel.htmlFor = 'brush-speed-slider';
     brushSpeedLabel.textContent = `Brush Speed: ${brushSpeed}`;
@@ -112,7 +112,7 @@ function addPreview() {
     previewCanvas.style.backgroundColor = `rgba(${Empty.currentColor[0]}, ${Empty.currentColor[1]}, ${Empty.currentColor[2]}, 1)`;
 
     brushPreview.appendChild(previewCanvas);
-    
+
     updatePreview();
 }
 
@@ -129,9 +129,26 @@ function createMenu() {
     document.body.appendChild(itemMenu);
 }
 
-export function openBrushMenu() {
+function openBrushMenu() {
     createMenu();
     addContent();
+}
+
+function closeCurrentBrushMenu() {
+    currentBrushMenu?.remove();
+    currentBrushMenu = null;
+}
+
+export function toggleBrushMenu(toggle?: boolean) {
+    if (toggle) {
+        focusCanvas();
+        openBrushMenu();
+    } else if (toggle === undefined && !currentBrushMenu) {
+        focusCanvas();
+        openBrushMenu();
+    } else {
+        closeCurrentBrushMenu();
+    }
 }
 
 export function setBrushSize(size: number) {
@@ -149,12 +166,3 @@ export function getBrushSize() {
 export function getBrushSpeed() {
     return maxBrushSpeed - brushSpeed;
 }
-
-export function getCurrentBrushMenu() {
-    return currentBrushMenu;
-}
-
-export function closeCurrentBrushMenu() {
-    currentBrushMenu?.remove();
-    currentBrushMenu = null;
-}   

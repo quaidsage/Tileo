@@ -1,5 +1,5 @@
 import Behaviour from './Behaviour.js';
-import { DEBUG_VELOCITY, DEBUG_MOVEMENT } from '../config.js';
+import { DebugOptions, DEBUG_MODE } from '../config.js';
 class MoveDown extends Behaviour {
     constructor({ maxSpeed = 0, acceleration = 0, velocity = 0 } = {}) {
         super();
@@ -10,14 +10,14 @@ class MoveDown extends Behaviour {
     }
     resetVelocity(element) {
         this.velocity = 0;
-        if (DEBUG_VELOCITY || DEBUG_MOVEMENT) {
+        if (DEBUG_MODE === DebugOptions.MOVEMENT || DEBUG_MODE === DebugOptions.VELOCITY) {
             element.debugColor = [0, 255, 0];
         }
     }
     updateVelocity(element) {
         this.velocity += this.acceleration;
         this.velocity >= 0 ? this.velocity = Math.min(this.velocity, this.maxSpeed) : this.velocity = Math.max(this.velocity, -this.maxSpeed);
-        if (DEBUG_VELOCITY) {
+        if (DEBUG_MODE === DebugOptions.VELOCITY) {
             element.debugColor = [Math.abs(this.velocity) * 100, 100 - (Math.abs(this.velocity) * 10), 0];
             if (this.velocity == this.maxSpeed) {
                 element.debugColor = [255, 0, 100];
@@ -37,27 +37,28 @@ class MoveDown extends Behaviour {
         }
         return moves;
     }
-    // Need to fix where solids with high velocity phase through solid elements
+    // TODO: Need to fix where solids with high velocity phase through solid elements
     step(element, grid, x, y, nx, ny) {
+        let isInMovementDebugMode = DEBUG_MODE === DebugOptions.MOVEMENT;
         while (ny > y) {
             let moves = this.availableMoves(nx, ny, grid);
             if (moves[0] === 1) {
                 grid.swap(y * grid.col + x, ny * grid.col + nx);
-                if (DEBUG_MOVEMENT) {
+                if (isInMovementDebugMode) {
                     element.debugColor = [255, 0, 0];
                 }
                 break;
             }
             else if (moves[1] === 1) {
                 grid.swap(y * grid.col + x, ny * grid.col + nx - 1);
-                if (DEBUG_MOVEMENT) {
+                if (isInMovementDebugMode) {
                     element.debugColor = [0, 0, 255];
                 }
                 break;
             }
             else if (moves[2] === 1) {
                 grid.swap(y * grid.col + x, ny * grid.col + nx + 1);
-                if (DEBUG_MOVEMENT) {
+                if (isInMovementDebugMode) {
                     element.debugColor = [0, 0, 255];
                 }
                 break;
