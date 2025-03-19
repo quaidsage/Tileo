@@ -22,8 +22,8 @@ const controls = {
     'custom': () => new Custom(0),
     'eraser': () => new Empty(0),
 };
-let placeItems = ['Sand', 'Wood', 'Water', 'Smoke', 'Stone', 'Fire', 'Custom', 'Eraser', 'Temp'];
-let utilityItems = ['Pause (P)', 'Clear Save', 'Debug Velo', 'Debug Move', 'Debug Life', 'Save', 'Load'];
+let placeItems = ['Sand', 'Wood', 'Water', 'Smoke', 'Stone', 'Fire', 'Custom', 'Eraser'];
+let utilityItems = ['Pause (Space)', 'Save', 'Load', 'Clear Save', 'Debug Velocity', 'Debug Movement', 'Debug Life'];
 let existingMenu = null;
 let existingMenuType = null;
 // Adds buttons to the menu based on the type of menu
@@ -53,17 +53,17 @@ function addItems(itemMenu, menuType) {
                 item.textContent = element;
                 item.addEventListener('click', function () {
                     switch (element) {
-                        case 'Pause (P)':
+                        case 'Pause (Space)':
                             togglePause();
                             break;
                         case 'Clear Save':
                             localStorage.clear();
                             location.reload();
                             break;
-                        case 'Debug Velo':
+                        case 'Debug Velocity':
                             toggleDebug(DebugOptions.VELOCITY);
                             break;
-                        case 'Debug Move':
+                        case 'Debug Movement':
                             toggleDebug(DebugOptions.MOVEMENT);
                             break;
                         case 'Debug Life':
@@ -72,14 +72,18 @@ function addItems(itemMenu, menuType) {
                         case 'Save':
                             save = new Grid();
                             save.initialize(grid.row, grid.col);
-                            save.grid = grid.grid.map(e => Object.assign(Object.create(Object.getPrototypeOf(e)), e));
-                            save.drawAll();
+                            save.grid = grid.grid.map((element, index) => {
+                                let constructor = Object.getPrototypeOf(element).constructor;
+                                return new constructor(index);
+                            });
                             break;
                         case 'Load':
                             let importedGrid = new Grid();
                             importedGrid.initialize(save.row, save.col);
-                            importedGrid.grid = save.grid.map(e => Object.assign(Object.create(Object.getPrototypeOf(e)), e));
-                            importedGrid.drawAll();
+                            importedGrid.grid = save.grid.map((element, index) => {
+                                let constructor = Object.getPrototypeOf(element).constructor;
+                                return new constructor(index);
+                            });
                             importGridSave(importedGrid);
                             break;
                         default:

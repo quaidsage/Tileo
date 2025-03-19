@@ -4,10 +4,11 @@ import { updateHTMLValues } from './ui/editor.js';
 import { drawElementInfo } from './ui/inspect-menu.js';
 import { getBrushSpeed, toggleBrushMenu } from './ui/brush-menu.js';
 import { togglePause } from './config.js';
-import { toggleDrawMenu } from './ui/toolbar.js';
+import { toggleDrawMenu, toggleUtilityMenu } from './ui/toolbar.js';
 let PAUSE_KEY = 'Space';
 let DRAW_MENU_KEY = 'KeyD';
 let BRUSH_MENU_KEY = 'KeyC';
+let UTILITY_MENU_KEY = 'KeyU';
 let brushInterval;
 let currentElement = new Sand(0);
 let mouseX;
@@ -46,7 +47,6 @@ function setupCameraControls() {
     });
     // Zoom
     canvas.addEventListener("wheel", (event) => {
-        event.preventDefault();
         const zoomFactor = 1.1;
         const newScale = event.deltaY < 0
             ? camera.scale * zoomFactor
@@ -77,7 +77,7 @@ function setupCameraControls() {
         camera.y += (worldPointAfterZoom.y - worldPointBeforeZoom.y) * camera.scale;
         // Update the inverse transform again with the new camera position
         updateCurrentTransform(ctx.getTransform());
-    });
+    }, { passive: true });
     // Panning Start
     let isPanning = false;
     let startX = 0, startY = 0;
@@ -162,6 +162,11 @@ function setupHotkeys() {
     window.addEventListener('keydown', (event) => {
         if (event.code === DRAW_MENU_KEY) {
             toggleDrawMenu();
+        }
+    });
+    window.addEventListener('keydown', (event) => {
+        if (event.code === UTILITY_MENU_KEY) {
+            toggleUtilityMenu();
         }
     });
     window.addEventListener('keydown', (event) => {

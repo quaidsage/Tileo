@@ -99,9 +99,20 @@ export function toggleDebug(debugMode) {
         });
     }
 }
+let pauseNotification = null;
 export function togglePause(val) {
     if (val !== undefined)
         isPaused = val;
     else
         isPaused = !isPaused;
+    if (isPaused) {
+        pauseNotification = document.createElement('div');
+        pauseNotification.id = 'pause-notification';
+        pauseNotification.textContent = '||';
+        document.body.appendChild(pauseNotification);
+    }
+    else {
+        pauseNotification === null || pauseNotification === void 0 ? void 0 : pauseNotification.remove();
+        pauseNotification = null;
+    }
 }

@@ -119,10 +119,24 @@ export function toggleDebug(debugMode: DebugOptions) {
     }
 }
 
+let pauseNotification: HTMLDivElement | null = null;
+
 export function togglePause(val?: boolean) {
     if (val !== undefined)
         isPaused = val;
     else
         isPaused = !isPaused;
+
+    if (isPaused) {
+        pauseNotification = document.createElement('div') as HTMLDivElement;
+        pauseNotification.id = 'pause-notification';
+
+        pauseNotification.textContent = '||';
+
+        document.body.appendChild(pauseNotification);
+    } else {
+        pauseNotification?.remove();
+        pauseNotification = null;
+    }
 }
 

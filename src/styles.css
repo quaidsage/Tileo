@@ -219,6 +219,18 @@ body {
     background-color: rgb(40, 40, 46);
 }
 
+#pause-notification {
+    background-color: rgb(50, 50, 56);
+    border: 1px solid white;
+    padding: 10px 20px;
+    position: absolute;
+    left: 90%;
+    top: 10%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    color: white;
+}
+
 #external {
     margin-left: 10px;
     height: 800px;

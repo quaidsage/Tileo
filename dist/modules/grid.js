@@ -11,7 +11,6 @@ class Grid {
         for (let i = 0; i < row * col; i++) {
             this.grid[i] = new Empty(i);
         }
-        this.drawAll();
         this.highlightIndex = new Set();
         this.debugView = false;
     }
