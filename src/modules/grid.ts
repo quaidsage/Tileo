@@ -257,6 +257,16 @@ class Grid {
             }
         }
 
+        // If debug mode is enabled, update the debug colors when they change
+        if (DEBUG_MODE !== DebugOptions.NONE) {
+            this.grid.forEach((element, index) => {
+                if (element.debugColor !== element.previousDebugColor) {
+                    drawPixel(index, element);
+                    element.previousDebugColor = element.debugColor;
+                }
+            });
+        }
+
     }
 }
 

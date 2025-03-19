@@ -2,9 +2,8 @@ import Behaviour from './Behaviour.js';
 import { DebugOptions, DEBUG_MODE } from '../config.js';
 import Element from '../elements/element.js';
 import Grid from '../grid.js';
-import { updateOnNextFrame } from '../renderer.js';
 
-class MoveDown extends Behaviour {
+class Movement extends Behaviour {
     maxSpeed!: number;
     acceleration!: number;
     velocity!: number;
@@ -19,10 +18,10 @@ class MoveDown extends Behaviour {
     }
 
     resetVelocity(element: Element) {
-        this.velocity = 0;
         if (DEBUG_MODE === DebugOptions.MOVEMENT || DEBUG_MODE === DebugOptions.VELOCITY) {
             element.debugColor = [0, 255, 0];
         }
+        this.velocity = 0;
     }
 
     updateVelocity(element: Element) {
@@ -94,4 +93,4 @@ class MoveDown extends Behaviour {
     }
 
 }
-export default MoveDown;
+export default Movement;

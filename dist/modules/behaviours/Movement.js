@@ -1,6 +1,6 @@
 import Behaviour from './Behaviour.js';
 import { DebugOptions, DEBUG_MODE } from '../config.js';
-class MoveDown extends Behaviour {
+class Movement extends Behaviour {
     constructor({ maxSpeed = 0, acceleration = 0, velocity = 0 } = {}) {
         super();
         this.maxSpeed = maxSpeed !== null && maxSpeed !== void 0 ? maxSpeed : 0;
@@ -9,10 +9,10 @@ class MoveDown extends Behaviour {
         this.previousPosition = -1;
     }
     resetVelocity(element) {
-        this.velocity = 0;
         if (DEBUG_MODE === DebugOptions.MOVEMENT || DEBUG_MODE === DebugOptions.VELOCITY) {
             element.debugColor = [0, 255, 0];
         }
+        this.velocity = 0;
     }
     updateVelocity(element) {
         this.velocity += this.acceleration;
@@ -81,4 +81,4 @@ class MoveDown extends Behaviour {
         this.step(element, grid, x, y, nx, ny);
     }
 }
-export default MoveDown;
+export default Movement;

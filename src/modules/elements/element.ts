@@ -5,6 +5,7 @@ class Element {
     index!: number;
     color!: number[];
     debugColor!: number[];
+    previousDebugColor!: number[];
     probability!: number;
     solid!: boolean;
     liquid!: boolean;
@@ -22,6 +23,7 @@ class Element {
         this.index = index;
         this.color = Element.currentColor;
         this.debugColor = [255, 255, 255];
+        this.previousDebugColor = [255, 255, 255];
         this.probability = Element.currentProbability;
         this.solid = solid;
         this.liquid = liquid;

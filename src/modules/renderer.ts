@@ -79,6 +79,7 @@ export function start() {
 
 export function drawPixel(index: number, element: Element) {
     let colorList = element.color;
+
     if (DEBUG_MODE !== DebugOptions.NONE) {
         colorList = element.debugColor;
     }
@@ -147,6 +148,10 @@ function render() {
         updateOnNextFrame.clear();
     }, RENDER_DELAY);
 
+}
+
+export function importGridSave(save: Grid) {
+    grid = save;
 }
 
 export function focusCanvas() {

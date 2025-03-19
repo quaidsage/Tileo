@@ -2,6 +2,8 @@ import { gridWidth } from './renderer.js';
 import { increaseSize, decreaseSize, setGridSize, grid } from './renderer.js';
 import Empty from './elements/misc/empty.js';
 import { parseColor, rgbToHex } from './utils.js';
+import Movement from './behaviours/Movement.js';
+import Life from './behaviours/Life.js';
 export let ALLOW_REPLACEMENT = false;
 export let isPaused = false;
 export let RENDER_DELAY = 0;
@@ -78,10 +80,23 @@ export function toggleDebug(debugMode) {
     else {
         DEBUG_MODE = debugMode;
     }
-    if (isPaused) {
-        isPaused = false;
-        grid.draw();
-        isPaused = true;
+    if (DEBUG_MODE !== DebugOptions.NONE) {
+        grid.grid.forEach((element, index) => {
+            let hasMovementBehaviour = (element.getBehaviour(Movement));
+            let hasLifeBehaviour = (element.getBehaviour(Life));
+            let isElementEmpty = element instanceof Empty;
+            if (!isElementEmpty) {
+                if (DEBUG_MODE === DebugOptions.VELOCITY && !hasMovementBehaviour) {
+                    element.debugColor = [255, 255, 255];
+                }
+                if (DEBUG_MODE === DebugOptions.MOVEMENT && !hasMovementBehaviour) {
+                    element.debugColor = [255, 255, 255];
+                }
+                if (DEBUG_MODE === DebugOptions.LIFE && !hasLifeBehaviour) {
+                    element.debugColor = [255, 255, 255];
+                }
+            }
+        });
     }
 }
 export function togglePause(val) {

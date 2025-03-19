@@ -17,11 +17,11 @@ class Life extends Behaviour {
         if (DEBUG_MODE === DebugOptions.LIFE) {
             element.debugColor = [150, this.life * 5, 0];
         }
+        this.life = this.life - this.reduction;
         if (this.life <= 0) {
             this.onDeath(element, grid);
             return;
         }
-        this.life = this.life - this.reduction;
         // Calculate the percentage of life remaining
         const lifePercentage = this.life / (this.life + this.reduction);
         // Fade out the color based on the percentage of life remaining

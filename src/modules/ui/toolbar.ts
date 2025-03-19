@@ -2,13 +2,17 @@ import { Sand, Water, Fire, Smoke, Wood, Stone, Custom, Empty } from '../element
 import { setCurrentElement, toggleInspect } from '../controls.js';
 import { DebugOptions, toggleDebug, togglePause } from '../config.js';
 import { toggleBrushMenu } from './brush-menu.js';
-import { focusCanvas } from '../renderer.js';
+import { focusCanvas, importGridSave } from '../renderer.js';
 import { toggleHelpMenu } from './help-menu.js';
+import { grid } from '../renderer.js';
+import Grid from '../grid.js';
 
 enum MenuType {
     PLACE,
     UTILITY,
 }
+
+let save: Grid;
 
 const controls: { [key: string]: () => any } = {
     'sand': () => new Sand(0),
@@ -22,7 +26,7 @@ const controls: { [key: string]: () => any } = {
 };
 
 let placeItems = ['Sand', 'Wood', 'Water', 'Smoke', 'Stone', 'Fire', 'Custom', 'Eraser', 'Temp'];
-let utilityItems = ['Pause (P)', 'Clear Save', 'Debug Velo', 'Debug Move', 'Debug Life'];
+let utilityItems = ['Pause (P)', 'Clear Save', 'Debug Velo', 'Debug Move', 'Debug Life', 'Save', 'Load'];
 
 let existingMenu: HTMLDivElement | null | undefined = null;
 let existingMenuType: MenuType | null = null;
@@ -72,6 +76,21 @@ function addItems(itemMenu: HTMLDivElement, menuType: MenuType) {
                             break;
                         case 'Debug Life':
                             toggleDebug(DebugOptions.LIFE);
+                            break;
+                        case 'Save':
+                            save = new Grid();
+                            save.initialize(grid.row, grid.col);
+                            save.grid = grid.grid.map(e => Object.assign(Object.create(Object.getPrototypeOf(e)), e));
+                            save.drawAll();
+
+                            break;
+                        case 'Load':
+                            let importedGrid = new Grid();
+                            importedGrid.initialize(save.row, save.col);
+                            importedGrid.grid = save.grid.map(e => Object.assign(Object.create(Object.getPrototypeOf(e)), e));
+                            importedGrid.drawAll();
+
+                            importGridSave(importedGrid);
                             break;
                         default:
                             break;

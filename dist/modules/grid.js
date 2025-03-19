@@ -1,6 +1,6 @@
 import { drawPixel, gridWidth, ctx, updateOnNextFrame } from './renderer.js';
 import { currentElement, mouseX, mouseY, isInspecting } from './controls.js';
-import { ALLOW_REPLACEMENT, DEBUG_MODE, isPaused } from './config.js';
+import { ALLOW_REPLACEMENT, DEBUG_MODE, DebugOptions, isPaused } from './config.js';
 import { Sand, Water, Fire, Smoke, Wood, Stone, Custom, Empty } from './elements/ElementIndex.js';
 import { getBrushSize } from './ui/brush-menu.js';
 class Grid {
@@ -217,6 +217,15 @@ class Grid {
                     element.update(this);
                 }
             }
+        }
+        // If debug mode is enabled, update the debug colors when they change
+        if (DEBUG_MODE !== DebugOptions.NONE) {
+            this.grid.forEach((element, index) => {
+                if (element.debugColor !== element.previousDebugColor) {
+                    drawPixel(index, element);
+                    element.previousDebugColor = element.debugColor;
+                }
+            });
         }
     }
 }

@@ -2,6 +2,7 @@ import { DEBUG_MODE, DebugOptions } from "../config.js";
 import Movement from "./Movement.js";
 import Element from "../elements/element.js";
 import Grid from "../grid.js";
+
 class WaterMove extends Movement {
     dispersion!: number;
 

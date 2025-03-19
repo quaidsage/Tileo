@@ -118,6 +118,9 @@ function render() {
         updateOnNextFrame.clear();
     }, RENDER_DELAY);
 }
+export function importGridSave(save) {
+    grid = save;
+}
 export function focusCanvas() {
     closeCurrentMenu();
     toggleBrushMenu(false);
