@@ -4,6 +4,7 @@ import { setupEditor } from './ui/editor.js';
 import { DEBUG_MODE, DebugOptions, RENDER_DELAY, setupConfig } from './config.js';
 import { closeCurrentMenu, setupToolbar } from './ui/toolbar.js';
 import { toggleBrushMenu } from './ui/brush-menu.js';
+import { toggleHelpMenu } from './ui/help-menu.js';
 const canvas = document.getElementById("canvas");
 const ctx = canvas === null || canvas === void 0 ? void 0 : canvas.getContext("2d");
 let w = canvas.width;
@@ -62,6 +63,11 @@ export function start() {
     setupEditor();
     setupToolbar();
     render();
+    // If first time on the page, show the help menu
+    if (localStorage.getItem('firstTime') === null) {
+        localStorage.setItem('firstTime', 'false');
+        toggleHelpMenu(true);
+    }
 }
 export function drawPixel(index, element) {
     let colorList = element.color;

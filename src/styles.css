@@ -220,7 +220,7 @@ body {
 }
 
 #pause-notification {
-    background-color: rgb(50, 50, 56);
+    background-color: rgba(50, 50, 56, 0.75);
     border: 1px solid white;
     padding: 10px 20px;
     position: absolute;
@@ -229,6 +229,7 @@ body {
     transform: translate(-50%, -50%);
     z-index: 1;
     color: white;
+    pointer-events: none;
 }
 
 #external {
