@@ -24,18 +24,14 @@ class Custom extends Element {
 
     constructor(index: number) {
         super(index, {
-            solid: true,
+            liquid: true,
             behaviours: [
                 new WaterMove({
                     maxSpeed: Custom.currentMaxSpeed,
                     acceleration: Custom.currentAcceleration,
                     dispersion: Custom.currentDispersion
                 }),
-                new Burning({
-                    life: Custom.currentLife,
-                    reduction: Custom.currentReduction,
-                    chanceToSpread: Custom.currentChanceToSpread,
-                })
+
             ]
         });
         this.probability = Custom.currentProbability;

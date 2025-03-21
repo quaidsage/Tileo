@@ -52,6 +52,7 @@ class WaterMove extends Movement {
 
     update(grid: Grid, element: Element) {
         super.update(grid, element);
+
         if (element.index == this.previousPosition) {
             this.disperse(element, grid);
         }

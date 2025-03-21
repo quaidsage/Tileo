@@ -2,6 +2,7 @@ import Burning from '../behaviours/Burning.js';
 import Life from '../behaviours/Life.js';
 import Movement from '../behaviours/Movement.js';
 import SolidMove from '../behaviours/SolidMove.js';
+import WaterMove from '../behaviours/WaterMove.js';
 import { grid } from '../renderer.js';
 
 export function drawElementInfo(i: number, j: number, e: MouseEvent, currentElementInfo: HTMLDivElement): void {
@@ -40,7 +41,7 @@ export function drawElementInfo(i: number, j: number, e: MouseEvent, currentElem
         let velocity: string = 'N/A';
         let life: string = 'N/A';
         element.behaviours.forEach(behaviour => {
-            switch(behaviour.constructor.name) {
+            switch (behaviour.constructor.name) {
                 case 'SolidMove':
                     velocity = ((behaviour as Movement).velocity).toFixed(2);
                     break;
@@ -62,8 +63,9 @@ export function drawElementInfo(i: number, j: number, e: MouseEvent, currentElem
         });
 
         // Get type of element
+        let elementType: string;
         if (element.solid) {
-            var elementType = 'Solid';
+            elementType = 'Solid';
         } else if (element.liquid) {
             elementType = 'Liquid';
         } else if (element.gas) {
@@ -71,7 +73,17 @@ export function drawElementInfo(i: number, j: number, e: MouseEvent, currentElem
         } else {
             elementType = 'N/A';
         }
-        
+
+
+        // Get behaviours of element, turn into a string
+        let behaviours: string = '';
+        element.behaviours.forEach(behaviour => {
+            behaviours += `${behaviour.constructor.name}, `;
+        });
+
+        behaviours = behaviours.slice(0, -2);
+
+
         // Add information on element to details menu
         let elementDetailsContent = document.getElementById('element-details-content') as HTMLDivElement;
         elementDetailsContent.innerHTML = `<p>Element: ${elementConstructor.name || 'N/A'}</p>
@@ -79,14 +91,15 @@ export function drawElementInfo(i: number, j: number, e: MouseEvent, currentElem
             <p>Type: ${elementType || 'N/A'}</p>
             <p>Color: ${'#' + elementConstructor.currentColor.map((val: number) => Math.floor(val).toString(16).padStart(2, '0')).join('') || 'N/A'}</p>
             <p>On Fire: ${elementInstance.behavioursLookup['Burning'] ? (`${element.onFire ? 'Yes' : 'No'}`) : 'Immune'}</p>
-            <p>Velocity: ${elementInstance.behavioursLookup['SolidMove'] ? `${velocity}` : 'N/A'}</p>
+            <p>Velocity: ${velocity ? velocity : 'N/A'}</p>
             <p>Acceleration: ${elementConstructor.currentAcceleration || 'N/A'}</p>
             <p>Max Speed: ${elementConstructor.currentMaxSpeed || 'N/A'}</p>
             <p>Dispersion: ${elementConstructor.currentDispersion || 'N/A'}</p>
             <p>Life: ${life || 'N/A'}</p>
             <p>Reduction: ${elementConstructor.currentReduction || 'N/A'}</p>
-            <p>Fire Spread: ${elementInstance.behavioursLookup['Burning'] ? elementInstance.behavioursLookup['Burning'].chanceToSpread : 'N/A'}</p>`;
-            
+            <p>Fire Spread: ${elementInstance.behavioursLookup['Burning'] ? elementInstance.behavioursLookup['Burning'].chanceToSpread : 'N/A'}</p>
+            <p>Behaviours: ${behaviours}</p>`;
+
 
         // Update reference to menu to current
         currentElementInfo = elementDetails;

@@ -1,22 +1,16 @@
 import Element from '../element.js';
 import { randomColor } from '../../utils.js';
-import Burning from '../../behaviours/Burning.js';
 import WaterMove from '../../behaviours/WaterMove.js';
 class Custom extends Element {
     constructor(index) {
         super(index, {
-            solid: true,
+            liquid: true,
             behaviours: [
                 new WaterMove({
                     maxSpeed: Custom.currentMaxSpeed,
                     acceleration: Custom.currentAcceleration,
                     dispersion: Custom.currentDispersion
                 }),
-                new Burning({
-                    life: Custom.currentLife,
-                    reduction: Custom.currentReduction,
-                    chanceToSpread: Custom.currentChanceToSpread,
-                })
             ]
         });
         this.probability = Custom.currentProbability;
