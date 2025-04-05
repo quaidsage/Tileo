@@ -1,6 +1,5 @@
 import { Sand, Water, Fire, Smoke, Wood, Stone, Custom, Empty } from './elements/ElementIndex.js';
 import { gridWidth, col, row, grid, camera, ctx, focusCanvas } from './renderer.js';
-import { updateHTMLValues } from './ui/editor.js';
 import Solid from './elements/solids/solid.js';
 import Liquid from './elements/liquids/liquid.js';
 import Gas from './elements/gases/gas.js';
@@ -23,6 +22,14 @@ let currentInverseTransform: DOMMatrix;
 let currentElementInfo: HTMLDivElement = document.getElementById('element-details-menu') as HTMLDivElement;
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 
+let lastTouchDist: number | null = null;
+
+function getTouchDistance(touches: TouchList): number {
+    if (touches.length < 2) return 0;
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+}
 function getMousePosition(e: MouseEvent): void {
     let rect = canvas.getBoundingClientRect();
     let tempMouseX = (e.clientX - rect.left) * (canvas.width / canvas.clientWidth);
@@ -33,17 +40,14 @@ function getMousePosition(e: MouseEvent): void {
     mouseX = transformedPoint.x;
     mouseY = transformedPoint.y;
 }
+function getTouchPosition(touch: Touch): void {
+    const rect = canvas.getBoundingClientRect();
+    const canvasX = (touch.clientX - rect.left) * (canvas.width / canvas.clientWidth);
+    const canvasY = (touch.clientY - rect.top) * (canvas.height / canvas.clientHeight);
 
-function debugTool(transformedPoint: DOMPoint): void {
-    //draw a point via html
-    let point = document.createElement('div');
-    point.style.position = 'absolute';
-    point.style.width = '5px';
-    point.style.height = '5px';
-    point.style.backgroundColor = 'red';
-    point.style.left = `${transformedPoint.x}px`;
-    point.style.top = `${transformedPoint.y}px`;
-    document.body.appendChild(point);
+    const worldPos = currentInverseTransform.transformPoint(new DOMPoint(canvasX, canvasY));
+    mouseX = worldPos.x;
+    mouseY = worldPos.y;
 }
 
 function setupCameraControls() {
@@ -58,51 +62,45 @@ function setupCameraControls() {
 
     // Zoom
     canvas.addEventListener("wheel", (event) => {
+        // Calculate new scale based on mouse wheel delta
         const zoomFactor = 1.1;
         const newScale = event.deltaY < 0
             ? camera.scale * zoomFactor
             : camera.scale / zoomFactor;
-
-        // Ensure the new scale is within the allowed range
+    
         const clampedScale = Math.min(camera.maxScale, Math.max(camera.minScale, newScale));
-
-        if (clampedScale === camera.scale) {
-            return; // No change in scale
-        }
-
-        // Calculate the mouse position relative to canvas
+        if (clampedScale === camera.scale) return;
+        
+        // Calculate mouse position relative to canvas
         const rect = canvas.getBoundingClientRect();
         const canvasX = (event.clientX - rect.left) * (canvas.width / canvas.clientWidth);
         const canvasY = (event.clientY - rect.top) * (canvas.height / canvas.clientHeight);
-
-        // Get the world coordinates before zoom
-        const worldPointBeforeZoom = currentInverseTransform.transformPoint(
+        
+        // Get mouse position in world space before zoom
+        const worldPointBefore = currentInverseTransform.transformPoint(
             new DOMPoint(canvasX, canvasY)
         );
-
-        // debugTool(worldPointBeforeZoom);
-
-        // Store the old scale and update to new scale
-        const oldScale = camera.scale;
+    
+        // Apply new scale to camera
         camera.scale = clampedScale;
-
-        // Apply the transform based on the updated camera scale
-        const transform = ctx.getTransform();
-        // Update the inverse transform matrix
-        updateCurrentTransform(transform);
-
-        // Calculate how the same screen point would map to world coordinates after the zoom
-        const worldPointAfterZoom = currentInverseTransform.transformPoint(
+    
+        // Build new transform manually based on updated camera
+        // This needs to be done as the renderer may have not applied 
+        // the new camera scale.
+        const postInverseTransform = new DOMMatrix()
+            .translate(-camera.x, -camera.y)
+            .scale(camera.scale).inverse();
+        
+        // Get mouse position in world space after zoom
+        const worldPointAfter = postInverseTransform.transformPoint(
             new DOMPoint(canvasX, canvasY)
         );
-
-        // Adjust camera position to keep the point under cursor fixed in world space
-        camera.x += (worldPointAfterZoom.x - worldPointBeforeZoom.x) * camera.scale;
-        camera.y += (worldPointAfterZoom.y - worldPointBeforeZoom.y) * camera.scale;
-
-        // Update the inverse transform again with the new camera position
-        updateCurrentTransform(ctx.getTransform());
+    
+        // Adjust camera to keep mouse fixed in world space
+        camera.x += (worldPointBefore.x - worldPointAfter.x) * camera.scale;
+        camera.y += (worldPointBefore.y - worldPointAfter.y) * camera.scale;
     }, { passive: true });
+    
 
     // Panning Start
     let isPanning = false;
@@ -126,15 +124,163 @@ function setupCameraControls() {
     canvas.addEventListener("mouseleave", () => isPanning = false);
 }
 
+function setupMobileCameraControls() {
+    let isPanning = false;
+    let startPanX = 0, startPanY = 0;
+
+    // Start pan
+    canvas.addEventListener("touchstart", (e) => {
+        if (e.touches.length === 1 && isInspecting) {
+            clearInterval(brushInterval);
+            focusCanvas();
+            const touch = e.touches[0];
+            isPanning = true;
+            startPanX = touch.clientX + camera.x;
+            startPanY = touch.clientY + camera.y;
+
+            // Show element inspect on touch
+            getTouchPosition(touch);
+            const i = Math.floor(mouseX / gridWidth);
+            const j = Math.floor(mouseY / gridWidth);
+            if (i >= 0 && i < col && j >= 0 && j < row) {
+                drawElementInfo(i, j, e, currentElementInfo);
+            } else if (currentElementInfo) {
+                currentElementInfo.style.display = 'none';
+            }
+        }
+    }, { passive: false });
+    
+    // Move pan
+    canvas.addEventListener("touchmove", (e) => {
+        if (isPanning && e.touches.length === 1) {
+            clearInterval(brushInterval);
+            e.preventDefault();
+
+            const touch = e.touches[0];
+            camera.x = startPanX - touch.clientX;
+            camera.y = startPanY - touch.clientY;
+            
+            // Hide inspect on pan move
+            if (currentElementInfo) {
+                currentElementInfo.style.display = 'none';
+            }
+        }
+    }, { passive: false });
+    
+    // End pan
+    canvas.addEventListener("touchend", () => {
+        isPanning = false;
+    });
+
+    // Zoom
+    canvas.addEventListener("touchmove", (e) => {
+        if (e.touches.length === 2 && isInspecting) {
+            e.preventDefault(); 
+            const dist = getTouchDistance(e.touches);
+    
+            if (lastTouchDist != null) {
+                // Calculate zoom
+                const zoomFactor = 1.05;
+                const scaleDelta = dist > lastTouchDist ? zoomFactor : 1 / zoomFactor;
+                const newScale = Math.min(camera.maxScale, Math.max(camera.minScale, camera.scale * scaleDelta));
+                if (newScale === camera.scale) return;
+
+                // Get center of touches
+                const rect = canvas.getBoundingClientRect();
+                const centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left;
+                const centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top;
+                
+                // Get center point relative to canvas
+                const canvasX = centerX * (canvas.width / canvas.clientWidth);
+                const canvasY = centerY * (canvas.height / canvas.clientHeight);
+                
+                // Get center touch position in world space 
+                const worldPointBefore = currentInverseTransform.transformPoint(new DOMPoint(canvasX, canvasY));
+                
+                // Apply new scale to camera
+                camera.scale = newScale;
+    
+                // Build new transform manually
+                const inversePost = new DOMMatrix()
+                    .translate(-camera.x, -camera.y)
+                    .scale(camera.scale).inverse();
+                
+                // Get new center point position in world space, move camera appropriately
+                const worldPointAfter = inversePost.transformPoint(new DOMPoint(canvasX, canvasY));
+
+                camera.x += (worldPointBefore.x - worldPointAfter.x) * camera.scale;
+                camera.y += (worldPointBefore.y - worldPointAfter.y) * camera.scale;
+            }
+
+            lastTouchDist = dist;
+
+            // Hide inspect on zoom
+            if (currentElementInfo) {
+                currentElementInfo.style.display = 'none';
+            }
+        }
+    }, { passive: false });
+    
+    // End zoom
+    canvas.addEventListener("touchend", () => {
+        lastTouchDist = null;
+    });
+}
+
+function setupMobileBrushControls() {
+    // Start brush / inspect at touch point
+    canvas.addEventListener('touchstart', function (e) {
+        e.preventDefault();
+        focusCanvas();
+
+        if (isInspecting) return;
+    
+        const touch = e.touches[0];
+        getTouchPosition(touch);
+
+        brushInterval = setInterval(() => {
+            const i = Math.floor(mouseX / gridWidth);
+            const j = Math.floor(mouseY / gridWidth);
+            if (i >= 0 && i < col && j >= 0 && j < row) {
+                grid.setBrush(i, j);
+            }
+        }, getBrushSpeed());
+    }, { passive: false });
+    
+    // Move brush / remove inspect
+    canvas.addEventListener('touchmove', function (e) {
+        e.preventDefault();
+
+        if (isInspecting) return;
+
+        getTouchPosition(e.touches[0]);
+
+        if (isInspecting) {
+            clearInterval(brushInterval);
+
+            if (currentElementInfo) {
+                currentElementInfo.style.display = 'none';
+            }
+        }
+    }, { passive: false });
+    
+    // End brush / inspect
+    canvas.addEventListener('touchend', function () {
+        clearInterval(brushInterval);
+    });
+    canvas.addEventListener('touchcancel', function () {
+        clearInterval(brushInterval);
+    });
+    
+}
+
 function setupBrushControls() {
     // Brush start
     canvas.addEventListener('mousedown', function (e) {
         if (e.button === 0) {
             focusCanvas();
 
-            if (isInspecting) {
-                return;
-            }
+            if (isInspecting) return;
 
             getMousePosition(e);
 
@@ -157,9 +303,6 @@ function setupBrushControls() {
         let j = Math.floor(mouseY / gridWidth);
 
         if (i >= 0 && i < col && j >= 0 && j < row) {
-            let mousePosition = document.getElementById('mousePosition') as HTMLDivElement;
-            mousePosition.textContent = `Mouse position: ${i}, ${j}`;
-
             if (isInspecting) {
                 drawElementInfo(i, j, e, currentElementInfo);
             } else {
@@ -215,46 +358,6 @@ function setupHotkeys() {
     });
 }
 
-function setupLegacyEditorControls() {
-    // Grid reset and fill buttons
-    let resetButton = document.getElementById('reset') as HTMLButtonElement;
-    resetButton.addEventListener('click', function () {
-        grid.reset();
-    });
-    let fillButton = document.getElementById('fillgrid') as HTMLButtonElement;
-    fillButton.addEventListener('click', function () {
-        grid.fill();
-    });
-
-    const controls: { [key: string]: () => any } = {
-        'sand': () => new Sand(0),
-        'wood': () => new Wood(0),
-        'water': () => new Water(0),
-        'smoke': () => new Smoke(0),
-        'stone': () => new Stone(0),
-        'fire': () => new Fire(0),
-        'custom': () => new Custom(0),
-        'eraser': () => new Empty(0),
-    };
-
-    Object.keys(controls).forEach(controlId => {
-        let button = document.getElementById(controlId) as HTMLButtonElement;
-        button.addEventListener('click', function () {
-            Object.keys(controls).forEach(id => {
-                let elementButton = document.getElementById(id) as HTMLButtonElement;
-                elementButton.classList.remove('button-selected');
-            });
-            button.classList.add('button-selected');
-
-            currentElement = controls[controlId]();
-            localStorage.setItem('currentElement', controlId);
-            let selected = document.getElementById('selected') as HTMLDivElement;
-            selected.textContent = `Selected: ${controlId.charAt(0).toUpperCase() + controlId.slice(1)}`;
-            updateHTMLValues();
-        });
-    });
-}
-
 export function updateCurrentTransform(baseTranform: DOMMatrix): void {
     currentInverseTransform = baseTranform.invertSelf();
 }
@@ -270,6 +373,8 @@ export function toggleInspect(inspect?: boolean) {
     } else {
         isInspecting = !isInspecting;
     }
+
+    if (!isInspecting) currentElementInfo.style.display = 'none';
 }
 
 export function setupControls() {
@@ -277,12 +382,12 @@ export function setupControls() {
     canvas.addEventListener("contextmenu", (event) => event.preventDefault());
 
     setupCameraControls();
+    setupMobileCameraControls();
 
     setupBrushControls();
+    setupMobileBrushControls()
 
     setupHotkeys();
-
-    setupLegacyEditorControls();
 }
 
 export { currentElement, mouseX, mouseY, isInspecting }

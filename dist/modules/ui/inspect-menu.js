@@ -16,8 +16,21 @@ export function drawElementInfo(i, j, e, currentElementInfo) {
             elementDetails.style.display = 'block';
         }
         // Calculate the position of the details menu
-        let left = e.clientX + 10;
-        let top = e.clientY + 10;
+        let left;
+        let top;
+        if (e instanceof MouseEvent) {
+            left = e.clientX + 10;
+            top = e.clientY + 10;
+        }
+        else if (e instanceof TouchEvent) {
+            let touch = e.touches[0];
+            left = touch.clientX + 10;
+            top = touch.clientY + 10;
+        }
+        else {
+            left = 0;
+            top = 0;
+        }
         // Adjust position if the menu is off-screen
         if (left + elementDetails.offsetWidth > window.innerWidth) {
             left = window.innerWidth - elementDetails.offsetWidth - 10;
@@ -76,7 +89,7 @@ export function drawElementInfo(i, j, e, currentElementInfo) {
         elementDetailsContent.innerHTML = `<p>Element: ${elementConstructor.name || 'N/A'}</p>
             <p>x: ${i || 'N/A'}, y: ${j || 'N/A'}</p>
             <p>Type: ${elementType || 'N/A'}</p>
-            <p>Color: ${'#' + elementConstructor.currentColor.map((val) => Math.floor(val).toString(16).padStart(2, '0')).join('') || 'N/A'}</p>
+            <p>Default Color: ${'#' + elementConstructor.currentColor.map((val) => Math.floor(val).toString(16).padStart(2, '0')).join('') || 'N/A'}</p>
             <p>On Fire: ${elementInstance.behavioursLookup['Burning'] ? (`${element.onFire ? 'Yes' : 'No'}`) : 'Immune'}</p>
             <p>Velocity: ${velocity ? velocity : 'N/A'}</p>
             <p>Acceleration: ${elementConstructor.currentAcceleration || 'N/A'}</p>

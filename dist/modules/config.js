@@ -71,7 +71,15 @@ function legacyConfig() {
     grid.updateColor();
 }
 export function setupConfig() {
-    console.log("config");
+    console.log("temp config setup");
+    // Remove hotkey text from toolbar buttons on mobile
+    if (isTouch()) {
+        let toolbarButtons = document.querySelectorAll('.toolbar-button');
+        toolbarButtons.forEach((button) => {
+            var _a;
+            button.textContent = ((_a = button.textContent) === null || _a === void 0 ? void 0 : _a.replace(/\([a-zA-Z]\)/g, '')) || '';
+        });
+    }
 }
 export function toggleDebug(debugMode) {
     if (DEBUG_MODE === debugMode) {
@@ -115,4 +123,7 @@ export function togglePause(val) {
         pauseNotification === null || pauseNotification === void 0 ? void 0 : pauseNotification.remove();
         pauseNotification = null;
     }
+}
+export function isTouch() {
+    return 'ontouchstart' in window || navigator.maxTouchPoints;
 }

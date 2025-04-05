@@ -88,7 +88,15 @@ function legacyConfig() {
 }
 
 export function setupConfig() {
-    console.log("config")
+    console.log("temp config setup");
+
+    // Remove hotkey text from toolbar buttons on mobile
+    if (isTouch()) {
+        let toolbarButtons = document.querySelectorAll('.toolbar-button');
+        toolbarButtons.forEach((button) => {
+            button.textContent = button.textContent?.replace(/\([a-zA-Z]\)/g, '') || '';
+        });
+    }
 }
 
 export function toggleDebug(debugMode: DebugOptions) {
@@ -140,3 +148,7 @@ export function togglePause(val?: boolean) {
     }
 }
 
+
+export function isTouch() {
+    return 'ontouchstart' in window || navigator.maxTouchPoints;
+}

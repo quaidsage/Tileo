@@ -1,6 +1,6 @@
 import { Sand, Water, Fire, Smoke, Wood, Stone, Custom, Empty } from '../elements/ElementIndex.js';
 import { setCurrentElement, toggleInspect } from '../controls.js';
-import { DebugOptions, toggleDebug, togglePause } from '../config.js';
+import { DebugOptions, toggleDebug, togglePause, isTouch } from '../config.js';
 import { toggleBrushMenu } from './brush-menu.js';
 import { focusCanvas, importGridSave } from '../renderer.js';
 import { toggleHelpMenu } from './help-menu.js';
@@ -188,11 +188,29 @@ export function setupToolbar() {
         this.blur();
     });
 
+    // Show help button only on desktop
     let helpButton = document.getElementById('help-button') as HTMLButtonElement;
-    helpButton.addEventListener('click', function () {
-        toggleHelpMenu();
-        this.blur();
-    });
+    if (isTouch()) {
+        helpButton.style.display = 'none';
+    } else {
+        let helpButton = document.getElementById('help-button') as HTMLButtonElement;
+        helpButton.addEventListener('click', function () {
+            toggleHelpMenu();
+            this.blur();
+        });
+    }
+
+    // Show inspect button only on mobile
+    let inspectButton = document.getElementById('inspect-button') as HTMLButtonElement;
+    if (isTouch()) {
+        inspectButton.addEventListener('click', function () {
+            focusCanvas();
+            toggleInspect();
+            this.blur();
+        });
+    } else {
+        inspectButton.style.display = 'none';
+    }
 }
 
 export function toggleDrawMenu(toggle?: boolean) {

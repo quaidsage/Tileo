@@ -1,6 +1,5 @@
 import Grid from './grid.js';
 import { setupControls, updateCurrentTransform } from './controls.js';
-import { setupEditor } from './ui/editor.js';
 import { DEBUG_MODE, DebugOptions, RENDER_DELAY, setupConfig } from './config.js';
 import { closeCurrentMenu, setupToolbar } from './ui/toolbar.js';
 import { toggleBrushMenu } from './ui/brush-menu.js';
@@ -60,7 +59,6 @@ export function start() {
     grid.initialize(row, col);
     setupControls();
     setupConfig();
-    setupEditor();
     setupToolbar();
     render();
     // If first time on the page, show the help menu
@@ -91,14 +89,6 @@ function calculateFrameRate() {
     // Calculate the average frame time and convert to fps
     const averageFrameTime = frameTimes.reduce((a, b) => a + b) / frameTimes.length;
     const frameRate = 1000 / averageFrameTime;
-    // Update the frame rate display
-    const frameRateElement = document.getElementById('frameRate');
-    const maxFrameRateElement = document.getElementById('frameRateMax');
-    frameRateElement.textContent = `Avg Frame Rate: ${Math.round(frameRate)} fps`;
-    if (maxFrameRate < frameRate) {
-        maxFrameRate = frameRate;
-        maxFrameRateElement.textContent = `Max Frame Rate: ${Math.round(maxFrameRate)} fps`;
-    }
 }
 function render() {
     let didCameraMove = oldCameraXPosition !== camera.x || oldCameraYPosition !== camera.y || oldCameraScale !== camera.scale;

@@ -5,7 +5,7 @@ import SolidMove from '../behaviours/SolidMove.js';
 import WaterMove from '../behaviours/WaterMove.js';
 import { grid } from '../renderer.js';
 
-export function drawElementInfo(i: number, j: number, e: MouseEvent, currentElementInfo: HTMLDivElement): void {
+export function drawElementInfo(i: number, j: number, e: UIEvent, currentElementInfo: HTMLDivElement): void {
     // Get element from grid based on mouse position
     let element = grid.getElement(i, j);
 
@@ -24,8 +24,20 @@ export function drawElementInfo(i: number, j: number, e: MouseEvent, currentElem
         }
 
         // Calculate the position of the details menu
-        let left = e.clientX + 10;
-        let top = e.clientY + 10;
+        let left: number;
+        let top: number;
+        if (e instanceof MouseEvent) {
+            left = e.clientX + 10;
+            top = e.clientY + 10;
+        }
+        else if (e instanceof TouchEvent) {
+            let touch = e.touches[0];
+            left = touch.clientX + 10;
+            top = touch.clientY + 10;
+        } else {
+            left = 0;
+            top = 0;
+        }
 
         // Adjust position if the menu is off-screen
         if (left + elementDetails.offsetWidth > window.innerWidth) {
@@ -89,7 +101,7 @@ export function drawElementInfo(i: number, j: number, e: MouseEvent, currentElem
         elementDetailsContent.innerHTML = `<p>Element: ${elementConstructor.name || 'N/A'}</p>
             <p>x: ${i || 'N/A'}, y: ${j || 'N/A'}</p>
             <p>Type: ${elementType || 'N/A'}</p>
-            <p>Color: ${'#' + elementConstructor.currentColor.map((val: number) => Math.floor(val).toString(16).padStart(2, '0')).join('') || 'N/A'}</p>
+            <p>Default Color: ${'#' + elementConstructor.currentColor.map((val: number) => Math.floor(val).toString(16).padStart(2, '0')).join('') || 'N/A'}</p>
             <p>On Fire: ${elementInstance.behavioursLookup['Burning'] ? (`${element.onFire ? 'Yes' : 'No'}`) : 'Immune'}</p>
             <p>Velocity: ${velocity ? velocity : 'N/A'}</p>
             <p>Acceleration: ${elementConstructor.currentAcceleration || 'N/A'}</p>

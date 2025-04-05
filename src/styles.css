@@ -19,6 +19,8 @@ body {
     justify-content: center;
     margin: 10px 20px;
     background-color: rgb(34, 34, 40);
+    touch-action: none;
+
 }
 
 #toolbar {
@@ -232,224 +234,54 @@ body {
     pointer-events: none;
 }
 
-#external {
-    margin-left: 10px;
-    height: 800px;
-    display: none;
+@media only screen and (max-width: 600px) {
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden; /* prevent page scroll */
+        touch-action: none; /* disables double-tap zoom and scroll on canvas */
+        user-select: none;  /* disables text selection while dragging */
+        background-color: #121212; /* optional, dark background for canvas app */
+    }
+    
+    canvas {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        touch-action: none;
+    }
+
+    #toolbar {
+        top: 97%;
+        width: 90%;
+    }
+    
+    .toolbar-button {
+        font-size: 12px;
+        padding: 5px 0px;
+        margin: 0px 3px;
+    }
+
+    #brush-menu {
+        width: 90%;
+    }
+
+    #brush-preview {
+        width:10px;
+        height:10px;
+    }
+
+    #brush-controls {
+        font-size: 14px;
+    }
+
+    .menu-item {
+        font-size: 16px;
+    }
+
+    #help-menu {
+        width: 80%;
+    }
 }
 
-#menu {
-    display: flex;
-}
-
-#btns {
-    display: flex;
-    border: 1px solid darkgray;
-    background-color: rgb(50, 50, 56);
-    flex-direction: column;
-    margin-right: 10px;
-}
-
-#btns>* {
-    margin: 10px;
-}
-
-#info {
-    margin-top: 10px;
-    border: 1px solid darkgray;
-    background-color: rgb(50, 50, 56);
-    color: white;
-    font-size: 16px;
-    display: flex;
-    justify-content: space-between;
-    padding: 0px 10px 0px 10px;
-}
-
-#debugOptions {
-    margin-top: 10px;
-}
-
-#titleCard {
-    margin-top: 10px;
-    background-color: rgb(50, 50, 56);
-    color: white;
-    padding: 10px;
-    font-size: 18px;
-    border: 1px solid darkgray;
-    box-shadow: 0 4px 10px 0px black;
-}
-
-#titleCard h1 {
-    margin: 10px;
-}
-
-#btns button {
-    font-weight: bold;
-    margin-bottom: 5px;
-    font-size: 18px;
-    box-shadow: 0 4px 10px 0px black;
-}
-
-.button-selected {
-    outline: 2px solid darkgray;
-}
-
-#sand {
-    background-color: rgb(187, 167, 77);
-    border: 5px solid rgb(151, 131, 62);
-}
-
-#water {
-    background-color: rgb(51, 100, 184);
-    border: 5px solid rgb(39, 75, 138);
-}
-
-#wood {
-    background-color: rgb(102, 66, 28);
-    border: 5px solid rgb(66, 43, 18);
-
-}
-
-#stone {
-    background-color: rgb(100, 100, 100);
-    border: 5px solid rgb(70, 70, 70);
-
-}
-
-#smoke {
-    background-color: rgb(50, 50, 56);
-    border: 5px solid rgb(30, 30, 36);
-}
-
-#fire {
-    background-color: rgb(190, 60, 20);
-    border: 5px solid rgb(120, 20, 0);
-}
-
-#custom {
-    background-color: rgb(180, 150, 255);
-    border: 5px solid rgb(140, 110, 205);
-}
-
-#eraser {
-    background-color: rgb(255, 255, 255);
-    border: 5px solid rgb(225, 225, 225);
-
-}
-
-#debugOptionsSelect {
-    background-color: rgb(50, 50, 56);
-    color: white;
-    border: 1px solid darkgray;
-    padding: 5px;
-    font-family: monospace;
-    cursor: pointer;
-}
-
-#resetAll,
-#resetSettings,
-#githubrepo {
-    background-color: rgb(50, 50, 56);
-    border: 1px solid white;
-    color: white;
-    width: 120px;
-    padding: 5px;
-    font-family: monospace;
-    font-size: 16px;
-    box-shadow: 0 4px 10px 0px black;
-    cursor: pointer;
-}
-
-#resetAll:hover,
-#resetSettings:hover,
-#githubrepo:hover {
-    background-color: rgb(40, 40, 46);
-}
-
-
-#editWindow {
-    background-color: rgb(50, 50, 56);
-    border: 1px solid darkgray;
-    padding: 10px;
-    color: white;
-}
-
-#editWindowContent {
-    display: flex;
-    flex-direction: column;
-}
-
-#editTitleWindow {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-}
-
-#editTitleWindow h2 {
-    margin: 0px 10px;
-    color: white;
-}
-
-#editTitleWindow button {
-    font-size: 18px;
-    color: white;
-    background-color: rgb(50, 50, 56);
-    font-weight: bold;
-    box-shadow: 0 4px 10px 0px black;
-}
-
-#editValueWindow {
-    display: flex;
-    margin-top: 10px;
-}
-
-#editValueWindow>* {
-    margin-right: 20px;
-}
-
-#editValueWindow label {
-    color: white;
-}
-
-#editValueWindow input {
-    color: white;
-    background-color: rgb(50, 50, 56);
-    border: 1px solid white;
-    font-family: monospace;
-    font-size: 14px;
-    box-shadow: 0 4px 10px 0px black;
-    margin-bottom: 10px;
-    width: 100px;
-}
-
-#editValueWindow input:hover {
-    background-color: rgb(40, 40, 46);
-}
-
-#resetSettings {
-    width: 100px;
-    margin-top: 15px;
-}
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-input[type=number] {
-    -moz-appearance: textfield;
-}
-
-#backgroundcolor {
-    color: white;
-    background-color: rgb(50, 50, 56);
-    border: 1px solid white;
-    font-family: monospace;
-    font-size: 14px;
-    box-shadow: 0 4px 10px 0px black;
-    margin-bottom: 10px;
-    width: 100px;
-
-}
