@@ -6,7 +6,7 @@
   <p align="center">
     A grid-based physics sandbox built in TypeScript
     <br />
-    <a href="https://quaidsage.com/falling-sand" target="_blank"><strong>View demo »</strong></a>
+    <a href="https://quaidsage.com/tileo" target="_blank"><strong>View demo »</strong></a>
     <br />
   </p>
 </div>
